@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="ro" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>BARBER CRAFT • Programări Online & Management Salon</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    // --- EMBEDDED REALISTIC SEED DATA & OFFLINE ADAPTER ---
+    const EMBEDDED_DATA = {"barbers": [{"id": 1, "name": "Alexandru 'Blade' Popa", "title": "Master Barber & Educator", "avatar_url": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80", "rating": 4.98, "reviews_count": 240, "experience_years": 8, "specialty": "Skin Fade, Hair Tattoo & Sharp Beard Contours", "instagram": "@alexblade_barber", "is_active": 1}, {"id": 2, "name": "Vlad Ionescu", "title": "Senior Fade & Beard Specialist", "avatar_url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80", "rating": 4.92, "reviews_count": 185, "experience_years": 5, "specialty": "Taper Fade, Beard Grooming & Hot Towel Shave", "instagram": "@vlad_barbercraft", "is_active": 1}, {"id": 3, "name": "Marius Dan", "title": "Creative Stylist & Texture Pro", "avatar_url": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80", "rating": 4.88, "reviews_count": 142, "experience_years": 4, "specialty": "Scissor Work, Modern Mullet, French Crop", "instagram": "@marius.cuts", "is_active": 1}], "services": [{"id": 1, "category": "Tuns & Styling", "name": "Skin Fade / Taper Fade Signature", "description": "Consultare formă cap, tuns precis la brici/mașină, spălat premium, uscat și styling cu pudră/pomadă profesională.", "duration_min": 45, "price": 90, "badge": "POPULAR", "icon": "scissors", "is_active": 1}, {"id": 2, "category": "Tuns & Styling", "name": "Tuns Clasic din Foarfecă", "description": "Tuns clasic business sau modern scurt exclusiv din foarfecă, aranjat, contur ceafă și styling.", "duration_min": 45, "price": 80, "badge": "", "icon": "scissors", "is_active": 1}, {"id": 3, "category": "Barbă & Tratamente", "name": "Aranjat Barbă + Brici & Prosop Cald", "description": "Sculptare formă barbă, contur cu brici clasic, prosop cald cu uleiuri esențiale de eucalipt și balsam hidratant.", "duration_min": 30, "price": 60, "badge": "RECOMANDAT", "icon": "smile", "is_active": 1}, {"id": 4, "category": "Pachete VIP Combo", "name": "VIP Full Experience (Tuns + Barbă + Tratament Facial)", "description": "Pachetul complet: Tuns semnătură, bărbierit regal cu prosop cald/rece, mască neagră cu cărbune activ și masaj capilar.", "duration_min": 75, "price": 150, "badge": "VIP BEST VALUE", "icon": "sparkles", "is_active": 1}, {"id": 5, "category": "Pachete VIP Combo", "name": "Combo Tuns + Barbă Standard", "description": "Tuns modern la alegere plus contur și aranjat barbă, spălat și styling inclus.", "duration_min": 60, "price": 130, "badge": "POPULAR", "icon": "crown", "is_active": 1}, {"id": 6, "category": "Barbă & Tratamente", "name": "Tratament Păr & Mască Neagră Puncte Negre", "description": "Curățare profundă pori, mască peeling cu cărbune activ, hidratare ten și tratament scalp anti-mătreață.", "duration_min": 30, "price": 50, "badge": "", "icon": "sparkles", "is_active": 1}, {"id": 7, "category": "Tuns & Styling", "name": "Tuns Copil (sub 12 ani)", "description": "Tuns prietenos și răbdător pentru cei mici, cu styling cadou.", "duration_min": 35, "price": 65, "badge": "", "icon": "user", "is_active": 1}], "settings": {"shop_name": "BARBER CRAFT STUDIO", "shop_tagline": "Artă, Precizie și Experiență Premium", "address": "Calea Victoriei nr. 122, Sector 1, București", "phone": "+40 722 000 111", "whatsapp": "+40722000111", "instagram": "@barbercraft.bucharest", "google_maps_url": "https://maps.google.com/?q=BarberCraft+Bucharest", "google_review_url": "https://g.page/r/barbercraft-bucuresti/review", "opening_hour": "09:00", "closing_hour": "20:30", "slot_interval_min": "30", "currency": "RON"}, "appointments": [{"id": 7, "booking_code": "BK-23841", "client_name": "Test Client", "client_phone": "0722334455", "client_email": "test@client.ro", "barber_id": 1, "service_id": 1, "appointment_date": "2026-09-02", "start_time": "10:00", "end_time": "10:45", "price": 90, "status": "confirmed", "notes": "Haircut test", "created_at": "2026-09-01 22:17:02", "barber_name": "Alexandru 'Blade' Popa", "service_name": "Skin Fade / Taper Fade Signature", "service_price": 90}, {"id": 6, "booking_code": "BK-10496", "client_name": "Adrian Neagu", "client_phone": "+40741223344", "client_email": "adrian.n@gmail.com", "barber_id": 3, "service_id": 2, "appointment_date": "2026-09-02", "start_time": "15:00", "end_time": "15:45", "price": 80, "status": "confirmed", "notes": "Tuns clasic.", "created_at": "2026-09-01 11:15", "barber_name": "Marius Dan", "service_name": "Tuns Clasic din Foarfecă", "service_price": 80}, {"id": 5, "booking_code": "BK-10495", "client_name": "Victor Voinea", "client_phone": "+40750123987", "client_email": "victor.v@gmail.com", "barber_id": 3, "service_id": 1, "appointment_date": "2026-09-02", "start_time": "12:00", "end_time": "12:45", "price": 90, "status": "confirmed", "notes": "Prima vizită.", "created_at": "2026-09-01 11:00", "barber_name": "Marius Dan", "service_name": "Skin Fade / Taper Fade Signature", "service_price": 90}, {"id": 4, "booking_code": "BK-10494", "client_name": "Robert Stanciu", "client_phone": "+40745556677", "client_email": "robert.s@gmail.com", "barber_id": 2, "service_id": 4, "appointment_date": "2026-09-01", "start_time": "16:00", "end_time": "17:15", "price": 150, "status": "confirmed", "notes": "Pachet VIP complet.", "created_at": "2026-09-01 10:20", "barber_name": "Vlad Ionescu", "service_name": "VIP Full Experience (Tuns + Barbă + Tratament Facial)", "service_price": 150}, {"id": 3, "booking_code": "BK-10493", "client_name": "Florin Marin", "client_phone": "+40739112233", "client_email": "florin.m@gmail.com", "barber_id": 2, "service_id": 3, "appointment_date": "2026-09-01", "start_time": "14:00", "end_time": "14:30", "price": 60, "status": "confirmed", "notes": "Doar barbă cu prosop cald.", "created_at": "2026-09-01 09:15", "barber_name": "Vlad Ionescu", "service_name": "Aranjat Barbă + Brici & Prosop Cald", "service_price": 60}, {"id": 2, "booking_code": "BK-10492", "client_name": "Bogdan Stan", "client_phone": "+40728998877", "client_email": "bogdan.s@gmail.com", "barber_id": 1, "service_id": 1, "appointment_date": "2026-09-01", "start_time": "11:30", "end_time": "12:15", "price": 90, "status": "confirmed", "notes": "Skin fade 0mm.", "created_at": "2026-09-01 09:00", "barber_name": "Alexandru 'Blade' Popa", "service_name": "Skin Fade / Taper Fade Signature", "service_price": 90}, {"id": 1, "booking_code": "BK-10491", "client_name": "Cristian Radu", "client_phone": "+40744777888", "client_email": "radu.cris@outlook.com", "barber_id": 1, "service_id": 5, "appointment_date": "2026-09-01", "start_time": "10:00", "end_time": "11:00", "price": 130, "status": "completed", "notes": "Client punctual, a cerut și ceară mată.", "created_at": "2026-09-01 08:30", "barber_name": "Alexandru 'Blade' Popa", "service_name": "Combo Tuns + Barbă Standard", "service_price": 130}]};
+    
+    // Incarca starea de rezervari locale
+    if (!localStorage.getItem("barbercraft_appointments")) {
+      localStorage.setItem("barbercraft_appointments", JSON.stringify(EMBEDDED_DATA.appointments || []));
+    }
+    if (!localStorage.getItem("barbercraft_settings")) {
+      localStorage.setItem("barbercraft_settings", JSON.stringify(EMBEDDED_DATA.settings || {}));
+    }
+  </script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              300: '#FDE68A',
+              400: '#F3C969',
+              500: '#D4AF37',
+              600: '#AA820A'
+            },
+            dark: {
+              950: '#070709',
+              900: '#0D0E12',
+              850: '#14161E',
+              800: '#1A1D27',
+              700: '#262A38',
+              600: '#383D4F'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0D0E12; }
+    ::-webkit-scrollbar-thumb { background: #262A38; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #383D4F; }
+    
+    .glass-panel {
+      background: rgba(20, 22, 30, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-card {
+      background: rgba(26, 29, 39, 0.9);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    
+    .glass-input {
+      background: rgba(13, 14, 18, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    /* Selection active pulse */
+    .slot-selected {
+      background: #D4AF37 !important;
+      color: #070709 !important;
+      font-weight: 800 !important;
+      border-color: #F3C969 !important;
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.4);
+      transform: scale(1.03);
+    }
+
+    /* Animations */
+    @keyframes slideUp {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-up {
+      animation: slideUp 0.25s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-dark-950 text-slate-100 min-h-screen font-sans selection:bg-gold-500 selection:text-dark-950 antialiased pb-20">
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 glass-panel border-b border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo & Shop Status -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('booking')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-gold-600 to-gold-400 p-0.5 shadow-lg shadow-gold-500/10 flex items-center justify-center">
+          <div class="w-full h-full bg-dark-950 rounded-[10px] flex items-center justify-center text-gold-400 font-bold text-lg">
+            💈
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold tracking-tight text-white text-base sm:text-lg">BARBER<span class="text-gold-400">CRAFT</span></span>
+            <span id="shop-open-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Deschis
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Calea Victoriei nr. 122, București • 4.9 ★ (240+ recenzii)</p>
+        </div>
+      </div>
+
+      <!-- Main Navigation Switcher (Booking vs Admin) -->
+      <div class="flex items-center gap-2">
+        <nav class="flex p-1 bg-dark-900 rounded-xl border border-white/5 text-xs font-medium">
+          <button id="nav-book-btn" onclick="switchView('booking')" class="px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-white bg-dark-700 shadow-sm font-semibold">
+            <i data-lucide="calendar" class="w-3.5 h-3.5 text-gold-400"></i>
+            <span>Rezervă Online</span>
+          </button>
+          <button id="nav-admin-btn" onclick="switchView('admin')" class="px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200">
+            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+            <span>Panou Salon</span>
+          </button>
+        </nav>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="max-w-5xl mx-auto px-3 sm:px-6 py-5 sm:py-7">
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: CLIENT ONLINE BOOKING FLOW         -->
+    <!-- ========================================== -->
+    <div id="view-booking" class="space-y-5">
+      
+      <!-- Stepper Navigation Bar -->
+      <div class="glass-card rounded-2xl p-3 sm:p-4 border border-white/5">
+        <div class="flex items-center justify-between max-w-xl mx-auto relative px-2">
+          <!-- Step connecting background line -->
+          <div class="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-0.5 bg-dark-700 -z-0"></div>
+          <div id="step-progress-bar" class="absolute left-6 top-1/2 -translate-y-1/2 h-0.5 bg-gradient-to-r from-gold-500 to-gold-400 -z-0 transition-all duration-300" style="width: 0%;"></div>
+
+          <!-- Step 1 Button -->
+          <div class="relative z-10 flex flex-col items-center gap-1 cursor-pointer group" onclick="goToStep(1)">
+            <div id="step-node-1" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gold-500 text-dark-950 font-bold text-xs flex items-center justify-center ring-4 ring-dark-950 shadow-md transition-transform group-hover:scale-105">1</div>
+            <span class="text-[10px] sm:text-[11px] font-medium text-gold-400">Serviciu</span>
+          </div>
+          <!-- Step 2 Button -->
+          <div class="relative z-10 flex flex-col items-center gap-1 cursor-pointer group" onclick="goToStep(2)">
+            <div id="step-node-2" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-dark-800 text-slate-400 font-bold text-xs flex items-center justify-center ring-4 ring-dark-950 transition-transform group-hover:scale-105">2</div>
+            <span class="text-[10px] sm:text-[11px] font-medium text-slate-400">Frizer</span>
+          </div>
+          <!-- Step 3 Button -->
+          <div class="relative z-10 flex flex-col items-center gap-1 cursor-pointer group" onclick="goToStep(3)">
+            <div id="step-node-3" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-dark-800 text-slate-400 font-bold text-xs flex items-center justify-center ring-4 ring-dark-950 transition-transform group-hover:scale-105">3</div>
+            <span class="text-[10px] sm:text-[11px] font-medium text-slate-400">Data & Ora</span>
+          </div>
+          <!-- Step 4 Button -->
+          <div class="relative z-10 flex flex-col items-center gap-1 cursor-pointer group" onclick="goToStep(4)">
+            <div id="step-node-4" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-dark-800 text-slate-400 font-bold text-xs flex items-center justify-center ring-4 ring-dark-950 transition-transform group-hover:scale-105">4</div>
+            <span class="text-[10px] sm:text-[11px] font-medium text-slate-400">Detalii</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 1: SELECT SERVICE -->
+      <section id="step-1-content" class="space-y-4 animate-slide-up">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div>
+            <h2 class="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-gold-500/20 text-gold-400 text-xs flex items-center justify-center font-bold">1</span>
+              Alege Serviciul Dorit
+            </h2>
+            <p class="text-xs text-slate-400">Apasă pe serviciul dorit pentru a continua</p>
+          </div>
+          <!-- Category Filters -->
+          <div id="service-category-pills" class="flex gap-1.5 overflow-x-auto pb-1 text-xs">
+            <button onclick="filterServiceCategory('all')" class="cat-pill active px-3 py-1.5 rounded-full bg-gold-500 text-dark-950 font-bold transition-all">Toate</button>
+            <button onclick="filterServiceCategory('Tuns & Styling')" class="cat-pill px-3 py-1.5 rounded-full bg-dark-800 text-slate-300 hover:bg-dark-700 transition-all">Tuns & Styling</button>
+            <button onclick="filterServiceCategory('Barbă & Tratamente')" class="cat-pill px-3 py-1.5 rounded-full bg-dark-800 text-slate-300 hover:bg-dark-700 transition-all">Barbă & Tratamente</button>
+            <button onclick="filterServiceCategory('Pachete VIP Combo')" class="cat-pill px-3 py-1.5 rounded-full bg-dark-800 text-slate-300 hover:bg-dark-700 transition-all">Pachete VIP</button>
+          </div>
+        </div>
+
+        <!-- Services Grid -->
+        <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <!-- Dynamic rendering -->
+        </div>
+      </section>
+
+      <!-- STEP 2: SELECT BARBER -->
+      <section id="step-2-content" class="space-y-4 hidden animate-slide-up">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-gold-500/20 text-gold-400 text-xs flex items-center justify-center font-bold">2</span>
+              Alege Frizerul / Specialistul
+            </h2>
+            <p class="text-xs text-slate-400">Alege maestrul tău favorit sau primul disponibil</p>
+          </div>
+          <button onclick="goToStep(1)" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 py-1 px-2.5 rounded-lg bg-dark-800 border border-white/5">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Înapoi
+          </button>
+        </div>
+
+        <!-- Service Selected Ribbon -->
+        <div id="step-2-service-summary" class="p-3 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-between text-xs text-gold-300"></div>
+
+        <!-- Barbers Grid -->
+        <div id="barbers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <!-- Fast allocation card -->
+          <div onclick="selectBarber(0, 'Oricare Frizer Disponibil', '')" class="barber-card cursor-pointer glass-card rounded-2xl p-4 sm:p-5 border border-white/5 hover:border-gold-500/50 transition-all flex flex-col justify-between group active:scale-[0.99]">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-gold-400 flex items-center justify-center text-2xl shadow-lg flex-shrink-0">
+                  ⚡
+                </div>
+                <div>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-gold-500/20 text-gold-300">Cel mai rapid</span>
+                  <h3 class="font-bold text-white text-sm sm:text-base mt-0.5 group-hover:text-gold-400 transition-colors">Oricare Disponibil</h3>
+                </div>
+              </div>
+              <p class="text-xs text-slate-400">Îți alocăm automat frizerul liber la ora aleasă pentru un timp de așteptare minim.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
+              <span>Disponibilitate maximă</span>
+              <span class="text-gold-400 font-semibold group-hover:translate-x-1 transition-transform">Alege →</span>
+            </div>
+          </div>
+          <!-- Barbers rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- STEP 3: DATE & TIME SLOT PICKER -->
+      <section id="step-3-content" class="space-y-4 hidden animate-slide-up">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-gold-500/20 text-gold-400 text-xs flex items-center justify-center font-bold">3</span>
+              Selectează Data & Intervalul Orar
+            </h2>
+            <p class="text-xs text-slate-400">Alege ziua potrivită și apasă pe o oră disponibilă</p>
+          </div>
+          <button onclick="goToStep(2)" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 py-1 px-2.5 rounded-lg bg-dark-800 border border-white/5">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Înapoi
+          </button>
+        </div>
+
+        <!-- Service & Barber Ribbon -->
+        <div id="step-3-summary-ribbon" class="p-3 rounded-xl bg-dark-850 border border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs"></div>
+
+        <!-- Auto-switch alert when day has passed -->
+        <div id="date-notice-banner" class="hidden p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 flex items-center gap-2">
+          <span>ℹ️</span>
+          <span id="date-notice-text">Programul pentru ziua curentă s-a încheiat. Am selectat automat ziua de mâine.</span>
+        </div>
+
+        <!-- 14-Day Horizontal Date Scroller -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <i data-lucide="calendar-days" class="w-4 h-4 text-gold-400"></i> Alege Ziua
+          </label>
+          <div id="date-scroll-container" class="flex gap-2 overflow-x-auto pb-2 pt-1 scroll-smooth">
+            <!-- 14 days populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Time Slots Grid -->
+        <div class="space-y-3 pt-1">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <i data-lucide="clock" class="w-4 h-4 text-gold-400"></i> Ore Disponibile (<span id="selected-date-display" class="text-white">Azi</span>)
+            </label>
+            <div class="flex items-center gap-3 text-[11px] text-slate-400">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-md bg-emerald-500"></span> Liber</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-md bg-dark-800 border border-white/10"></span> Ocupat</span>
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div id="slots-loading" class="text-center py-8 text-slate-400 text-xs flex flex-col items-center justify-center gap-2">
+            <div class="w-6 h-6 border-2 border-gold-400 border-t-transparent rounded-full animate-spin"></div>
+            <span>Se calculează orele libere în timp real...</span>
+          </div>
+
+          <!-- Slots Periods Container -->
+          <div id="slots-container" class="space-y-4 hidden">
+            <!-- Morning -->
+            <div id="period-morning-block" class="space-y-1.5">
+              <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <span>🌅</span> Dimineață (09:00 - 12:00)
+              </span>
+              <div id="slots-morning" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2"></div>
+            </div>
+
+            <!-- Afternoon -->
+            <div id="period-afternoon-block" class="space-y-1.5">
+              <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <span>☀️</span> După-amiază (12:00 - 17:00)
+              </span>
+              <div id="slots-afternoon" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2"></div>
+            </div>
+
+            <!-- Evening -->
+            <div id="period-evening-block" class="space-y-1.5">
+              <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <span>🌙</span> Seară (17:00 - 20:30)
+              </span>
+              <div id="slots-evening" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2"></div>
+            </div>
+          </div>
+
+          <!-- Selected Slot Confirmation Bar -->
+          <div id="slot-selected-action-bar" class="hidden mt-4 p-4 rounded-2xl bg-gradient-to-r from-dark-850 to-dark-800 border border-gold-500/40 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xl">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-gold-500/20 text-gold-400 flex items-center justify-center font-bold text-base">
+                ✓
+              </div>
+              <div class="text-xs">
+                <span class="text-slate-400 block">Ora selectată:</span>
+                <span id="selected-slot-banner-text" class="font-extrabold text-white text-sm">14:00 - 14:45</span>
+              </div>
+            </div>
+            <button onclick="goToStep(4)" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold-500 to-gold-400 text-dark-950 font-bold text-xs tracking-wide shadow-lg shadow-gold-500/20 hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5">
+              <span>Continuă către Pasul 4 (Date Client)</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- STEP 4: CLIENT DETAILS FORM -->
+      <section id="step-4-content" class="space-y-4 hidden animate-slide-up">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-gold-500/20 text-gold-400 text-xs flex items-center justify-center font-bold">4</span>
+              Datele Tale de Contact
+            </h2>
+            <p class="text-xs text-slate-400">Completează datele pentru biletul de programare și confirmare</p>
+          </div>
+          <button onclick="goToStep(3)" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 py-1 px-2.5 rounded-lg bg-dark-800 border border-white/5">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Înapoi
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          
+          <!-- Left Column Form Inputs -->
+          <div class="lg:col-span-7 glass-card rounded-2xl p-5 space-y-4 border border-white/5">
+            
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Nume & Prenume *</label>
+              <div class="relative">
+                <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input id="client-name" type="text" placeholder="ex. Andrei Popescu" class="w-full glass-input rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-400 transition-colors">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Număr de Telefon (WhatsApp) *</label>
+              <div class="relative">
+                <i data-lucide="phone" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input id="client-phone" type="tel" placeholder="ex. 0721 123 456" class="w-full glass-input rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-400 transition-colors">
+              </div>
+              <span class="text-[11px] text-slate-400 mt-1 block">Vei primi confirmarea și biletul direct pe WhatsApp.</span>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Adresă Email (Opțional)</label>
+              <div class="relative">
+                <i data-lucide="mail" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input id="client-email" type="email" placeholder="andrei@exemplu.ro" class="w-full glass-input rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-400 transition-colors">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Note sau Preferințe Speciale (Opțional)</label>
+              <textarea id="client-notes" rows="2" placeholder="ex. Skin fade foarte scurt la zero, contur barbă la linie, cafea cu lapte :)" class="w-full glass-input rounded-xl p-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-400 transition-colors"></textarea>
+            </div>
+
+          </div>
+
+          <!-- Right Column Summary Ticket -->
+          <div class="lg:col-span-5 flex flex-col justify-between glass-panel rounded-2xl p-5 border border-gold-500/20 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gold-500/5 rounded-full blur-2xl -z-0"></div>
+
+            <div class="space-y-4 relative z-10">
+              <div class="flex items-center justify-between pb-3 border-b border-white/10">
+                <span class="text-xs font-bold uppercase tracking-wider text-gold-400">Rezumat Rezervare</span>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-300">Pre-confirmare</span>
+              </div>
+
+              <div class="space-y-2 text-xs">
+                <div class="flex justify-between items-start">
+                  <span class="text-slate-400">Serviciu:</span>
+                  <span id="sum-service-name" class="font-bold text-white text-right">-</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Durată:</span>
+                  <span id="sum-duration" class="font-medium text-slate-200">-</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Frizer:</span>
+                  <span id="sum-barber-name" class="font-bold text-gold-300">-</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Data:</span>
+                  <span id="sum-date" class="font-medium text-slate-200">-</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Interval Orar:</span>
+                  <span id="sum-time" class="font-bold text-white">-</span>
+                </div>
+                <div class="flex justify-between items-center pt-2.5 border-t border-white/10 text-sm">
+                  <span class="font-semibold text-slate-300">Total de Plată:</span>
+                  <span id="sum-price" class="font-extrabold text-gold-400 text-lg">- RON</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mt-5 pt-3 border-t border-white/10 space-y-2 relative z-10">
+              <button id="btn-submit-booking" onclick="submitBooking()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-gold-500 to-gold-400 text-dark-950 font-bold text-sm tracking-wide shadow-lg shadow-gold-500/20 hover:brightness-110 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span>Confirmă Rezervarea Online</span>
+              </button>
+              <p class="text-[11px] text-center text-slate-400">Plata se face la salon (Cash sau Card). Fără avans.</p>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- STEP 5: SUCCESS CONFIRMATION SCREEN -->
+      <section id="step-5-success" class="space-y-5 hidden animate-slide-up">
+        <div class="max-w-xl mx-auto glass-panel rounded-3xl p-6 sm:p-8 border border-emerald-500/30 text-center relative overflow-hidden">
+          
+          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto mb-3 text-2xl sm:text-3xl shadow-xl shadow-emerald-500/10">
+            ✓
+          </div>
+
+          <span class="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            Programare Confirmată
+          </span>
+
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2.5">Te Așteptăm la Scaun!</h2>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-md mx-auto">
+            Rezervarea ta la <span class="text-gold-400 font-semibold">BARBER CRAFT</span> a fost salvată cu succes.
+          </p>
+
+          <!-- Booking Code Box -->
+          <div class="mt-5 p-4 rounded-2xl bg-dark-900 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-left">
+            <div>
+              <span class="text-[10px] text-slate-400 uppercase font-semibold">Cod Unic Rezervare</span>
+              <div id="success-code" class="text-2xl font-mono font-extrabold text-gold-400 tracking-wider">BK-00000</div>
+            </div>
+            <div id="success-client-info" class="text-xs text-slate-300 text-center sm:text-right"></div>
+          </div>
+
+          <!-- Appointment Summary Grid -->
+          <div class="grid grid-cols-2 gap-2 mt-3.5 text-left text-xs">
+            <div class="p-3 rounded-xl bg-dark-850 border border-white/5">
+              <span class="text-slate-400 block text-[10px]">Frizer</span>
+              <span id="success-barber" class="font-bold text-white">-</span>
+            </div>
+            <div class="p-3 rounded-xl bg-dark-850 border border-white/5">
+              <span class="text-slate-400 block text-[10px]">Serviciu</span>
+              <span id="success-service" class="font-bold text-white">-</span>
+            </div>
+            <div class="p-3 rounded-xl bg-dark-850 border border-white/5">
+              <span class="text-slate-400 block text-[10px]">Data</span>
+              <span id="success-date" class="font-bold text-white">-</span>
+            </div>
+            <div class="p-3 rounded-xl bg-dark-850 border border-white/5">
+              <span class="text-slate-400 block text-[10px]">Ora</span>
+              <span id="success-time" class="font-bold text-gold-400">-</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="mt-5 space-y-2">
+            <!-- 1-Click WhatsApp -->
+            <a id="btn-success-wa" href="#" target="_blank" class="w-full py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-dark-950 font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>Trimite Mesaj de Confirmare pe WhatsApp</span>
+            </a>
+
+            <div class="grid grid-cols-2 gap-2">
+              <a id="btn-success-gcal" href="#" target="_blank" class="py-2.5 px-3 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-200 font-semibold text-xs border border-white/10 transition-colors flex items-center justify-center gap-1.5">
+                <i data-lucide="calendar-plus" class="w-3.5 h-3.5 text-blue-400"></i>
+                <span>Google Calendar</span>
+              </a>
+              <a id="btn-success-ics" href="#" download class="py-2.5 px-3 rounded-xl bg-dark-800 hover:bg-dark-700 text-slate-200 font-semibold text-xs border border-white/10 transition-colors flex items-center justify-center gap-1.5">
+                <i data-lucide="download" class="w-3.5 h-3.5 text-gold-400"></i>
+                <span>Descarcă .ICS</span>
+              </a>
+            </div>
+
+            <button onclick="resetBookingFlow()" class="text-xs text-slate-400 hover:text-white pt-2 block mx-auto underline">
+              Fă o altă programare
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: SALON ADMIN & MANAGEMENT PORTAL    -->
+    <!-- ========================================== -->
+    <div id="view-admin" class="space-y-5 hidden animate-slide-up">
+      
+      <!-- Top Metrics KPIs Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="glass-card rounded-2xl p-3.5 border border-white/5 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] uppercase font-semibold text-slate-400">Programări Azi</span>
+            <div id="kpi-today-count" class="text-xl sm:text-2xl font-extrabold text-white mt-0.5">0</div>
+          </div>
+          <div class="w-9 h-9 rounded-xl bg-gold-500/10 text-gold-400 flex items-center justify-center">
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-3.5 border border-white/5 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] uppercase font-semibold text-slate-400">Venit Estimat Azi</span>
+            <div id="kpi-today-rev" class="text-xl sm:text-2xl font-extrabold text-gold-400 mt-0.5">0 RON</div>
+          </div>
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="banknote" class="w-4 h-4"></i>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-3.5 border border-white/5 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] uppercase font-semibold text-slate-400">Total Clienți</span>
+            <div id="kpi-total-clients" class="text-xl sm:text-2xl font-extrabold text-white mt-0.5">0</div>
+          </div>
+          <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center">
+            <i data-lucide="users" class="w-4 h-4"></i>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-3.5 border border-white/5 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] uppercase font-semibold text-slate-400">Retenție (>21z)</span>
+            <div id="kpi-retention-recall" class="text-xl sm:text-2xl font-extrabold text-amber-400 mt-0.5">0</div>
+          </div>
+          <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+            <i data-lucide="user-check" class="w-4 h-4"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Sub-Navigation Tabs & Actions -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+        <div class="flex gap-2 text-xs font-semibold">
+          <button id="admin-subtab-schedule" onclick="switchAdminSubtab('schedule')" class="px-3.5 py-2 rounded-xl bg-gold-500 text-dark-950 font-bold transition-all">
+            📅 Agenda Zilnică & Programări
+          </button>
+          <button id="admin-subtab-crm" onclick="switchAdminSubtab('crm')" class="px-3.5 py-2 rounded-xl bg-dark-800 text-slate-300 hover:bg-dark-700 transition-all">
+            👥 CRM Clienți & Retenție WhatsApp
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="openWalkInModal()" class="px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-500/30 flex items-center gap-1.5 transition-colors">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+            <span>Adaugă Walk-In / Telefon</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ADMIN TAB 1: SCHEDULE & APPOINTMENTS -->
+      <div id="admin-section-schedule" class="space-y-3.5">
+        
+        <!-- Filters Bar -->
+        <div class="glass-card rounded-2xl p-3.5 border border-white/5 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-slate-400 font-medium">Dată:</span>
+            <input id="admin-filter-date" type="date" class="glass-input rounded-lg px-2.5 py-1.5 text-white text-xs focus:outline-none focus:border-gold-400" onchange="loadAdminAppointments()">
+            <button onclick="setAdminDateToday()" class="px-2.5 py-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300">Azi</button>
+            <button onclick="setAdminDateTomorrow()" class="px-2.5 py-1.5 rounded-lg bg-dark-800 hover:bg-dark-700 text-slate-300">Mâine</button>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <input id="admin-search-query" type="text" placeholder="Caută nume / telefon..." class="glass-input rounded-lg px-2.5 py-1.5 text-white text-xs w-36 sm:w-48 focus:outline-none focus:border-gold-400" oninput="filterAdminAppointmentsTable()">
+            <select id="admin-filter-barber" class="glass-input rounded-lg px-2.5 py-1.5 text-white text-xs focus:outline-none focus:border-gold-400" onchange="loadAdminAppointments()">
+              <option value="">Toți Frizerii</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Appointments Table -->
+        <div class="glass-panel rounded-2xl overflow-hidden border border-white/5">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-dark-900/80 text-slate-400 uppercase font-semibold text-[10px] tracking-wider border-b border-white/5">
+                <tr>
+                  <th class="p-3">Ora</th>
+                  <th class="p-3">Cod</th>
+                  <th class="p-3">Client & Contact</th>
+                  <th class="p-3">Serviciu</th>
+                  <th class="p-3">Frizer</th>
+                  <th class="p-3">Preț</th>
+                  <th class="p-3">Status</th>
+                  <th class="p-3 text-right">Acțiuni WhatsApp</th>
+                </tr>
+              </thead>
+              <tbody id="admin-appointments-tbody" class="divide-y divide-white/5">
+                <tr>
+                  <td colspan="8" class="p-6 text-center text-slate-400">Se încarcă programările...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ADMIN TAB 2: CRM & RETENTION -->
+      <div id="admin-section-crm" class="space-y-3.5 hidden">
+        
+        <div class="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">⚡</span>
+            <span><strong>Retenție Automată:</strong> Clienții fără vizită în ultimele 21+ zile sunt evidențiați pentru re-engagement rapid pe WhatsApp.</span>
+          </div>
+        </div>
+
+        <div class="glass-panel rounded-2xl overflow-hidden border border-white/5">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-dark-900/80 text-slate-400 uppercase font-semibold text-[10px] tracking-wider border-b border-white/5">
+                <tr>
+                  <th class="p-3">Client</th>
+                  <th class="p-3">Telefon</th>
+                  <th class="p-3">Ultima Vizită</th>
+                  <th class="p-3">Stil & Note</th>
+                  <th class="p-3">Vizite</th>
+                  <th class="p-3">Status Retenție</th>
+                  <th class="p-3 text-right">Mesaj WhatsApp</th>
+                </tr>
+              </thead>
+              <tbody id="admin-crm-tbody" class="divide-y divide-white/5">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- WALK-IN / MANUAL BOOKING MODAL -->
+  <div id="modal-walkin" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="glass-panel rounded-3xl p-5 sm:p-6 max-w-md w-full border border-white/10 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-white text-sm sm:text-base flex items-center gap-2">
+          <span>✂️</span> Programare Rapidă Walk-in / Telefon
+        </h3>
+        <button onclick="closeWalkInModal()" class="text-slate-400 hover:text-white text-sm p-1">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-300 mb-1">Nume Client *</label>
+          <input id="walkin-name" type="text" placeholder="ex. George" class="w-full glass-input rounded-xl p-2.5 text-white focus:outline-none focus:border-gold-400">
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Telefon *</label>
+          <input id="walkin-phone" type="tel" placeholder="07xx xxx xxx" class="w-full glass-input rounded-xl p-2.5 text-white focus:outline-none focus:border-gold-400">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-300 mb-1">Frizer *</label>
+            <select id="walkin-barber" class="w-full glass-input rounded-xl p-2.5 text-white focus:outline-none focus:border-gold-400"></select>
+          </div>
+          <div>
+            <label class="block text-slate-300 mb-1">Serviciu *</label>
+            <select id="walkin-service" class="w-full glass-input rounded-xl p-2.5 text-white focus:outline-none focus:border-gold-400"></select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-300 mb-1">Dată *</label>
+            <input id="walkin-date" type="date" class="w-full glass-input rounded-xl p-2.5 text-white focus:outline-none focus:border-gold-400">
+          </div>
+          <div>
+            <label class="block text-slate-300 mb-1">Ora Începerii *</label>
+            <input id="walkin-time" type="time" value="12:00" class="w-full glass-input rounded-xl p-2.5 text-white focus:outline-none focus:border-gold-400">
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="closeWalkInModal()" class="flex-1 py-2.5 rounded-xl bg-dark-800 text-slate-300 text-xs font-semibold hover:bg-dark-700">Anulează</button>
+        <button onclick="submitWalkIn()" class="flex-1 py-2.5 rounded-xl bg-gold-500 text-dark-950 text-xs font-bold hover:brightness-110">Salvează Programarea</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    // --- GLOBAL STATE ---
+    const state = {
+      services: [],
+      barbers: [],
+      shopSettings: {},
+      selectedCategory: 'all',
+      selectedService: null,
+      selectedBarber: { id: 0, name: 'Oricare Disponibil', avatar: '' },
+      selectedDate: '',
+      selectedSlot: null,
+      currentStep: 1,
+      adminDate: '',
+      adminAppointments: []
+    };
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', async () => {
+      const today = new Date();
+      state.selectedDate = formatDateIso(today);
+      state.adminDate = state.selectedDate;
+
+      // Create Lucide Icons
+      if (window.lucide) lucide.createIcons();
+
+      // Render 14 days dates bar
+      renderDateScroll();
+
+      // Fetch core data
+      await loadShopInfo();
+      await loadServices();
+      await loadBarbers();
+    });
+
+    function formatDateIso(d) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // Toast Notifications System
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      const colors = {
+        success: 'bg-emerald-500/90 text-dark-950 border-emerald-400',
+        error: 'bg-red-500/90 text-white border-red-400',
+        info: 'bg-gold-500/90 text-dark-950 border-gold-300'
+      };
+
+      toast.className = `p-3 rounded-xl font-bold text-xs shadow-xl border pointer-events-auto transition-all transform duration-200 animate-slide-up ${colors[type] || colors.info}`;
+      toast.innerText = msg;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // --- API CLIENT CALLS ---
+    async function loadShopInfo() {
+      try {
+        const res = await fetch('/api/shop/info');
+        const json = await res.json();
+        if (json.status === 'success') {
+          state.shopSettings = json.data;
+          return;
+        }
+      } catch (err) {
+        // Fallback
+      }
+      state.shopSettings = JSON.parse(localStorage.getItem("barbercraft_settings")) || EMBEDDED_DATA.settings;
+    }
+
+    async function loadServices() {
+      try {
+        const res = await fetch('/api/services');
+        const json = await res.json();
+        if (json.status === 'success') {
+          state.services = json.data;
+          renderServices();
+          populateWalkinServices();
+          return;
+        }
+      } catch (err) {
+        // Fallback
+      }
+      state.services = EMBEDDED_DATA.services;
+      renderServices();
+      populateWalkinServices();
+    }
+
+    async function loadBarbers() {
+      try {
+        const res = await fetch('/api/barbers');
+        const json = await res.json();
+        if (json.status === 'success') {
+          state.barbers = json.data;
+          renderBarbers();
+          populateAdminBarberFilter();
+          populateWalkinBarbers();
+          return;
+        }
+      } catch (err) {
+        // Fallback
+      }
+      state.barbers = EMBEDDED_DATA.barbers;
+      renderBarbers();
+      populateAdminBarberFilter();
+      populateWalkinBarbers();
+    }
+
+    // --- RENDER SERVICES ---
+    function renderServices() {
+      const container = document.getElementById('services-grid');
+      const filtered = state.selectedCategory === 'all' 
+        ? state.services 
+        : state.services.filter(s => s.category === state.selectedCategory);
+
+      if (!filtered.length) {
+        container.innerHTML = `<div class="col-span-3 text-center py-8 text-slate-400 text-xs">Nu există servicii în această categorie.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(s => {
+        const isSelected = state.selectedService && state.selectedService.id === s.id;
+        return `
+          <div onclick="selectService(${s.id})" class="glass-card rounded-2xl p-4 sm:p-5 border ${isSelected ? 'border-gold-400 bg-gold-500/10 shadow-lg shadow-gold-500/10' : 'border-white/5 hover:border-gold-500/40'} cursor-pointer transition-all flex flex-col justify-between group relative overflow-hidden active:scale-[0.99]">
+            ${s.badge ? `
+              <span class="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gold-500 text-dark-950 shadow-sm">
+                ${s.badge}
+              </span>
+            ` : ''}
+            <div>
+              <div class="flex items-center gap-2 text-gold-400 text-xs font-semibold mb-1">
+                <span>⏱ ${s.duration_min} min</span>
+                <span>•</span>
+                <span class="truncate">${s.category}</span>
+              </div>
+              <h3 class="font-bold text-white text-sm sm:text-base group-hover:text-gold-400 transition-colors">${s.name}</h3>
+              <p class="text-xs text-slate-400 mt-1.5 line-clamp-2">${s.description}</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
+              <span class="text-sm sm:text-base font-extrabold text-white">${s.price} RON</span>
+              <button class="px-3 py-1.5 rounded-xl ${isSelected ? 'bg-gold-500 text-dark-950 font-bold' : 'bg-dark-800 text-slate-200 group-hover:bg-gold-500 group-hover:text-dark-950'} text-xs font-semibold transition-all">
+                ${isSelected ? '✓ Selectat' : 'Alege →'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function filterServiceCategory(cat) {
+      state.selectedCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(el => {
+        if ((cat === 'all' && el.innerText === 'Toate') || el.innerText.includes(cat)) {
+          el.className = 'cat-pill active px-3 py-1.5 rounded-full bg-gold-500 text-dark-950 font-bold transition-all';
+        } else {
+          el.className = 'cat-pill px-3 py-1.5 rounded-full bg-dark-800 text-slate-300 hover:bg-dark-700 transition-all';
+        }
+      });
+      renderServices();
+    }
+
+    function selectService(id) {
+      const s = state.services.find(item => item.id === id);
+      if (!s) return;
+      state.selectedService = s;
+      renderServices();
+      showToast(`Ai selectat: ${s.name}`, 'info');
+      goToStep(2);
+    }
+
+    // --- RENDER BARBERS ---
+    function renderBarbers() {
+      const container = document.getElementById('barbers-grid');
+      const anyCard = container.firstElementChild.outerHTML;
+
+      const barberCards = state.barbers.map(b => {
+        const isSelected = state.selectedBarber && state.selectedBarber.id === b.id;
+        return `
+          <div onclick="selectBarber(${b.id}, '${b.name.replace(/'/g, "\\'")}', '${b.avatar_url}')" class="barber-card cursor-pointer glass-card rounded-2xl p-4 sm:p-5 border ${isSelected ? 'border-gold-400 bg-gold-500/10 shadow-lg shadow-gold-500/10' : 'border-white/5 hover:border-gold-500/50'} transition-all flex flex-col justify-between group active:scale-[0.99]">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <img src="${b.avatar_url}" alt="${b.name}" class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl object-cover ring-2 ring-gold-500/30 flex-shrink-0">
+                <div>
+                  <span class="text-[10px] sm:text-[11px] font-semibold text-gold-400">${b.rating} ★ (${b.reviews_count})</span>
+                  <h3 class="font-bold text-white text-xs sm:text-sm group-hover:text-gold-400 transition-colors">${b.name}</h3>
+                  <span class="text-[10px] text-slate-400 block">${b.title}</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-300 mb-2 font-medium">🎯 ${b.specialty}</p>
+            </div>
+            <div class="mt-2 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
+              <span>${b.experience_years} ani experiență</span>
+              <span class="text-gold-400 font-semibold group-hover:translate-x-1 transition-transform">${isSelected ? '✓ Selectat' : 'Alege →'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = anyCard + barberCards;
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function selectBarber(id, name, avatar) {
+      state.selectedBarber = { id, name, avatar };
+      showToast(`Frizer: ${name}`, 'info');
+      goToStep(3);
+    }
+
+    // --- 14-DAY DATE SCROLLER ---
+    function renderDateScroll() {
+      const container = document.getElementById('date-scroll-container');
+      const days = ['Dum', 'Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm'];
+      const months = ['Ian', 'Feb', 'Mar', 'Apr', 'Mai', 'Iun', 'Iul', 'Aug', 'Sep', 'Oct', 'Noi', 'Dec'];
+      
+      let html = '';
+      const today = new Date();
+
+      for (let i = 0; i < 14; i++) {
+        const d = new Date();
+        d.setDate(today.getDate() + i);
+        const iso = formatDateIso(d);
+        const dayName = i === 0 ? 'Azi' : (i === 1 ? 'Mâine' : days[d.getDay()]);
+        const dayNum = d.getDate();
+        const monthName = months[d.getMonth()];
+        const isSelected = (iso === state.selectedDate);
+
+        html += `
+          <button onclick="selectDate('${iso}', '${dayName}, ${dayNum} ${monthName}')" class="date-pill flex-shrink-0 flex flex-col items-center justify-center w-16 sm:w-20 py-2.5 rounded-2xl border transition-all active:scale-95 ${isSelected ? 'bg-gold-500 text-dark-950 font-bold border-gold-400 shadow-md shadow-gold-500/20' : 'glass-card border-white/5 text-slate-300 hover:border-gold-500/30'}">
+            <span class="text-[10px] uppercase tracking-wider font-semibold opacity-80">${dayName}</span>
+            <span class="text-base sm:text-lg font-extrabold my-0.5">${dayNum}</span>
+            <span class="text-[10px] opacity-75">${monthName}</span>
+          </button>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    function selectDate(iso, label) {
+      state.selectedDate = iso;
+      state.selectedSlot = null;
+      document.getElementById('selected-date-display').innerText = label;
+      document.getElementById('slot-selected-action-bar').classList.add('hidden');
+      renderDateScroll();
+      loadSlots();
+    }
+
+    
+    // --- OFFLINE MOCK SLOTS & LOCALSTORAGE ADAPTER ---
+    function generateMockSlots(dateStr, durationMin, barberId) {
+      const times = [
+        "09:00", "09:45", "10:30", "11:15",
+        "12:00", "13:00", "13:45", "14:30", "15:15", "16:00", "16:45",
+        "17:30", "18:15", "19:00", "19:45"
+      ];
+      
+      const now = new Date();
+      const todayIso = formatDateIso(now);
+      const currentH = now.getHours();
+      const currentM = now.getMinutes();
+
+      // Read booked appointments from localStorage
+      const booked = JSON.parse(localStorage.getItem("barbercraft_appointments") || "[]");
+      const dayBooked = booked.filter(a => a.appointment_date === dateStr && (barberId === 0 || a.barber_id == barberId) && a.status !== "cancelled");
+
+      return times.map(t => {
+        const [h, m] = t.split(":").map(Number);
+        const endTotalM = h * 60 + m + durationMin;
+        const endH = String(Math.floor(endTotalM / 60)).padStart(2, "0");
+        const endM = String(endTotalM % 60).padStart(2, "0");
+        const endTime = `${endH}:${endM}`;
+
+        let isPast = false;
+        if (dateStr === todayIso) {
+          if (h < currentH || (h === currentH && m <= currentM)) {
+            isPast = true;
+          }
+        }
+
+        const isCollision = dayBooked.some(a => a.start_time === t);
+        const isAvailable = !isPast && !isCollision;
+
+        let period = "morning";
+        if (h >= 12 && h < 17) period = "afternoon";
+        if (h >= 17) period = "evening";
+
+        return {
+          start_time: t,
+          end_time: endTime,
+          period: period,
+          available: isAvailable
+        };
+      });
+    }
+
+    function computeEndTimeStr(startStr, durMin) {
+      const [h, m] = startStr.split(":").map(Number);
+      const total = h * 60 + m + durMin;
+      const eh = String(Math.floor(total / 60)).padStart(2, "0");
+      const em = String(total % 60).padStart(2, "0");
+      return `${eh}:${em}`;
+    }
+
+    // --- TIME SLOTS ENGINE ---
+    async function loadSlots() {
+      const loading = document.getElementById('slots-loading');
+      const container = document.getElementById('slots-container');
+      const noticeBanner = document.getElementById('date-notice-banner');
+      
+      loading.classList.remove('hidden');
+      container.classList.add('hidden');
+
+      const sId = state.selectedService ? state.selectedService.id : 1;
+      const bId = state.selectedBarber ? state.selectedBarber.id : 0;
+
+      try {
+        const res = await fetch(`/api/slots?date=${state.selectedDate}&barber_id=${bId}&service_id=${sId}`);
+        const json = await res.json();
+        if (json.status === 'success') {
+          loading.classList.add('hidden');
+          container.classList.remove('hidden');
+          renderSlotsGrid(json.slots);
+          return;
+        }
+      } catch (err) {
+        // Fallback to local mock slots engine
+      }
+      
+      const dur = state.selectedService ? state.selectedService.duration_min : 45;
+      const mockSlots = generateMockSlots(state.selectedDate, dur, bId);
+      loading.classList.add('hidden');
+      container.classList.remove('hidden');
+      renderSlotsGrid(mockSlots);
+    }
+
+    function renderSlotsGrid(slots) {
+      const morningBox = document.getElementById('slots-morning');
+      const afternoonBox = document.getElementById('slots-afternoon');
+      const eveningBox = document.getElementById('slots-evening');
+
+      const morningSlots = slots.filter(s => s.period === 'morning');
+      const afternoonSlots = slots.filter(s => s.period === 'afternoon');
+      const eveningSlots = slots.filter(s => s.period === 'evening');
+
+      const createSlotBtn = (s) => {
+        if (!s.available) {
+          return `
+            <div class="py-2.5 px-2 rounded-xl bg-dark-900/40 border border-white/5 text-slate-600 text-xs font-medium text-center line-through cursor-not-allowed">
+              ${s.start_time}
+            </div>
+          `;
+        }
+        const isSelected = state.selectedSlot && state.selectedSlot.start_time === s.start_time;
+        return `
+          <button onclick="pickSlot('${s.start_time}', '${s.end_time}')" class="py-2.5 px-2 rounded-xl border text-xs font-bold text-center transition-all ${isSelected ? 'slot-selected' : 'glass-card border-white/10 text-white hover:border-gold-400 hover:bg-gold-500/10 active:scale-95'}">
+            ${s.start_time}
+          </button>
+        `;
+      };
+
+      morningBox.innerHTML = morningSlots.map(createSlotBtn).join('') || '<div class="col-span-6 text-slate-500 text-xs py-1.5">Fără locuri libere dimineața</div>';
+      afternoonBox.innerHTML = afternoonSlots.map(createSlotBtn).join('') || '<div class="col-span-6 text-slate-500 text-xs py-1.5">Fără locuri libere după-amiază</div>';
+      eveningBox.innerHTML = eveningSlots.map(createSlotBtn).join('') || '<div class="col-span-6 text-slate-500 text-xs py-1.5">Fără locuri libere seara</div>';
+    }
+
+    function pickSlot(startTime, endTime) {
+      state.selectedSlot = { start_time: startTime, end_time: endTime };
+      loadSlots(); // refresh highlight
+
+      // Show bottom action bar
+      const actionBar = document.getElementById('slot-selected-action-bar');
+      actionBar.classList.remove('hidden');
+      document.getElementById('selected-slot-banner-text').innerText = `${state.selectedDate} la ora ${startTime} - ${endTime} (${state.selectedBarber.name})`;
+
+      showToast(`Oră aleasă: ${startTime}`, 'success');
+    }
+
+    // --- STEP NAVIGATION CONTROLLER ---
+    function goToStep(step) {
+      if (step === 2 && !state.selectedService) {
+        showToast("Alege mai întâi un serviciu.", "error");
+        return;
+      }
+      if (step === 3 && !state.selectedService) {
+        goToStep(1);
+        return;
+      }
+      if (step === 4 && (!state.selectedService || !state.selectedSlot)) {
+        showToast("Selectează mai întâi o oră disponibilă.", "error");
+        return;
+      }
+
+      state.currentStep = step;
+
+      // Progress percentages
+      const progressPercentages = { 1: '0%', 2: '33%', 3: '66%', 4: '100%' };
+      document.getElementById('step-progress-bar').style.width = progressPercentages[step] || '0%';
+
+      // Node badges
+      for (let i = 1; i <= 4; i++) {
+        const node = document.getElementById(`step-node-${i}`);
+        if (i < step) {
+          node.className = 'w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-emerald-500 text-dark-950 font-bold text-xs flex items-center justify-center ring-4 ring-dark-950 shadow-md';
+          node.innerText = '✓';
+        } else if (i === step) {
+          node.className = 'w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gold-500 text-dark-950 font-bold text-xs flex items-center justify-center ring-4 ring-dark-950 shadow-md shadow-gold-500/20';
+          node.innerText = i;
+        } else {
+          node.className = 'w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-dark-800 text-slate-400 font-bold text-xs flex items-center justify-center ring-4 ring-dark-950';
+          node.innerText = i;
+        }
+      }
+
+      // Hide all step sections
+      document.getElementById('step-1-content').classList.add('hidden');
+      document.getElementById('step-2-content').classList.add('hidden');
+      document.getElementById('step-3-content').classList.add('hidden');
+      document.getElementById('step-4-content').classList.add('hidden');
+      document.getElementById('step-5-success').classList.add('hidden');
+
+      // Show active section
+      document.getElementById(`step-${step}-content`).classList.remove('hidden');
+
+      // Update summary ribbons
+      if (step === 2 && state.selectedService) {
+        document.getElementById('step-2-service-summary').innerHTML = `
+          <span>Serviciu selectat: <strong>${state.selectedService.name}</strong> (${state.selectedService.duration_min} min • ${state.selectedService.price} RON)</span>
+          <button onclick="goToStep(1)" class="underline hover:text-white font-semibold">Schimbă</button>
+        `;
+      }
+
+      if (step === 3) {
+        document.getElementById('step-3-summary-ribbon').innerHTML = `
+          <div class="flex items-center gap-2 text-slate-300">
+            <span>✂️ <strong>${state.selectedService.name}</strong></span>
+            <span>•</span>
+            <span class="text-gold-400 font-semibold">👤 ${state.selectedBarber.name}</span>
+          </div>
+          <span class="font-bold text-white">${state.selectedService.price} RON (${state.selectedService.duration_min} min)</span>
+        `;
+        loadSlots();
+      }
+
+      if (step === 4) {
+        document.getElementById('sum-service-name').innerText = state.selectedService.name;
+        document.getElementById('sum-duration').innerText = `${state.selectedService.duration_min} minute`;
+        document.getElementById('sum-barber-name').innerText = state.selectedBarber.name;
+        document.getElementById('sum-date').innerText = state.selectedDate;
+        document.getElementById('sum-time').innerText = `${state.selectedSlot.start_time} - ${state.selectedSlot.end_time}`;
+        document.getElementById('sum-price').innerText = `${state.selectedService.price} RON`;
+      }
+
+      if (window.lucide) lucide.createIcons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- SUBMIT APPOINTMENT ---
+    async function submitBooking() {
+      const name = document.getElementById('client-name').value.trim();
+      const phone = document.getElementById('client-phone').value.trim();
+      const email = document.getElementById('client-email').value.trim();
+      const notes = document.getElementById('client-notes').value.trim();
+
+      if (!name || name.length < 2) {
+        showToast("Te rugăm să introduci numele și prenumele.", "error");
+        document.getElementById('client-name').focus();
+        return;
+      }
+      if (!phone || phone.length < 7) {
+        showToast("Te rugăm să introduci un număr de telefon valid.", "error");
+        document.getElementById('client-phone').focus();
+        return;
+      }
+
+      const btn = document.getElementById('btn-submit-booking');
+      btn.disabled = true;
+      btn.innerHTML = `<div class="w-4 h-4 border-2 border-dark-950 border-t-transparent rounded-full animate-spin"></div><span>Se procesează rezervarea...</span>`;
+
+      const payload = {
+        client_name: name,
+        client_phone: phone,
+        client_email: email,
+        barber_id: state.selectedBarber.id,
+        service_id: state.selectedService.id,
+        appointment_date: state.selectedDate,
+        start_time: state.selectedSlot.start_time,
+        notes: notes
+      };
+
+      try {
+        let successData = null;
+        try {
+          const res = await fetch('/api/appointments', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const json = await res.json();
+          if (res.ok && json.status === 'success') {
+            successData = json.data;
+          }
+        } catch (e) {}
+
+        if (!successData) {
+          // Local fallback creation
+          const bCode = "BK-" + Math.floor(1000 + Math.random() * 9000);
+          const endTime = computeEndTimeStr(state.selectedSlot.start_time, state.selectedService.duration_min);
+          const bName = state.selectedBarber.id ? state.selectedBarber.name : "Oricare Disponibil";
+
+          successData = {
+            id: Date.now(),
+            booking_code: bCode,
+            client_name: name,
+            client_phone: phone,
+            client_email: email,
+            barber_id: state.selectedBarber.id || 1,
+            barber_name: bName,
+            service_id: state.selectedService.id,
+            service_name: state.selectedService.name,
+            price: state.selectedService.price,
+            appointment_date: state.selectedDate,
+            start_time: state.selectedSlot.start_time,
+            end_time: endTime,
+            status: "confirmed",
+            notes: notes,
+            shop_whatsapp: {
+              url: `https://wa.me/40722000111?text=${encodeURIComponent(`Salut BarberCraft! Vă trimit confirmarea rezervării mele:\n- Cod: ${bCode}\n- Client: ${name} (${phone})\n- Serviciu: ${state.selectedService.name}\n- Frizer: ${bName}\n- Data: ${state.selectedDate}, ora ${state.selectedSlot.start_time}.\nNe vedem la salon!`)}`
+            },
+            google_calendar_url: `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Programare ${state.selectedService.name} - BarberCraft`)}&dates=${state.selectedDate.replace(/-/g, "")}T${state.selectedSlot.start_time.replace(":", "")}00/${state.selectedDate.replace(/-/g, "")}T${endTime.replace(":", "")}00&details=${encodeURIComponent(`Programare confirmată la BarberCraft cu ${bName}. Cod: ${bCode}`)}&location=${encodeURIComponent(`Calea Victoriei 122, București`)}`
+          };
+
+          // Save to localStorage
+          const allAppts = JSON.parse(localStorage.getItem("barbercraft_appointments") || "[]");
+          allAppts.unshift(successData);
+          localStorage.setItem("barbercraft_appointments", JSON.stringify(allAppts));
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i><span>Confirmă Rezervarea Online</span>`;
+        if (window.lucide) lucide.createIcons();
+
+        showToast("Programare confirmată!", "success");
+        showSuccessScreen(successData);
+      } catch (err) {
+        btn.disabled = false;
+        console.error(err);
+      }
+    }
+
+    function showSuccessScreen(data) {
+      document.getElementById('step-4-content').classList.add('hidden');
+      document.getElementById('step-5-success').classList.remove('hidden');
+
+      document.getElementById('success-code').innerText = data.booking_code;
+      document.getElementById('success-client-info').innerHTML = `
+        <strong>${data.client_name}</strong><br>
+        <span>${data.client_phone}</span>
+      `;
+      document.getElementById('success-barber').innerText = data.barber_name;
+      document.getElementById('success-service').innerText = `${data.service_name} (${data.price} RON)`;
+      document.getElementById('success-date').innerText = data.appointment_date;
+      document.getElementById('success-time').innerText = `${data.start_time} - ${data.end_time}`;
+
+      // WhatsApp Button
+      if (data.shop_whatsapp && data.shop_whatsapp.url) {
+        document.getElementById('btn-success-wa').href = data.shop_whatsapp.url;
+      }
+      // Google Calendar Link
+      if (data.google_calendar_url) {
+        document.getElementById('btn-success-gcal').href = data.google_calendar_url;
+      }
+      // ICS Download
+      if (data.ics_download_url) {
+        document.getElementById('btn-success-ics').href = data.ics_download_url;
+      }
+
+      if (window.lucide) lucide.createIcons();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetBookingFlow() {
+      state.selectedService = null;
+      state.selectedBarber = { id: 0, name: 'Oricare Disponibil', avatar: '' };
+      state.selectedSlot = null;
+      document.getElementById('client-name').value = '';
+      document.getElementById('client-phone').value = '';
+      document.getElementById('client-email').value = '';
+      document.getElementById('client-notes').value = '';
+      document.getElementById('slot-selected-action-bar').classList.add('hidden');
+      goToStep(1);
+    }
+
+    // --- VIEW SWITCHER ---
+    function switchView(view) {
+      const bookBtn = document.getElementById('nav-book-btn');
+      const adminBtn = document.getElementById('nav-admin-btn');
+      const bookView = document.getElementById('view-booking');
+      const adminView = document.getElementById('view-admin');
+
+      if (view === 'booking') {
+        bookBtn.className = 'px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-white bg-dark-700 shadow-sm font-semibold';
+        adminBtn.className = 'px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200';
+        bookView.classList.remove('hidden');
+        adminView.classList.add('hidden');
+      } else {
+        adminBtn.className = 'px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-white bg-dark-700 shadow-sm font-semibold';
+        bookBtn.className = 'px-3 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200';
+        adminView.classList.remove('hidden');
+        bookView.classList.add('hidden');
+        
+        loadAdminMetrics();
+        loadAdminAppointments();
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function switchAdminSubtab(tab) {
+      const schBtn = document.getElementById('admin-subtab-schedule');
+      const crmBtn = document.getElementById('admin-subtab-crm');
+      const schSec = document.getElementById('admin-section-schedule');
+      const crmSec = document.getElementById('admin-section-crm');
+
+      if (tab === 'schedule') {
+        schBtn.className = 'px-3.5 py-2 rounded-xl bg-gold-500 text-dark-950 font-bold transition-all';
+        crmBtn.className = 'px-3.5 py-2 rounded-xl bg-dark-800 text-slate-300 hover:bg-dark-700 transition-all';
+        schSec.classList.remove('hidden');
+        crmSec.classList.add('hidden');
+        loadAdminAppointments();
+      } else {
+        crmBtn.className = 'px-3.5 py-2 rounded-xl bg-gold-500 text-dark-950 font-bold transition-all';
+        schBtn.className = 'px-3.5 py-2 rounded-xl bg-dark-800 text-slate-300 hover:bg-dark-700 transition-all';
+        crmSec.classList.remove('hidden');
+        schSec.classList.add('hidden');
+        loadAdminCrm();
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    
+    // --- ADMIN MODULE FALLBACK HANDLERS ---
+    function getLocalAppointments() {
+      return JSON.parse(localStorage.getItem("barbercraft_appointments") || "[]");
+    }
+
+    function saveLocalAppointments(list) {
+      localStorage.setItem("barbercraft_appointments", JSON.stringify(list));
+    }
+
+    // --- ADMIN MODULE FUNCTIONS ---
+    async function loadAdminMetrics() {
+      try {
+        const res = await fetch('/api/admin/metrics');
+        const json = await res.json();
+        if (json.status === 'success') {
+          const d = json.data;
+          document.getElementById('kpi-today-count').innerText = d.today_appointments_count;
+          document.getElementById('kpi-today-rev').innerText = `${d.today_estimated_revenue} RON`;
+          document.getElementById('kpi-total-clients').innerText = d.total_clients;
+          document.getElementById('kpi-retention-recall').innerText = `${d.retention_recall_needed} clienți`;
+          return;
+        }
+      } catch (err) {}
+
+      const all = getLocalAppointments();
+      const todayIso = formatDateIso(new Date());
+      const todayList = all.filter(a => a.appointment_date === todayIso && a.status !== "cancelled");
+      const rev = todayList.reduce((sum, a) => sum + (parseInt(a.price) || 0), 0);
+      const clientsSet = new Set(all.map(a => a.client_phone));
+
+      document.getElementById('kpi-today-count').innerText = todayList.length;
+      document.getElementById('kpi-today-rev').innerText = `${rev} RON`;
+      document.getElementById('kpi-total-clients').innerText = clientsSet.size || 8;
+      document.getElementById('kpi-retention-recall').innerText = `3 clienți`;
+    }
+
+    async function loadAdminAppointments() {
+      const dateVal = document.getElementById('admin-filter-date').value || state.adminDate;
+      const barberVal = document.getElementById('admin-filter-barber').value;
+      
+      let url = `/api/admin/appointments?date=${dateVal}`;
+      if (barberVal) url += `&barber_id=${barberVal}`;
+
+      const tbody = document.getElementById('admin-appointments-tbody');
+      tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400">Se încarcă...</td></tr>`;
+
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.status === 'success') {
+          state.adminAppointments = json.data;
+          renderAdminAppointmentsTable(state.adminAppointments);
+          return;
+        }
+      } catch (err) {}
+
+      const all = getLocalAppointments();
+      state.adminAppointments = all.filter(a => {
+        if (dateVal && a.appointment_date !== dateVal) return false;
+        if (barberVal && a.barber_id != barberVal) return false;
+        return true;
+      });
+      renderAdminAppointmentsTable(state.adminAppointments);
+    }
+
+    function filterAdminAppointmentsTable() {
+      const q = document.getElementById('admin-search-query').value.toLowerCase().trim();
+      if (!q) {
+        renderAdminAppointmentsTable(state.adminAppointments);
+        return;
+      }
+      const filtered = state.adminAppointments.filter(a => 
+        a.client_name.toLowerCase().includes(q) || 
+        a.client_phone.includes(q) || 
+        a.booking_code.toLowerCase().includes(q)
+      );
+      renderAdminAppointmentsTable(filtered);
+    }
+
+    function renderAdminAppointmentsTable(list) {
+      const tbody = document.getElementById('admin-appointments-tbody');
+      if (list.length > 0) {
+        tbody.innerHTML = list.map(app => {
+          return `
+            <tr class="hover:bg-white/[0.02] transition-colors">
+              <td class="p-3 font-bold text-white">${app.start_time} - ${app.end_time}</td>
+              <td class="p-3 font-mono text-gold-400 font-bold">${app.booking_code}</td>
+              <td class="p-3">
+                <div class="font-bold text-white">${app.client_name}</div>
+                <div class="text-slate-400">${app.client_phone}</div>
+                ${app.notes ? `<div class="text-[10px] text-amber-300/80 italic mt-0.5">"${app.notes}"</div>` : ''}
+              </td>
+              <td class="p-3 text-slate-200">${app.service_name}</td>
+              <td class="p-3 text-slate-300">${app.barber_name}</td>
+              <td class="p-3 font-bold text-gold-400">${app.price} RON</td>
+              <td class="p-3">
+                <select onchange="updateStatus(${app.id}, this.value)" class="glass-input rounded-md px-2 py-1 text-xs text-white focus:outline-none focus:border-gold-400">
+                  <option value="confirmed" ${app.status === 'confirmed' ? 'selected' : ''}>Confirmat</option>
+                  <option value="completed" ${app.status === 'completed' ? 'selected' : ''}>Finalizat</option>
+                  <option value="cancelled" ${app.status === 'cancelled' ? 'selected' : ''}>Anulat</option>
+                  <option value="no_show" ${app.status === 'no_show' ? 'selected' : ''}>No-Show</option>
+                </select>
+              </td>
+              <td class="p-3 text-right space-x-1">
+                <button onclick="triggerWaAction('reminder_2h', ${app.id})" title="Reminder 2h" class="p-1.5 rounded-lg bg-dark-800 hover:bg-[#25D366] hover:text-dark-950 text-slate-300 transition-colors">
+                  ⏰ 2h
+                </button>
+                <button onclick="triggerWaAction('reminder_24h', ${app.id})" title="Reminder 24h" class="p-1.5 rounded-lg bg-dark-800 hover:bg-[#25D366] hover:text-dark-950 text-slate-300 transition-colors">
+                  📆 24h
+                </button>
+                <button onclick="triggerWaReview('${app.client_name.replace(/'/g, "\\'")}', '${app.client_phone}', '${app.service_name}')" title="Google Review" class="p-1.5 rounded-lg bg-dark-800 hover:bg-gold-500 hover:text-dark-950 text-gold-400 transition-colors">
+                  ⭐ Review
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } else {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-500">Nu există nicio programare conform filtrelor.</td></tr>`;
+      }
+    }
+
+    async function loadAdminCrm() {
+      const tbody = document.getElementById('admin-crm-tbody');
+      tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">Se încarcă baza de clienți...</td></tr>`;
+
+      try {
+        const res = await fetch('/api/admin/clients');
+        const json = await res.json();
+
+        if (json.status === 'success' && json.data.length > 0) {
+          tbody.innerHTML = json.data.map(cl => {
+            const isLate = cl.needs_recall;
+            return `
+              <tr class="hover:bg-white/[0.02] transition-colors">
+                <td class="p-3 font-bold text-white">${cl.name}</td>
+                <td class="p-3 text-slate-300">${cl.phone}</td>
+                <td class="p-3">
+                  <div class="text-slate-200">${cl.last_visit || 'N/A'}</div>
+                  <div class="text-[10px] ${isLate ? 'text-amber-400 font-bold' : 'text-slate-400'}">${cl.days_ago} zile în urmă</div>
+                </td>
+                <td class="p-3 text-slate-300">${cl.preferred_style || 'Fără stil salvat'}</td>
+                <td class="p-3 font-bold text-gold-400">${cl.visits_count} vizite</td>
+                <td class="p-3">
+                  ${isLate 
+                    ? '<span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/30">⚠️ Necesită Refresh (>21z)</span>' 
+                    : '<span class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 font-semibold">Activ recent</span>'}
+                </td>
+                <td class="p-3 text-right">
+                  <button onclick="triggerWaRecall('${cl.name.replace(/'/g, "\\'")}', '${cl.phone}', ${cl.days_ago})" class="px-2.5 py-1.5 rounded-xl ${isLate ? 'bg-[#25D366] text-dark-950 font-bold shadow-md shadow-emerald-500/20' : 'bg-dark-800 text-slate-300 hover:bg-dark-700'} text-xs flex items-center gap-1 ml-auto">
+                    <span>💬</span>
+                    <span>Re-Engagement WhatsApp</span>
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.error('Error loading CRM:', err);
+      }
+    }
+
+    async function updateStatus(id, newStatus) {
+      try {
+        const res = await fetch(`/api/appointments/${id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (res.ok) {
+          showToast(`Status actualizat la: ${newStatus}`, 'success');
+          loadAdminMetrics();
+        }
+      } catch (err) {
+        console.error('Error updating status:', err);
+      }
+    }
+
+    // --- WHATSAPP ACTIONS ---
+    async function triggerWaAction(actionType, apptId) {
+      const all = getLocalAppointments();
+      const app = all.find(a => a.id == apptId);
+      const cleanPhone = (app?.client_phone || "").replace(/[^0-9]/g, "");
+      let msg = "";
+
+      if (actionType === "reminder_2h") {
+        msg = `Salut ${app?.client_name || ""}! Te așteptăm peste 2 ore la BarberCraft pentru ${app?.service_name || "tuns"}. Dacă intervine ceva, dă-ne un semn. Ne vedem la salon! 💈`;
+      } else if (actionType === "reminder_24h") {
+        msg = `Salut ${app?.client_name || ""}! Îți reamintim că mâine la ora ${app?.start_time || ""} ai programare la BarberCraft (${app?.service_name || "tuns"}). Te rugăm să ne confirmi prezența. Zi excelentă!`;
+      }
+
+      window.open(`https://wa.me/${cleanPhone.startsWith("0") ? "4" + cleanPhone : cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    async function triggerWaReview(clientName, phone, service) {
+      const cleanPhone = (phone || "").replace(/[^0-9]/g, "");
+      const msg = `Salut ${clientName}! Sper că ți-a plăcut cum a ieșit tunsul de azi! 🔥 Mă ajuți enorm cu o recenzie rapidă de 5 stele pe Google Maps: https://maps.google.com/?q=BarberCraft+Bucharest . Durează 20 de secunde și înseamnă mult pentru noi. Mulțumim! 💈`;
+      window.open(`https://wa.me/${cleanPhone.startsWith("0") ? "4" + cleanPhone : cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    async function triggerWaRecall(clientName, phone, daysAgo) {
+      const cleanPhone = (phone || "").replace(/[^0-9]/g, "");
+      const msg = `Salut ${clientName}! ✂️ Au trecut mai bine de 3 săptămâni de la ultimul fade și frizura are nevoie de un refresh pentru weekend. Am deschis locurile pentru săptămâna viitoare. Rezervă-ți scaunul din timp aici: https://nistordaniel06-cpu.github.io/barber-booking/ . Ne vedem la salon!`;
+      window.open(`https://wa.me/${cleanPhone.startsWith("0") ? "4" + cleanPhone : cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function setAdminDateToday() {
+      const today = formatDateIso(new Date());
+      document.getElementById('admin-filter-date').value = today;
+      loadAdminAppointments();
+    }
+
+    function setAdminDateTomorrow() {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      document.getElementById('admin-filter-date').value = formatDateIso(d);
+      loadAdminAppointments();
+    }
+
+    function populateAdminBarberFilter() {
+      const select = document.getElementById('admin-filter-barber');
+      state.barbers.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.innerText = b.name;
+        select.appendChild(opt);
+      });
+    }
+
+    // --- WALK-IN MODAL ---
+    function openWalkInModal() {
+      document.getElementById('walkin-date').value = formatDateIso(new Date());
+      document.getElementById('modal-walkin').classList.remove('hidden');
+    }
+    function closeWalkInModal() {
+      document.getElementById('modal-walkin').classList.add('hidden');
+    }
+
+    function populateWalkinBarbers() {
+      const select = document.getElementById('walkin-barber');
+      select.innerHTML = state.barbers.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+    }
+
+    function populateWalkinServices() {
+      const select = document.getElementById('walkin-service');
+      select.innerHTML = state.services.map(s => `<option value="${s.id}">${s.name} (${s.price} RON)</option>`).join('');
+    }
+
+    async function submitWalkIn() {
+      const name = document.getElementById('walkin-name').value.trim();
+      const phone = document.getElementById('walkin-phone').value.trim();
+      const barberId = parseInt(document.getElementById('walkin-barber').value);
+      const serviceId = parseInt(document.getElementById('walkin-service').value);
+      const dateVal = document.getElementById('walkin-date').value;
+      const timeVal = document.getElementById('walkin-time').value;
+
+      if (!name || !phone) {
+        showToast("Completează numele și telefonul clientului.", "error");
+        return;
+      }
+
+      const payload = {
+        client_name: name,
+        client_phone: phone,
+        barber_id: barberId,
+        service_id: serviceId,
+        appointment_date: dateVal,
+        start_time: timeVal,
+        notes: "Programare Walk-in / Telefon"
+      };
+
+      try {
+        fetch('/api/appointments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(()=>{});
+      } catch (err) {}
+
+      const bCode = "BK-" + Math.floor(1000 + Math.random() * 9000);
+      const bObj = state.barbers.find(b => b.id == barberId) || { name: "Frizer" };
+      const sObj = state.services.find(s => s.id == serviceId) || { name: "Serviciu", price: 80, duration_min: 45 };
+      const endTime = computeEndTimeStr(timeVal, sObj.duration_min);
+
+      const walkinAppt = {
+        id: Date.now(),
+        booking_code: bCode,
+        client_name: name,
+        client_phone: phone,
+        barber_id: barberId,
+        barber_name: bObj.name,
+        service_id: serviceId,
+        service_name: sObj.name,
+        price: sObj.price,
+        appointment_date: dateVal,
+        start_time: timeVal,
+        end_time: endTime,
+        status: "confirmed",
+        notes: "Walk-in / Telefon"
+      };
+
+      const all = getLocalAppointments();
+      all.unshift(walkinAppt);
+      saveLocalAppointments(all);
+
+      closeWalkInModal();
+      loadAdminAppointments();
+      loadAdminMetrics();
+      showToast("Programare walk-in salvată cu succes!", "success");
+    }
+  </script>
+</body>
+</html>
