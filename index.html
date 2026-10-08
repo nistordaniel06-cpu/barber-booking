@@ -19,6 +19,12 @@
 @media(min-width:700px){.app{border-inline:1px solid #28292f}.title{font-size:34px}}
 @media(max-height:690px){.top{height:56px}.content,.view{gap:10px}.hero{padding:17px}.hero h1{font-size:27px}.quick button{min-height:94px}.nav{height:53px}.primary{padding:13px}}
 @media(prefers-reduced-motion:no-preference){.view.active{animation:enter .2s ease-out}@keyframes enter{from{opacity:.65;transform:translateY(5px)}to{opacity:1;transform:none}}}
+
+/* Catalogue / owner cockpit */
+.catalog-tabs{display:flex;overflow-x:auto;gap:7px;scrollbar-width:none;padding:2px 0 11px}.catalog-tabs button{border:1px solid #363942;background:#1b1e26;color:#c1c4cb;border-radius:20px;padding:9px 12px;font-size:11px;white-space:nowrap}.catalog-tabs button.active{background:#e6b943;color:#17140e;border-color:#e6b943;font-weight:800}
+.menu-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.text-action{border:0;background:none;color:#e6b943;font-size:12px;font-weight:800}
+.owner-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.owner-kpis .card{padding:13px}.owner-kpis strong{display:block;font-size:22px;margin:4px 0}.owner-menu{display:grid;gap:9px}.owner-action{display:flex;justify-content:space-between;align-items:center;width:100%;padding:15px;background:#1b1e26;border:1px solid #373940;border-radius:16px;color:white;text-align:left}.owner-action small{color:#a0a5b0;display:block;margin-top:3px}.modal-back{position:fixed;inset:0;background:#000b;z-index:100;display:none;justify-content:center;align-items:flex-end}.modal-back.open{display:flex}.sheet{width:min(100%,560px);height:min(84dvh,780px);background:#181b22;border:1px solid #464349;border-radius:25px 25px 0 0;padding:20px 18px calc(15px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}.sheet .scroll{margin-top:5px}.sheet-top{display:flex;justify-content:space-between;align-items:center}.sheet h2{font-size:20px;margin:0}.status{color:#eac36b;font-size:12px;background:#292315;border:1px solid #5e4920;padding:11px;border-radius:12px}
+@media(min-width:700px){.modal-back{align-items:center}.sheet{border-radius:25px;height:min(85dvh,770px)}}
 </style>
 </head>
 <body>
@@ -33,7 +39,7 @@
   <div style="height:19px"></div>
   <div class="row between"><div class="smalltitle">Cum vrei să rezervi?</div><span class="tag">2 opțiuni</span></div>
   <div class="quick"><button class="card" onclick="instant()"><span class="emoji">⚡</span><div><div class="name">InstantBook</div><div class="sub">Primul loc liber</div></div></button><button class="card" onclick="go('discover')"><span class="emoji">♡</span><div><div class="name">Descoperă frizeri</div><div class="sub">Alege specialistul</div></div></button></div>
-  <div style="height:18px"></div><div class="smalltitle">BARBERCRAFT Studio</div><div class="muted">Calea Victoriei 122, București · Programări 09:00–20:30</div>
+  <div style="height:18px"></div><div class="menu-head"><div class="smalltitle">4MEN Lujerului · demo MERO</div><button class="text-action" onclick="openMenu()">Vezi tot meniul →</button></div><div class="muted">Bd. Iuliu Maniu nr. 57, București · Prețuri publice, orientative</div><div class="card" style="margin-top:10px;padding:12px"><div class="row between"><div><div class="name">Tuns + spălat + aranjat</div><div class="sub">45–60 min · de la 80 lei</div></div><button class="text-action" onclick="openMenu()">Meniu complet</button></div></div>
  </div>
 </section>
 <section class="view" id="discover">
@@ -43,7 +49,7 @@
 </section>
 <section class="view" id="services">
  <div><div class="steps" id="progress1"></div><div class="eyebrow">PASUL 1 / 3</div><h2 class="title">Ce facem astăzi?</h2><p class="muted">Alege serviciul. Poți modifica alegerea oricând.</p></div>
- <div class="scroll" id="servicesList"></div>
+ <div class="catalog-tabs" id="categoryTabs"></div><div class="scroll" id="servicesList"></div>
  <div class="footer"><button class="primary" onclick="toCalendar()">Continuă → <span id="chosenServicePrice"></span></button></div>
 </section>
 <section class="view" id="calendar">
@@ -63,10 +69,26 @@
  <p class="hint">Vom folosi datele furnizate numai pentru gestionarea rezervării. Trimiterea WhatsApp automată nu este încă activă.</p></div>
  <div class="footer"><button class="primary" id="confirm" onclick="confirmBooking()">Confirmă programarea →</button><div class="error" id="bookingError" role="alert"></div></div>
 </section>
+<section class="view" id="owner">
+ <div><div class="eyebrow">SALON OS · OWNER CONSOLE</div><h2 class="title">Control Panel</h2><p class="muted">Spațiul proprietarului · demonstrație fără acces la date private.</p></div>
+ <div class="scroll">
+  <div class="status">Mod previzualizare. Pentru modificări persistente, conectăm autentificarea proprietarului și rolurile din Supabase.</div>
+  <div style="height:12px"></div><div class="owner-kpis"><div class="card"><div class="hint">Servicii în catalog</div><strong id="kpiServices">4</strong><div class="sub">4MEN import preview</div></div><div class="card"><div class="hint">Specialiști vizibili</div><strong id="kpiBarbers">3</strong><div class="sub">MERO public</div></div></div>
+  <div style="height:18px"></div><div class="smalltitle">Administrare salon</div>
+  <div class="owner-menu">
+   <button class="owner-action" onclick="openMenu()"><span><b>✂ Catalog servicii</b><small>Servicii, categorii, prețuri, durate</small></span><span>→</span></button>
+   <button class="owner-action" onclick="openImport()"><span><b>↗ Import salon din MERO</b><small>Previzualizare, verificare, confirmare proprietar</small></span><span>→</span></button>
+   <button class="owner-action" onclick="ownerInfo('Programul echipei')"><span><b>▦ Echipă și orar</b><small>Specialiști, ture, zile libere</small></span><span>→</span></button>
+   <button class="owner-action" onclick="ownerInfo('Agenda și rezervările')"><span><b>◷ Calendar și rezervări</b><small>Google / Apple și disponibilitate</small></span><span>→</span></button>
+   <button class="owner-action" onclick="ownerInfo('WhatsApp Business API')"><span><b>◉ WhatsApp Business</b><small>Mesaje automate și programări prin chat</small></span><span>→</span></button>
+  </div>
+ </div>
+</section>
 <section class="view" id="success"><div class="scroll"><div class="result"><div class="eyebrow">CONFIRMARE SERVER</div><h2>Rezervare confirmată ✓</h2><div id="successText"></div></div></div><div class="footer"><button class="primary" onclick="reset()">Înapoi acasă →</button></div></section>
 </main>
-<nav class="nav" id="nav"><button id="nav-home" class="active" onclick="go('home')"><b>⌂</b>Acasă</button><button id="nav-discover" onclick="go('discover')"><b>♡</b>Descoperă</button><button id="nav-services" onclick="go('services')"><b>✂</b>Rezervă</button></nav>
+<nav class="nav" id="nav"><button id="nav-home" class="active" onclick="go('home')"><b>⌂</b>Acasă</button><button id="nav-discover" onclick="go('discover')"><b>♡</b>Descoperă</button><button id="nav-services" onclick="go('services')"><b>✂</b>Meniu</button><button id="nav-owner" onclick="go('owner')"><b>▦</b>Salon</button></nav>
 </div>
+<div id="sheetBackdrop" class="modal-back" onclick="if(event.target===this)closeSheet()"><div class="sheet"><div class="sheet-top"><h2 id="sheetTitle">Meniu</h2><button class="secondary" onclick="closeSheet()" aria-label="Închide">✕</button></div><div id="sheetBody" class="scroll"></div></div></div>
 <script>
 const api=(window.BARBERCRAFT_BOOKING_API||"").replace(/\/$/,"");
 const shop={name:"BARBERCRAFT",address:"Calea Victoriei 122, București"};
@@ -82,14 +104,15 @@ const fallbackBarbers=[
 {id:1,name:"Alexandru 'Blade' Popa",title:"Master Barber",rating:4.98,experience_years:8,avatar_url:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=700&q=80"},
 {id:2,name:"Vlad Ionescu",title:"Senior Fade & Beard",rating:4.92,experience_years:5,avatar_url:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=80"},
 {id:3,name:"Marius Dan",title:"Creative Stylist",rating:4.88,experience_years:4,avatar_url:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=700&q=80"}];
+let activeCategory="Toate";
 const state={view:"home",services:fallbackServices,barbers:fallbackBarbers,service:1,barber:0,matchIndex:0,date:"",slot:null,slots:[],instant:false,history:[]};
 const el=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function dateISO(d){let y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");return y+"-"+m+"-"+day}
 function addDays(days){const d=new Date();d.setDate(d.getDate()+days);return dateISO(d)}
 async function request(resource,options={},query=""){if(!api)throw Error("Backendul public nu este configurat.");const res=await fetch(api+"?resource="+resource+(query?"&"+query:""),options);const x=await res.json();if(!res.ok||x.status!=="success")throw Error(x.message||"Serviciul nu răspunde.");return x.data}
-async function init(){state.date=addDays(0);try{const data=await request("services");if(Array.isArray(data)&&data.length)state.services=data}catch{}try{const data=await request("barbers");if(Array.isArray(data)&&data.length)state.barbers=data}catch{}renderServices();renderMatch();renderDays();progress();go("home");}
-function go(view){if(state.view!==view){state.history.push(state.view)}state.view=view;document.querySelectorAll(".view").forEach(e=>e.classList.toggle("active",e.id===view));el("back").style.display=(["home","success"].includes(view)?"none":"block");document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.id==="nav-"+view));el("nav").style.display=(["home","discover","services"].includes(view)?"flex":"none");if(view==="services")renderServices();if(view==="calendar"){renderDays();loadSlots()}if(view==="details")renderSummary();}
+async function init(){state.date=addDays(0);try{const data=await request("services");if(Array.isArray(data)&&data.length)state.services=data}catch{}try{const data=await request("barbers");if(Array.isArray(data)&&data.length)state.barbers=data}catch{}renderServices();renderMatch();renderDays();progress();renderOwner();go("home");}
+function go(view){if(state.view!==view){state.history.push(state.view)}state.view=view;document.querySelectorAll(".view").forEach(e=>e.classList.toggle("active",e.id===view));el("back").style.display=(["home","success"].includes(view)?"none":"block");document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.id==="nav-"+view));el("nav").style.display=(["home","discover","services"].includes(view)?"flex":"none");if(view==="services")renderServices();if(view==="calendar"){renderDays();loadSlots()}if(view==="details")renderSummary();if(view==="owner")renderOwner();}
 function back(){const v=state.history.pop()||"home";state.view=v;go(v)}
 function reset(){state.history=[];state.slot=null;state.barber=0;state.instant=false;go("home")}
 function instant(){state.instant=true;state.barber=0;state.slot=null;go("services")}
@@ -97,7 +120,27 @@ function moveMatch(delta){state.matchIndex=(state.matchIndex+delta+state.barbers
 function renderMatch(){const b=state.barbers[state.matchIndex];if(!b)return;el("match").innerHTML='<img loading="lazy" src="'+esc(b.avatar_url)+'" alt="Profil frizer"><span class="cardcount">PROFIL '+(state.matchIndex+1)+' / '+state.barbers.length+'</span><h3>'+esc(b.name)+'</h3><div class="muted">'+esc(b.title||"Frizer")+'</div><span class="tag">★ '+esc(b.rating||"—")+' · '+esc(b.experience_years||"—")+' ani experiență</span>'}
 function chooseMatch(){state.barber=state.barbers[state.matchIndex].id;state.instant=false;go("services")}
 function selectService(id){state.service=id;renderServices()}
-function renderServices(){el("servicesList").innerHTML=state.services.map((s,i)=>'<button class="service '+(s.id===state.service?'sel':'')+'" onclick="selectService('+Number(s.id)+')"><span class="sico">'+(['✂','💈','🪒','♛','⚡','✧','✂'][i%7])+'</span><span class="grow"><span class="name">'+esc(s.name)+'</span><span class="sub">'+esc(s.category)+' · '+Number(s.duration_min)+' min</span></span><span class="price">'+Number(s.price)+' lei '+(s.id===state.service?'✓':'→')+'</span></button>').join("");const s=state.services.find(x=>x.id===state.service);el("chosenServicePrice").textContent=s?"· "+s.price+" lei":""}
+function renderServices(){const cats=["Toate",...new Set(state.services.map(x=>x.category||"Altele"))];el("categoryTabs").innerHTML=cats.map((c,i)=>`<button class="${activeCategory===c?"active":""}" onclick="setCategory(${i})">${esc(c)}</button>`).join("");el("servicesList").innerHTML=state.services.filter(x=>activeCategory==="Toate"||x.category===activeCategory).map((s,i)=>'<button class="service '+(s.id===state.service?'sel':'')+'" onclick="selectService('+Number(s.id)+')"><span class="sico">'+(['✂','💈','🪒','♛','⚡','✧','✂'][i%7])+'</span><span class="grow"><span class="name">'+esc(s.name)+'</span><span class="sub">'+esc(s.category)+' · '+Number(s.duration_min)+' min</span></span><span class="price">'+Number(s.price)+' lei '+(s.id===state.service?'✓':'→')+'</span></button>').join("");const s=state.services.find(x=>x.id===state.service);el("chosenServicePrice").textContent=s?"· "+s.price+" lei":""}
+function setCategory(i){const cats=["Toate",...new Set(state.services.map(x=>x.category||"Altele"))];activeCategory=cats[i]||"Toate";renderServices()}
+function renderOwner(){el("kpiServices").textContent=meroDemo.services.length;el("kpiBarbers").textContent=meroDemo.barbers.length}
+function closeSheet(){el("sheetBackdrop").classList.remove("open");document.body.style.overflow=""}
+function showSheet(title,html){el("sheetTitle").textContent=title;el("sheetBody").innerHTML=html;el("sheetBackdrop").classList.add("open");}
+const meroDemo={
+ name:"4MEN Lujerului",source:"https://mero.ro/p/4men",address:"Bulevardul Iuliu Maniu nr 57, București",
+ services:[
+  {name:"SPALAT + TUNS + ARANJAT",min:45,max:60,price_min:80,price_max:100,category:"Frizerie și barber shop"},
+  {name:"SPALAT + TUNS + BARBĂ + ARANJAT",min:60,max:60,price_min:100,price_max:120,category:"Frizerie și barber shop"},
+  {name:"ARANJAT BARBA",min:20,max:30,price_min:40,price_max:40,category:"Frizerie și barber shop"},
+  {name:"ARANJATUL SPRANCENELOR",min:15,max:15,price_min:30,price_max:30,category:"Aranjat Sprancene"}
+ ],
+ barbers:[{name:"Nistor Daniel",role:"Image Consultant & Barber"},{name:"Stefan Stinga",role:"Specialist"},{name:"Ivan",role:"Specialist"}]
+};
+function meroRow(s){const price=s.price_min===s.price_max?s.price_min+" lei":s.price_min+"–"+s.price_max+" lei";return '<div class="service" style="cursor:default"><span class="sico">✂</span><span class="grow"><span class="name">'+esc(s.name)+'</span><span class="sub">'+esc(s.category)+' · '+s.min+(s.max!==s.min?'–'+s.max:'')+' min</span></span><span class="price">'+price+'</span></div>'}
+function openMenu(){showSheet("Meniu complet · 4MEN",'<p class="muted">4MEN Lujerului · catalog public MERO, pentru exemplificare. Poate fi diferit de meniul actual.</p>'+meroDemo.services.map(meroRow).join('')+'<p class="hint">Alte saloane pot avea zeci de servicii, grupate automat pe categorii.</p>')}
+function ownerInfo(feature){showSheet(feature,'<div class="status">Mod demo: modulul '+esc(feature)+' necesită autentificare de proprietar și endpointuri administrative securizate înainte de activare.</div>')}
+function openImport(){showSheet("Importă salonul din MERO",'<div class="field">Link public MERO<input id="meroURL" type="url" value="https://mero.ro/p/4men" placeholder="https://mero.ro/p/salonul-tau"></div><button class="primary" onclick="previewMero()">Previzualizează importul →</button><div id="meroPreview" style="margin-top:12px"></div><p class="hint">Importăm doar informații publice pe care proprietarul le verifică. Nu copiem clienți, rezervări sau conturi MERO; acestea necesită export oficial sau integrare autorizată.</p>')}
+function previewMero(){const input=el("meroURL").value.trim();let u;try{u=new URL(input);if(u.protocol!=="https:"||u.hostname!=="mero.ro"||!/^\\/p\\/[a-zA-Z0-9_-]+\\/?$/.test(u.pathname))throw Error("URL invalid")}catch{el("meroPreview").innerHTML='<p class="error">Adaugă un link public valid de forma https://mero.ro/p/nume-salon.</p>';return}if(u.pathname.replace(/\\/$/,"")!=="/p/4men"){el("meroPreview").innerHTML='<div class="status">Importul automat pentru alte profiluri necesită un adaptor server autorizat. Acest preview suportă doar profilul 4MEN verificat.</div>';return}el("meroPreview").innerHTML='<div class="notice"><b>'+esc(meroDemo.name)+'</b><br>'+esc(meroDemo.address)+'<br>'+meroDemo.services.length+' servicii · '+meroDemo.barbers.length+' specialiști<br><br>Datele de mai jos sunt o previzualizare, nu au fost salvate în contul salonului.</div><div style="height:10px"></div>'+meroDemo.services.map(meroRow).join('')+'<button class="secondary" style="width:100%" onclick="exportMero()">Descarcă fișier JSON pentru verificare</button>'}
+function exportMero(){const content=JSON.stringify({...meroDemo,source_type:"public_preview",imported_at:new Date().toISOString()},null,2);const blob=new Blob([content],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="4men-mero-import-preview.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function toCalendar(){state.slot=null;go("calendar")}
 function renderDays(){let html="";for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()+i);const iso=dateISO(d);const label=i===0?"Azi":i===1?"Mâine":new Intl.DateTimeFormat("ro-RO",{weekday:"short"}).format(d);html+='<button class="chip '+(state.date===iso?'active':'')+'" onclick="chooseDate(\''+iso+'\')">'+esc(label)+' '+d.getDate()+'</button>';}el("days").innerHTML=html;el("barberCaption").textContent=state.barber?("Specialist: "+(state.barbers.find(x=>x.id===state.barber)?.name||"Selectat")):"Oricare disponibil · Alocare automată";}
 function chooseDate(iso){state.date=iso;state.slot=null;renderDays();loadSlots()}
