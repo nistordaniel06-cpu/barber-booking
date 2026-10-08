@@ -4,7 +4,7 @@ const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SE
 const origin = Deno.env.get("BOOKING_ORIGIN") || "https://nistordaniel06-cpu.github.io";
 const cors = { "Access-Control-Allow-Origin": origin, "Access-Control-Allow-Methods": "GET,POST,OPTIONS", "Access-Control-Allow-Headers": "Content-Type, apikey, authorization", "Vary": "Origin", "Content-Type": "application/json" };
 function response(payload: unknown,status=200) { return new Response(JSON.stringify(payload),{status,headers:cors}); }
-function clock(t:string) { const m=/^([01]\\d|2[0-3]):([0-5]\\d)$/.exec(t); return m?Number(m[1])*60+Number(m[2]):NaN; }
+function clock(t:string) { const m=/^([01]\d|2[0-3]):([0-5]\d)$/.exec(t); return m?Number(m[1])*60+Number(m[2]):NaN; }
 function hm(x:number) { return String(Math.floor(x/60)).padStart(2,"0")+":"+String(x%60).padStart(2,"0"); }
 const slotTimes=["09:00","09:45","10:30","11:15","12:00","13:00","13:45","14:30","15:15","16:00","16:45","17:30","18:15","19:00","19:45"];
 Deno.serve(async req=>{
@@ -22,7 +22,7 @@ Deno.serve(async req=>{
  }
  if(req.method==="GET" && url.searchParams.get("resource")==="slots"){
   const date=url.searchParams.get("date")||"", serviceId=Number(url.searchParams.get("service_id")), barberId=Number(url.searchParams.get("barber_id")||0);
-  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(date)||!Number.isInteger(serviceId)||!Number.isInteger(barberId)) return response({status:"error",message:"Invalid query"},400);
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isInteger(serviceId)||!Number.isInteger(barberId)) return response({status:"error",message:"Invalid query"},400);
   const [s,b,a]=await Promise.all([
    db.from("bc_services").select("duration_min").eq("id",serviceId).eq("is_active",true).single(),
    db.from("bc_barbers").select("id").eq("is_active",true).order("id"),
@@ -43,9 +43,9 @@ Deno.serve(async req=>{
   const raw=await req.text();
   if(raw.length>4000) return response({status:"error",message:"Payload too large"},413);
   let x;try{x=JSON.parse(raw);}catch{return response({status:"error",message:"Invalid JSON"},400);}
-  const phone=String(x.client_phone||"").replace(/[\\s()-]/g,"");
+  const phone=String(x.client_phone||"").replace(/[\s()-]/g,"");
   const e164=phone.startsWith("0")?"+40"+phone.slice(1):phone.startsWith("40")?"+"+phone:phone;
-  if(!/^\\+[1-9]\\d{7,14}$/.test(e164)||!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(x.appointment_date||""))||!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(String(x.start_time||""))||
+  if(!/^\+[1-9]\d{7,14}$/.test(e164)||!/^\d{4}-\d{2}-\d{2}$/.test(String(x.appointment_date||""))||!/^([01]\d|2[0-3]):[0-5]\d$/.test(String(x.start_time||""))||
      typeof x.client_name!=="string"||x.client_name.trim().length<2||x.client_name.length>120||
      (x.client_email && (typeof x.client_email!=="string"||x.client_email.length>180))||
      (x.notes && (typeof x.notes!=="string"||x.notes.length>500)))
