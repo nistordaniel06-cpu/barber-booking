@@ -15,7 +15,7 @@ create table if not exists public.bc_appointments (
  id bigint generated always as identity primary key,
  booking_code text not null unique default ('BC-' || upper(substr(replace(gen_random_uuid()::text,'-',''),1,10))),
  client_name text not null check (char_length(client_name) between 2 and 120),
- client_phone text not null check (client_phone ~ '^\\+[1-9][0-9]{7,14}$'),
+ client_phone text not null check (client_phone ~ '^\+[1-9][0-9]{7,14}$'),
  client_email text,
  barber_id integer not null references public.bc_barbers(id),
  service_id integer not null references public.bc_services(id),
@@ -62,9 +62,9 @@ declare
  s record; b record; v_end time; v_barber integer; v_booking public.bc_appointments%rowtype;
 begin
  if p_name is null or length(trim(p_name)) not between 2 and 120
-    or p_phone !~ '^\\+[1-9][0-9]{7,14}$'
+    or p_phone !~ '^\+[1-9][0-9]{7,14}$'
     or length(coalesce(p_notes,'')) > 500
-    or (p_email is not null and (length(p_email)>180 or p_email !~ '^[^@[:space:]]+@[^@[:space:]]+\\.[^@[:space:]]+$')) then
+    or (p_email is not null and (length(p_email)>180 or p_email !~ '^[^@[:space:]]+@[^@[:space:]]+\.[^@[:space:]]+$')) then
    raise exception 'INVALID_INPUT' using errcode = '22023';
  end if;
  select * into s from public.bc_services where id=p_service and is_active=true;
