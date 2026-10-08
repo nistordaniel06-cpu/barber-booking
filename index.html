@@ -99,7 +99,28 @@
     .animate-slide-up {
       animation: slideUp 0.25s ease-out forwards;
     }
-  </style>
+  @media(max-width:640px){
+ html,body{max-width:100%;overflow-x:hidden}
+ body{padding-bottom:0!important}
+ header .max-w-6xl{height:56px!important;padding-inline:10px!important;gap:7px}
+ header .max-w-6xl>div:first-child{gap:6px;min-width:0}
+ header .max-w-6xl>div:first-child>div:first-child{width:32px;height:32px;flex-shrink:0}
+ header .font-extrabold{font-size:13px!important}
+ #shop-open-badge{display:none!important}
+ #nav-book-btn,#nav-admin-btn{padding:7px!important;font-size:11px!important}
+ #nav-book-btn span,#nav-admin-btn span{white-space:nowrap}
+ body:has(#view-booking:not(.hidden)) main{height:calc(100dvh - 56px);overflow:hidden;padding:8px 12px 12px!important}
+ #view-booking{height:100%;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+ #step-1-content:not(.hidden),#step-2-content:not(.hidden),#step-3-content:not(.hidden),#step-4-content:not(.hidden){flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding-bottom:calc(15px + env(safe-area-inset-bottom))}
+ #step-1-content::-webkit-scrollbar,#step-2-content::-webkit-scrollbar,#step-3-content::-webkit-scrollbar,#step-4-content::-webkit-scrollbar{display:none}
+ #services-grid{display:grid;grid-template-columns:1fr!important;gap:8px!important}
+ #services-grid>div{padding:11px 13px!important}
+ #step-2-content .glass-card{padding:12px!important}
+ #step-2-content img{max-width:58px!important;max-height:58px!important;object-fit:cover}
+ .animate-slide-up{animation-duration:180ms}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body class="bg-dark-950 text-slate-100 min-h-screen font-sans selection:bg-gold-500 selection:text-dark-950 antialiased pb-20">
 
@@ -728,8 +749,18 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script src="booking-config.js"></script>
+<!-- JAVASCRIPT APPLICATION LOGIC -->
   <script>
+    const BOOKING_API=(window.BARBERCRAFT_BOOKING_API||"").replace(/\/$/,"");
+    async function bookingRequest(resource, options={}, query="") {
+      if(!BOOKING_API) throw new Error("Backendul rezervărilor nu este configurat.");
+      const u=BOOKING_API+"?resource="+encodeURIComponent(resource)+(query?"&"+query:"");
+      const res=await fetch(u,options);
+      const json=await res.json();
+      if(!res.ok || json.status!=="success") throw new Error(json.message||"Server indisponibil.");
+      return json.data;
+    }
     // --- GLOBAL STATE ---
     const state = {
       services: [],
@@ -761,6 +792,7 @@
       await loadShopInfo();
       await loadServices();
       await loadBarbers();
+      if(!BOOKING_API) showToast('Mod demo: rezervările reale sunt dezactivate până la conectarea backendului.','info');
     });
 
     function formatDateIso(d) {
@@ -808,7 +840,8 @@
 
     async function loadServices() {
       try {
-        const res = await fetch('/api/services');
+        if(!BOOKING_API) throw new Error('demo');
+        const res = await fetch(BOOKING_API+'?resource=services');
         const json = await res.json();
         if (json.status === 'success') {
           state.services = json.data;
@@ -826,7 +859,8 @@
 
     async function loadBarbers() {
       try {
-        const res = await fetch('/api/barbers');
+        if(!BOOKING_API) throw new Error('demo');
+        const res = await fetch(BOOKING_API+'?resource=barbers');
         const json = await res.json();
         if (json.status === 'success') {
           state.barbers = json.data;
@@ -1042,34 +1076,23 @@
 
     // --- TIME SLOTS ENGINE ---
     async function loadSlots() {
-      const loading = document.getElementById('slots-loading');
-      const container = document.getElementById('slots-container');
-      const noticeBanner = document.getElementById('date-notice-banner');
-      
+      const loading=document.getElementById('slots-loading');
+      const container=document.getElementById('slots-container');
       loading.classList.remove('hidden');
       container.classList.add('hidden');
-
-      const sId = state.selectedService ? state.selectedService.id : 1;
-      const bId = state.selectedBarber ? state.selectedBarber.id : 0;
-
       try {
-        const res = await fetch(`/api/slots?date=${state.selectedDate}&barber_id=${bId}&service_id=${sId}`);
-        const json = await res.json();
-        if (json.status === 'success') {
-          loading.classList.add('hidden');
-          container.classList.remove('hidden');
-          renderSlotsGrid(json.slots);
-          return;
-        }
-      } catch (err) {
-        // Fallback to local mock slots engine
+        const q=new URLSearchParams({date:state.selectedDate,
+          barber_id:String(state.selectedBarber?.id||0),service_id:String(state.selectedService?.id||0)});
+        renderSlotsGrid(await bookingRequest('slots',{},q.toString()));
+      } catch(err) {
+        state.selectedSlot=null;
+        document.getElementById('slot-selected-action-bar').classList.add('hidden');
+        renderSlotsGrid([]);
+        showToast(err.message||'Nu putem verifica disponibilitatea.','error');
+      } finally {
+        loading.classList.add('hidden');
+        container.classList.remove('hidden');
       }
-      
-      const dur = state.selectedService ? state.selectedService.duration_min : 45;
-      const mockSlots = generateMockSlots(state.selectedDate, dur, bId);
-      loading.classList.add('hidden');
-      container.classList.remove('hidden');
-      renderSlotsGrid(mockSlots);
     }
 
     function renderSlotsGrid(slots) {
@@ -1195,94 +1218,30 @@
 
     // --- SUBMIT APPOINTMENT ---
     async function submitBooking() {
-      const name = document.getElementById('client-name').value.trim();
-      const phone = document.getElementById('client-phone').value.trim();
-      const email = document.getElementById('client-email').value.trim();
-      const notes = document.getElementById('client-notes').value.trim();
-
-      if (!name || name.length < 2) {
-        showToast("Te rugăm să introduci numele și prenumele.", "error");
-        document.getElementById('client-name').focus();
-        return;
+      const name=document.getElementById('client-name').value.trim();
+      const phone=document.getElementById('client-phone').value.trim();
+      const email=document.getElementById('client-email').value.trim();
+      const notes=document.getElementById('client-notes').value.trim();
+      if(name.length<2||phone.replace(/\D/g,'').length<9) {
+        showToast('Completează numele și telefonul valid.','error'); return;
       }
-      if (!phone || phone.length < 7) {
-        showToast("Te rugăm să introduci un număr de telefon valid.", "error");
-        document.getElementById('client-phone').focus();
-        return;
-      }
-
-      const btn = document.getElementById('btn-submit-booking');
-      btn.disabled = true;
-      btn.innerHTML = `<div class="w-4 h-4 border-2 border-dark-950 border-t-transparent rounded-full animate-spin"></div><span>Se procesează rezervarea...</span>`;
-
-      const payload = {
-        client_name: name,
-        client_phone: phone,
-        client_email: email,
-        barber_id: state.selectedBarber.id,
-        service_id: state.selectedService.id,
-        appointment_date: state.selectedDate,
-        start_time: state.selectedSlot.start_time,
-        notes: notes
-      };
-
+      const btn=document.getElementById('btn-submit-booking');
+      btn.disabled=true;
+      btn.textContent='Se confirmă rezervarea...';
       try {
-        let successData = null;
-        try {
-          const res = await fetch('/api/appointments', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          const json = await res.json();
-          if (res.ok && json.status === 'success') {
-            successData = json.data;
-          }
-        } catch (e) {}
-
-        if (!successData) {
-          // Local fallback creation
-          const bCode = "BK-" + Math.floor(1000 + Math.random() * 9000);
-          const endTime = computeEndTimeStr(state.selectedSlot.start_time, state.selectedService.duration_min);
-          const bName = state.selectedBarber.id ? state.selectedBarber.name : "Oricare Disponibil";
-
-          successData = {
-            id: Date.now(),
-            booking_code: bCode,
-            client_name: name,
-            client_phone: phone,
-            client_email: email,
-            barber_id: state.selectedBarber.id || 1,
-            barber_name: bName,
-            service_id: state.selectedService.id,
-            service_name: state.selectedService.name,
-            price: state.selectedService.price,
-            appointment_date: state.selectedDate,
-            start_time: state.selectedSlot.start_time,
-            end_time: endTime,
-            status: "confirmed",
-            notes: notes,
-            shop_whatsapp: {
-              url: `https://wa.me/40722000111?text=${encodeURIComponent(`Salut BarberCraft! Vă trimit confirmarea rezervării mele:\n- Cod: ${bCode}\n- Client: ${name} (${phone})\n- Serviciu: ${state.selectedService.name}\n- Frizer: ${bName}\n- Data: ${state.selectedDate}, ora ${state.selectedSlot.start_time}.\nNe vedem la salon!`)}`
-            },
-            google_calendar_url: `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Programare ${state.selectedService.name} - BarberCraft`)}&dates=${state.selectedDate.replace(/-/g, "")}T${state.selectedSlot.start_time.replace(":", "")}00/${state.selectedDate.replace(/-/g, "")}T${endTime.replace(":", "")}00&details=${encodeURIComponent(`Programare confirmată la BarberCraft cu ${bName}. Cod: ${bCode}`)}&location=${encodeURIComponent(`Calea Victoriei 122, București`)}`
-          };
-
-          // Save to localStorage
-          const allAppts = JSON.parse(localStorage.getItem("barbercraft_appointments") || "[]");
-          allAppts.unshift(successData);
-          localStorage.setItem("barbercraft_appointments", JSON.stringify(allAppts));
-        }
-
-        btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i><span>Confirmă Rezervarea Online</span>`;
-        if (window.lucide) lucide.createIcons();
-
-        showToast("Programare confirmată!", "success");
-        showSuccessScreen(successData);
-      } catch (err) {
-        btn.disabled = false;
-        console.error(err);
+        const data=await bookingRequest('appointments',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({client_name:name,client_phone:phone,client_email:email,
+            barber_id:state.selectedBarber.id,service_id:state.selectedService.id,
+            appointment_date:state.selectedDate,start_time:state.selectedSlot.start_time,notes})});
+        showToast('Programare confirmată în sistem!','success');
+        showSuccessScreen(data);
+      } catch(err) {
+        showToast(err.message||'Rezervarea NU a fost salvată.','error');
+        await loadSlots();
+      } finally {
+        btn.disabled=false;
+        btn.textContent='Confirmă Rezervarea Online';
       }
     }
 
@@ -1291,10 +1250,7 @@
       document.getElementById('step-5-success').classList.remove('hidden');
 
       document.getElementById('success-code').innerText = data.booking_code;
-      document.getElementById('success-client-info').innerHTML = `
-        <strong>${data.client_name}</strong><br>
-        <span>${data.client_phone}</span>
-      `;
+      document.getElementById('success-client-info').textContent = data.client_name+' · '+data.client_phone;
       document.getElementById('success-barber').innerText = data.barber_name;
       document.getElementById('success-service').innerText = `${data.service_name} (${data.price} RON)`;
       document.getElementById('success-date').innerText = data.appointment_date;
@@ -1626,66 +1582,20 @@
     }
 
     async function submitWalkIn() {
-      const name = document.getElementById('walkin-name').value.trim();
-      const phone = document.getElementById('walkin-phone').value.trim();
-      const barberId = parseInt(document.getElementById('walkin-barber').value);
-      const serviceId = parseInt(document.getElementById('walkin-service').value);
-      const dateVal = document.getElementById('walkin-date').value;
-      const timeVal = document.getElementById('walkin-time').value;
-
-      if (!name || !phone) {
-        showToast("Completează numele și telefonul clientului.", "error");
-        return;
-      }
-
-      const payload = {
-        client_name: name,
-        client_phone: phone,
-        barber_id: barberId,
-        service_id: serviceId,
-        appointment_date: dateVal,
-        start_time: timeVal,
-        notes: "Programare Walk-in / Telefon"
-      };
-
+      const name=document.getElementById('walkin-name').value.trim();
+      const phone=document.getElementById('walkin-phone').value.trim();
+      const barber_id=Number(document.getElementById('walkin-barber').value);
+      const service_id=Number(document.getElementById('walkin-service').value);
+      const appointment_date=document.getElementById('walkin-date').value;
+      const start_time=document.getElementById('walkin-time').value;
       try {
-        fetch('/api/appointments', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }).catch(()=>{});
-      } catch (err) {}
-
-      const bCode = "BK-" + Math.floor(1000 + Math.random() * 9000);
-      const bObj = state.barbers.find(b => b.id == barberId) || { name: "Frizer" };
-      const sObj = state.services.find(s => s.id == serviceId) || { name: "Serviciu", price: 80, duration_min: 45 };
-      const endTime = computeEndTimeStr(timeVal, sObj.duration_min);
-
-      const walkinAppt = {
-        id: Date.now(),
-        booking_code: bCode,
-        client_name: name,
-        client_phone: phone,
-        barber_id: barberId,
-        barber_name: bObj.name,
-        service_id: serviceId,
-        service_name: sObj.name,
-        price: sObj.price,
-        appointment_date: dateVal,
-        start_time: timeVal,
-        end_time: endTime,
-        status: "confirmed",
-        notes: "Walk-in / Telefon"
-      };
-
-      const all = getLocalAppointments();
-      all.unshift(walkinAppt);
-      saveLocalAppointments(all);
-
-      closeWalkInModal();
-      loadAdminAppointments();
-      loadAdminMetrics();
-      showToast("Programare walk-in salvată cu succes!", "success");
+        await bookingRequest('appointments',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({client_name:name,client_phone:phone,barber_id,service_id,
+            appointment_date,start_time,notes:'Walk-in / Telefon'})});
+        closeWalkInModal();
+        showToast('Programare salvată în sistem.','success');
+      } catch(err){showToast(err.message||'Programarea nu a fost salvată.','error');}
     }
   </script>
 </body>
