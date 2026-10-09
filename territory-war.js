@@ -1,4 +1,4 @@
-/* BARBERCRAFT Territory War — pure client-side preview helpers.
+/* BARBERCRAFT Bătălia Zonelor — pure client-side preview helpers.
    Authoritative scoring, settlement, budgets and awards always run in Supabase. */
 (function(root){
  "use strict";
@@ -32,7 +32,7 @@
   const lines=["Salut! Vreau să verific o programare prin BARBERCRAFT.",
    "Salon: "+clean(salonName||"Salon"),"Frizer: "+clean(barberName||"La alegere"),
    "Client: "+clean(clientName),"Serviciu: "+clean(service),"Data și ora: "+clean(when)];
-  if(vipTitle)lines.push("🏆 Statut Territory War: "+clean(vipTitle)+" (verificare în aplicație)");
+  if(vipTitle)lines.push("🏆 Statut Bătălia Zonelor: "+clean(vipTitle)+" (verificare în aplicație)");
   if(upgrade)lines.push("🎁 Upgrade gratuit disponibil spre confirmare: "+clean(upgrade)+".");
   lines.push("Te rog să-mi confirmi disponibilitatea și eventualele beneficii.");
   return lines.join("\n");
