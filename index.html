@@ -60,7 +60,7 @@ function renderReview(){const rows=[["Salon","4MEN Lujerului"],["Serviciu",state
 $("continueBtn").addEventListener("click",()=>{if(!state.time){alert("Alege mai întâi o oră.");return;}go("confirm");});
 $("finalBtn").addEventListener("click",()=>{$("bookingStatus").textContent="Disponibilitatea reală nu poate fi verificată încă: API-ul de rezervări nu este conectat. Nu s-a creat nicio programare.";});
 $("infoBtn").onclick=() => alert("BARBERCRAFT · Preview UI. Nu sunt încă activate rezervările reale.");
-$("profileBtn").onclick=() => alert("Profilul de client va fi disponibil după integrarea autentificării.");
+
 $("search").addEventListener("input",e=>{$("salongrid").style.display=/4men|frizer|salon|tuns|barb/i.test(e.target.value)||!e.target.value?"grid":"none";});
 renderBarbers();renderServices();renderBooking();
 
@@ -68,7 +68,7 @@ const getTheme=()=>{try{return localStorage.getItem("bc-theme")}catch{return nul
 function theme(mode){document.documentElement.dataset.theme=mode;$("themeBtn").textContent=mode==="dark"?"☀":"☾";try{localStorage.setItem("bc-theme",mode)}catch{}}
 theme(getTheme()|| (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
 $("themeBtn").onclick=()=>theme(document.documentElement.dataset.theme==="dark"?"light":"dark");
-function calendarTimes(){if(!state.date||!state.time)return null;const start=new Date(state.date+"T"+state.time+":00+03:00"); // local wall-clock for preview; timezone handled in calendar links
+function calendarTimes(){if(!state.date||!state.time)return null;// Calendar export remains a tentative preview event in Bucharest timezone.
 const [hr,min]=state.time.split(":").map(Number);const end=new Date(Date.UTC(Number(state.date.slice(0,4)),Number(state.date.slice(5,7))-1,Number(state.date.slice(8,10)),hr,min+state.service.duration));
 const fmt=(d)=>d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
 const startWall=state.date.replace(/-/g,"")+"T"+state.time.replace(":","")+"00";
