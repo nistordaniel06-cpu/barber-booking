@@ -97,7 +97,7 @@ button{color:inherit}
 <section id="account" class="view"><button class="smalllink" data-go="home">‹ Înapoi</button><div class="eyebrow">Cont personal</div><h1 class="heading">Cont de client</h1><p class="sub">Programează-te mai ușor, păstrează rezervările și revino la frizerul preferat. Acesta este contul tău de client.</p><div class="onboard" id="accountGuest"><label class="formlabel">E-mail<input class="formfield" type="email" id="authEmail" autocomplete="email" placeholder="email@exemplu.ro"/></label><label class="formlabel">Parolă (minimum 8 caractere)<span class="passwordWrap"><input class="formfield" type="password" id="authPassword" autocomplete="current-password" minlength="8" placeholder="••••••••"/><button type="button" class="eye" id="showClientPassword" aria-label="Arată parola" aria-pressed="false">◉</button></span></label><button class="primary" id="loginBtn">Autentificare</button><button class="secondary" id="signupBtn">Creează cont de client</button><button class="smalllink" id="resendSignupBtn" type="button">↻ Retrimite e-mailul de confirmare</button><p class="helptext">Acesta este exclusiv contul de client. Conturile profesionale și de administrator sunt separate.</p></div><div class="onboard" id="accountUser" hidden><div class="notice" id="accountIdentity"></div><section class="bcAvatarEditor"><strong>Avatarul meu</strong><p>Fotografia apare în bara de sus în locul etichetei CLIENT.</p><label class="bcAvatarPick">Schimbă fotografia <input type="file" id="clientAvatarFile" accept="image/jpeg,image/png,image/webp" aria-label="Încarcă o fotografie avatar"></label><p id="clientAvatarStatus" class="helptext" role="status"></p></section><div class="bcWallet"><h3>Portofel BARBERCRAFT</h3><div id="clientRewardPreview" class="helptext">Se verifică punctele și beneficiile...</div><a class="walletLink" style="margin-right:7px" href="./passport.html">♛ Barber Passport · Vizite & recompense ↗</a></div><p class="helptext">Rezervările și plățile confirmate vor apărea aici când sunt conectate la sistemul real.</p><button class="secondary" id="logoutBtn">Deconectare</button></div><p id="authStatus" class="helptext" role="status"></p></section>
 <section id="confirm" class="view"><button class="smalllink" data-go="booking">‹ Modifică selecția</button><div class="successicon">✓</div><h1 class="heading" style="text-align:center">Cererea ta e pregătită!</h1><p class="sub" style="text-align:center">Verifică detaliile înainte de trimitere.</p><div class="reviewbox" id="review"></div><div class="whatsapp">◉ &nbsp; Programatorul WhatsApp automat este în configurare. Poți pregăti și distribui cererea, fără confirmare automată.</div><div class="actionlist"><button id="googleCalendarBtn">▦ Google Calendar</button><button id="appleCalendarBtn">▦ Apple / iOS Calendar</button><button id="specialistCalendarBtn">▦ Calendar specialist</button><button id="whatsappBtn">◉ Cerere WhatsApp</button></div><div class="notice">Acesta este un preview al aplicației. Programarea nu este confirmată și nu este trimisă către salon până la conectarea și testarea API-ului de rezervări.</div><div class="actionbar"><button class="primary" id="finalBtn">Verifică disponibilitatea</button><div class="nudge" id="bookingStatus" role="status">Mod demonstrație · nicio rezervare nu a fost creată</div></div></section>
 </main>
-<nav class="bottom" aria-label="Navigație"><button class="nav selected" data-go="home"><span class="symbol">⌂</span>Descoperă</button><button class="nav" data-go="booking"><span class="symbol">▦</span>Rezervări</button><button class="nav" data-go="salon"><span class="symbol">♡</span>Favorite</button><button class="nav" data-go="account"><span class="symbol">♙</span>Contul meu</button></nav>
+<nav class="bottom" aria-label="Navigație"><button class="nav selected" data-go="home"><span class="symbol">⌂</span>Descoperă</button><button class="nav" data-go="booking"><span class="symbol">▦</span>Rezervări</button><button class="nav" data-go="salon"><span class="symbol bcFavoriteHeart">♥</span>Favorite</button><button class="nav" data-go="account"><span class="symbol">♙</span>Contul meu</button></nav>
 </div>
 <script>
 "use strict";
@@ -351,18 +351,18 @@ let lastAvatarPath=null,avatarLoading=0;
 async function displayClientAvatar(){
  const head=$("clientHeaderAvatar");if(!head)return;
  const stamp=++avatarLoading;
- if(!currentUser){head.replaceChildren(document.createTextNode("CLIENT"));head.classList.remove("hasPhoto");return}
+ if(!currentUser){head.replaceChildren(document.createTextNode("C."));head.classList.remove("hasPhoto");return}
  const {data:profile}=await authClient.from("bc_profiles").select("display_name,avatar_path").eq("user_id",currentUser.id).maybeSingle();
  if(stamp!==avatarLoading||!currentUser)return;
  head.replaceChildren();lastAvatarPath=profile?.avatar_path||null;
  if(profile?.avatar_path&&profile.avatar_path.startsWith(currentUser.id+"/")){
   const img=document.createElement("img");img.alt="";
   img.src=authClient.storage.from("bc-client-avatars").getPublicUrl(profile.avatar_path).data.publicUrl;
-  img.onerror=()=>{head.replaceChildren(document.createTextNode((profile.display_name||"C").charAt(0).toUpperCase()))};
+  img.onerror=()=>{head.replaceChildren(document.createTextNode((profile.display_name||"Client").trim().charAt(0).toLocaleUpperCase("ro-RO")+"."))};
   head.classList.add("hasPhoto");head.append(img);
  }else{
   head.classList.remove("hasPhoto");
-  head.textContent=(profile?.display_name||currentUser.email||"C").trim().charAt(0).toUpperCase();
+  head.textContent=(profile?.display_name||currentUser.email?.split("@")[0]||"Client").trim().charAt(0).toLocaleUpperCase("ro-RO")+".";
  }
 }
 $("clientAvatarFile").addEventListener("change",async e=>{
