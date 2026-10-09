@@ -89,5 +89,5 @@ assert.equal(Object.keys(result[1].p_prices).length,0,"Prices are unchanged");
 assert.match(source,/apply\.onclick=async\(\)=>\{[\s\S]*?await save\.onclick\(\)/,"Salon repeat automatically invokes Save");
 const migration=fs.readFileSync("supabase/migrations/20261010_scope_pro_working_hours_to_salon.sql","utf8");
 assert.match(migration,/public\.bc_can_manage_pro_hours/);
-assert.doesNotMatch(migration,/m\.salon_id\s*=\s*m\.salon_id/);
+assert.doesNotMatch(migration.split("\n").filter(line=>!line.trimStart().startsWith("--")).join("\n"),/m\.salon_id\s*=\s*m\.salon_id/);
 console.log("PASS: specialist repeat changes selected hours, keeps weekend closed, explicitly opens days off, saves through real RPC");
