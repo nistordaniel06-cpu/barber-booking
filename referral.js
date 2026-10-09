@@ -36,7 +36,7 @@ async function draw(){
   }
  }
  $("refAuth").hidden=!!user;$("refOwner").hidden=!user;
- if(!user){status("Intră în cont pentru a activa invitația sau a crea linkuri.");return}
+ if(!user){if(!$("refStatus").textContent.includes("Acesta este un cont"))status("Intră în cont pentru a activa invitația sau a crea linkuri.");return}
  const [state,access]=await Promise.all([call("bc_referral_my_status",{}),active.rpc("bc_my_professional_access")]);
  staff=access.data?.filter(x=>["owner","manager"].includes(x.member_role))||[];
  const sel=$("refSalon");sel.replaceChildren();
@@ -89,7 +89,7 @@ $("refLogin").onsubmit=async e=>{
  const email=f.elements.email.value.trim(),password=f.elements.password.value;
  const redirect=new URL(location.href);redirect.hash="";
  const {data,error}=kind==="signup"?
-  await target.auth.signUp({email,password,options:{emailRedirectTo:redirect.href}}):
+  await target.auth.signUp({email,password,options:{emailRedirectTo:redirect.href,data:{barbercraft_account_type:scope==="pro"?"professional":"client"}}}):
   await target.auth.signInWithPassword({email,password});
  if(error){status(error.message);return}
  if(kind==="signup"&&!data.session){status("Verifică e-mailul pentru activarea contului, apoi revino pe același link.");return}
