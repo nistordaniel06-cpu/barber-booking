@@ -35,7 +35,7 @@ assert.ok(booking.includes("signInWithPassword"),"Clients can log in");
 assert.ok(booking.includes("auth.signUp"),"Clients can register");
 assert.ok(booking.includes("CLIENT")||booking.includes("contului"),"Awaiting approval is explained");
 assert.ok(owner.includes("bc_catalog_booking_toggle"),"Owner controls public reservations");
-assert.ok(approvals.includes("AFTER INSERT ON auth.users"),"New clients enter pending review");
+assert.ok(approvals.includes("after insert on auth.users"),"New clients enter pending review");
 assert.ok(approvals.includes("on conflict(user_id) do nothing"),"Existing accounts preserved");
 assert.ok(approvals.includes("CLIENT_NOT_APPROVED"),"Pending clients cannot confirm public reservations");
 assert.ok(approvals.includes("revoke all on function public.bc_catalog_booking_create"),"Anonymous cannot call public booking");
