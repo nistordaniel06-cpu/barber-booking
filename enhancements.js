@@ -14,10 +14,6 @@ if(label){
  selector.type="button";selector.id="bcLocationTitle";
  selector.setAttribute("aria-label","Selectează orașul");
  function refreshTitle(){
-   if(city&&!city.dataset.bcInitialCity&&[...city.options].some(o=>o.value==="București")){
-    city.dataset.bcInitialCity="1";
-    if(!city.value){city.value="București";city.dispatchEvent(new Event("change",{bubbles:true}))}
-   }
    selector.textContent="⌖  "+(city?.value||"Toată România")+"  ⌄";
   }
  refreshTitle();label.append(selector);
