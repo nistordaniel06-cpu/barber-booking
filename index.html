@@ -176,7 +176,7 @@ function renderSearch(){
 window.BCRefreshSearch=renderSearch;
 async function loadCatalog(){
  if(!window.supabase||!window.BARBERCRAFT_SUPABASE_URL){$("salongrid").textContent="Catalogul nu este configurat momentan.";return;}
- try{const api=window.BCAuthClient("client");const {data,error}=await api.from("bc_public_salon_catalog").select("id,salon_id,name,address,services,rating,review_count,city,county,sector,description,cover_image_url,explore_cover_path,public_booking_enabled,phone,website").eq("visibility","listed").limit(100);if(error)throw error;const seen=new Set();catalogSalons=(data||[]).map(s=>{
+ try{const api=window.BCAuthClient("client");const {data,error}=await api.from("bc_public_salon_catalog").select("id,salon_id,name,address,services,rating,review_count,city,county,sector,description,cover_image_url,explore_cover_path,public_booking_enabled,phone,website,geo_lat,geo_lng").eq("visibility","listed").limit(300);if(error)throw error;const seen=new Set();catalogSalons=(data||[]).map(s=>{
  if(!s.cover_image_url&&typeof s.explore_cover_path==="string"&&
  /^[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png|webp)$/i.test(s.explore_cover_path))
   s.cover_image_url=api.storage.from("bc-explore-images").getPublicUrl(s.explore_cover_path).data.publicUrl;
