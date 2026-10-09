@@ -164,7 +164,8 @@ async function loadBarberDetails(id,mine,target){
   if(mine)card.append(btn("Șterge",async()=>{
    if(!confirm("Ștergi definitiv fotografia publică?"))return;
    try{const path=await rpc("bc_social_barber_portfolio_delete",{p_id:photo.id});
-    if(path)await sb.storage.from("bc-barber-portfolio").remove([path]);await loadBarberDetails(id,true);
+    if(path){const {error:removeError}=await sb.storage.from("bc-barber-portfolio").remove([path]);if(removeError)throw removeError}
+    await loadBarberDetails(id,true);
    }catch(e){msgErr(e)}
   }));photos.append(card);
  }
