@@ -233,3 +233,15 @@ body.bc-premium.bc-war .hero .eyebrow{color:#fbd480}
  body.bc-premium.bc-passport .offers{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bc-battle{transition:none!important}}
+
+/* Header role navigation and PRO scanning shortcut. */
+.bc-role-menu{position:absolute;right:14px;top:68px;z-index:1000;min-width:230px;max-width:calc(100vw - 26px);
+ border:1px solid #6b5129;border-radius:17px;background:#19191ef8;box-shadow:0 20px 45px #000b;padding:8px}
+.bc-role-menu[hidden]{display:none!important}
+.bc-role-menu a{display:block;color:#e7e7ec;text-decoration:none;font-size:13px;font-weight:700;padding:12px;border-radius:10px}
+.bc-role-menu a:hover,.bc-role-menu a:focus-visible{background:#3a3020;color:#fce1aa}
+.bc-role-menu a[hidden]{display:none!important}
+body.bc-premium.bc-pro #member .proBottom a{display:grid;justify-items:center;gap:3px;background:transparent;border:0;color:#c8b17b;
+ font-size:10px;font-weight:800;padding:4px;text-decoration:none;min-width:0}
+body.bc-premium.bc-pro #member .proBottom a .navicon{font-size:21px;line-height:24px;background:#dfb746;color:#130f08;padding:1px 8px;border-radius:10px}
+body.bc-premium.bc-pro #member .proBottom a:focus-visible{outline:2px solid #ffd671}
