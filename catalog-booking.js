@@ -60,6 +60,21 @@ $("catalogRegister").onclick=async()=>{
   $("catalogAccountStatus").textContent="Verifică e-mailul pentru confirmarea contului, apoi așteaptă aprobarea administratorului.";
  }
 };
+$("catalogResendConfirmation").onclick=async()=>{
+ const email=$("catalogAuthEmail").value.trim(),button=$("catalogResendConfirmation");
+ if(!email||!$("catalogAuthEmail").checkValidity()){
+  $("catalogAccountStatus").textContent="Introdu e-mailul corect înainte de retrimitere.";return;
+ }
+ button.disabled=true;$("catalogAccountStatus").textContent="Retrimitem confirmarea…";
+ try{
+  const confirmUrl=new URL("https://nistordaniel06-cpu.github.io/barber-booking/catalog-booking.html");
+  confirmUrl.searchParams.set("salon",salon);
+  const {error}=await sb.auth.resend({type:"signup",email,
+   options:{emailRedirectTo:confirmUrl.toString()}});
+  $("catalogAccountStatus").textContent=error?"Nu am putut retrimite: "+error.message:
+   "Dacă adresa poate primi confirmări, vei primi un nou e-mail. Verifică și Spam.";
+ }finally{button.disabled=false}
+};
 $("catalogLogout").onclick=async()=>{await sb.auth.signOut();await checkAccount();};
 $("catalogRecheck").onclick=checkAccount;
 
