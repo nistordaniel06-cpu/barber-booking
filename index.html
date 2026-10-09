@@ -154,7 +154,12 @@ function renderSearch(){
 window.BCRefreshSearch=renderSearch;
 async function loadCatalog(){
  if(!window.supabase||!window.BARBERCRAFT_SUPABASE_URL){$("salongrid").textContent="Catalogul nu este configurat momentan.";return;}
- try{const api=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);const {data,error}=await api.from("bc_public_salon_catalog").select("id,salon_id,name,address,services,rating,review_count,city,county,sector,description,cover_image_url,phone,website").eq("visibility","listed").limit(100);if(error)throw error;const seen=new Set();catalogSalons=(data||[]).filter(s=>{const key=(s.name+"|"+String(s.address||"").replace(/<[^>]+>/g," ")).toLowerCase().replace(/\s+/g," ").trim();if(seen.has(key))return false;seen.add(key);return true;});for(const [id,field] of [["cityFilter","city"],["countyFilter","county"],["sectorFilter","sector"]]){const sel=document.getElementById(id);if(!sel)continue;const previous=sel.value;sel.replaceChildren(new Option(id==="cityFilter"?"Toate orașele":id==="countyFilter"?"Toate județele":"Toate sectoarele",""));for(const value of [...new Set(catalogSalons.map(s=>s[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ro")))sel.add(new Option(value,value));sel.value=previous;}renderSearch();}catch(err){console.warn("Catalog momentan indisponibil",err.message);$("salongrid").textContent="Catalogul nu poate fi încărcat acum. Verifică conexiunea și reîncarcă pagina.";}
+ try{const api=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);const {data,error}=await api.from("bc_public_salon_catalog").select("id,salon_id,name,address,services,rating,review_count,city,county,sector,description,cover_image_url,explore_cover_path,public_booking_enabled,phone,website").eq("visibility","listed").limit(100);if(error)throw error;const seen=new Set();catalogSalons=(data||[]).map(s=>{
+ if(!s.cover_image_url&&typeof s.explore_cover_path==="string"&&
+ /^[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png|webp)$/i.test(s.explore_cover_path))
+  s.cover_image_url=api.storage.from("bc-explore-images").getPublicUrl(s.explore_cover_path).data.publicUrl;
+ return s;
+}).filter(s=>{const key=(s.name+"|"+String(s.address||"").replace(/<[^>]+>/g," ")).toLowerCase().replace(/\s+/g," ").trim();if(seen.has(key))return false;seen.add(key);return true;});for(const [id,field] of [["cityFilter","city"],["countyFilter","county"],["sectorFilter","sector"]]){const sel=document.getElementById(id);if(!sel)continue;const previous=sel.value;sel.replaceChildren(new Option(id==="cityFilter"?"Toate orașele":id==="countyFilter"?"Toate județele":"Toate sectoarele",""));for(const value of [...new Set(catalogSalons.map(s=>s[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ro")))sel.add(new Option(value,value));sel.value=previous;}renderSearch();}catch(err){console.warn("Catalog momentan indisponibil",err.message);$("salongrid").textContent="Catalogul nu poate fi încărcat acum. Verifică conexiunea și reîncarcă pagina.";}
 }
 $("heroSearchBtn").onclick=()=>{$("search").focus();$("search").scrollIntoView({behavior:"smooth",block:"center"});};$("showAllSalons").onclick=()=>{$("search").value="";renderSearch();$("salongrid").scrollIntoView({behavior:"smooth",block:"start"});};$("search").addEventListener("input",renderSearch);["cityFilter","countyFilter","sectorFilter"].forEach(id=>document.getElementById(id)?.addEventListener("change",renderSearch));
 function showCatalogTab(tab){
@@ -205,7 +210,30 @@ async function renderCatalogProfile(salon){
  $("catalogDescription").textContent=salon.description||"Descrierea salonului va fi adăugată de proprietar.";
  $("catalogReviewInfo").textContent="Se verifică recenziile confirmate prin check-in și serviciu finalizat…";
  const reviewList=$("catalogVerifiedReviews");reviewList.replaceChildren();reviewList.dataset.salon=String(salon.salon_id||"");
- const requestedSalon=salon.salon_id;
+ const reserve=$("catalogBooking"),reserveStatus=$("catalogBookingStatus");
+ reserve.disabled=true;reserve.textContent="Programările online nu sunt încă disponibile";
+ reserveStatus.textContent="Salonul trebuie să confirme serviciile, programul și activarea rezervărilor din contul PRO.";
+ reserve.dataset.catalogId=salon.id;
+ if(salon.salon_id&&salon.public_booking_enabled&&window.supabase){
+  const request=salon.id;
+  reserveStatus.textContent="Verificăm programările activate de salon…";
+  (async()=>{
+   const api=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+   const {data,error}=await api.rpc("bc_catalog_booking_public",{p_catalog:request});
+   if(reserve.dataset.catalogId!==request)return;
+   if(error||!data?.enabled){
+    reserve.disabled=true;reserveStatus.textContent="Momentan salonul nu acceptă rezervări online.";return;
+   }
+   reserve.disabled=false;reserve.textContent="Rezervă o programare →";
+   reserveStatus.textContent="Ore reale, confirmare imediată și calendar sincronizat cu salonul.";
+   reserve.onclick=()=>{
+    const url=new URL("./catalog-booking.html",location.href);
+    url.searchParams.set("salon",request);
+    window.location.assign(url.href);
+   };
+  })().catch(()=>{if(reserve.dataset.catalogId===request)reserveStatus.textContent="Disponibilitatea nu a putut fi verificată.";});
+ }
+  const requestedSalon=salon.salon_id;
  if(requestedSalon&&window.supabase){
   (async()=>{
    const client=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);

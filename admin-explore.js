@@ -82,16 +82,34 @@ window.BCExploreAdmin={async render(sb,root){
    const flags=el("div",undefined,"bcExploreBadges");
    flags.append(el("span",salon.is_visible===false?"Ascuns":"Publicat",salon.is_visible===false?"bcExploreBadge is-hidden":"bcExploreBadge is-visible"));
    flags.append(el("span",salon.data_status==="admin_updated"?"Actualizat":"Demonstrativ","bcExploreBadge"));
+   if(salon.catalog_id)flags.append(el("span",salon.catalog_pro_salon?"Asociat salon PRO":"În Catalog","bcExploreBadge is-visible"));
    const actions=el("div",undefined,"bcExploreCardActions");
    actions.append(
     button("✎ Editează",()=>openEditor(salon),"bcExplorePrimary"),
+    button(salon.catalog_id?(salon.catalog_pro_salon?"Vezi în catalog":"↻ Sincronizează catalogul"):"⇧ Importă în Catalog",
+     ()=>promote(salon),"bcExploreSecondary"),
     button(salon.is_visible===false?"Publică":"Ascunde",()=>toggleVisibility(salon),"bcExploreSecondary"),
     button("Șterge",()=>remove(salon),"bcExploreDanger")
    );
    content.append(heading,flags,actions);card.append(visual,content);list.append(card);
   }
  }
- function payload(item,visible){
+ async function promote(item){
+  if(item.catalog_pro_salon){
+   inform("Profilul este deja asociat unui salon PRO. Editează tarifele și calendarul din contul PRO, nu prin import.","error");return;
+  }
+  const first=!!item.catalog_id;
+  const message=first?
+   "Actualizezi profilul din Catalog saloane cu datele de explorat și îl republici? Acțiunea nu activează rezervările.":
+   "Ai verificat numele, adresa, serviciile, prețurile, drepturile asupra imaginilor și proveniența datelor? Importul va publica un profil în Catalog saloane, fără să accepte automat rezervări.";
+  if(!confirm(message))return;
+  inform(first?"Sincronizăm datele în Catalog…":"Importăm salonul în Catalog…");
+  const {data,error}=await sb.rpc("bc_admin_explore_promote",{p_sample:item.id,p_confirmed:true});
+  if(error){inform("Importul nu a reușit: "+error.message,"error");return;}
+  await load();
+  inform("Salonul este în Catalog. Pentru programări, mergi la «Catalog saloane», asociază contul PRO al salonului și cere proprietarului activarea rezervărilor.","success");
+ }
+  function payload(item,visible){
   const services=Array.isArray(item.services)?item.services.map(s=>({
    name:String(s.name??""),price:String(s.price??""),duration:String(s.duration??"")
   })):[];
@@ -215,6 +233,13 @@ window.BCExploreAdmin={async render(sb,root){
   actions.append(button("Renunță",showList,"bcExploreSecondary"),save);
   form.append(actions);
   if(item){
+   if(item.catalog_id){
+   const link=el("div",undefined,"bcExploreCatalogLink");
+   link.append(el("strong","✓ Profil importat în Catalog saloane"),
+    el("small",item.catalog_pro_salon?"Asociat unui salon PRO. Modificările comerciale sunt gestionate de proprietar.":"Pentru rezervări trebuie asociat un salon PRO verificat și activat calendarul de către proprietar."));
+   link.append(button("Mergi la Catalog saloane ↗",()=>{window.location.hash="admin-catalog";window.location.reload();},"bcExploreSecondary"));
+   form.append(link);
+  }
    const danger=el("div",undefined,"bcExploreDeleteFooter");
    danger.append(el("small","Ștergerea definitivă afectează numai această fișă demonstrativă."),
     button("Șterge profilul",()=>remove(item),"bcExploreDanger"));

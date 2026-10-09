@@ -53,3 +53,12 @@
 .pilotFeedback textarea:focus{outline:2px solid #ffd16c}
 .pilotFeedbackRow{padding:13px 0;border-bottom:1px solid #45414b;display:grid;gap:6px}
 .pilotFeedbackRow strong{color:#ffdd99}.pilotFeedbackRow small{color:#bdc0c7;font-size:12px;overflow-wrap:anywhere}
+
+.pilotPublicRow{display:grid;gap:13px;border:1px solid #54442e;border-radius:14px;padding:14px;margin:12px 0;background:#231f1b}
+.pilotPublicRow>div{display:grid;gap:5px}
+.pilotPublicRow strong{font-size:14px;color:#f4d48f}
+.pilotPublicRow small{font-size:11px;color:#bbb0a2}
+.pilotPublicToggle{display:flex!important;align-items:center;gap:10px}
+.pilotPublicToggle input{flex:0 0 22px;width:22px!important;height:22px;accent-color:#ffd16c}
+.pilotPublicRow button{justify-self:start}
+@media(max-width:420px){.pilotPublicRow button{width:100%}}
