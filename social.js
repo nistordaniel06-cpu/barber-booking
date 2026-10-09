@@ -152,7 +152,7 @@ async function loadBarberDetails(id,mine,target){
  if(!info.jobs?.length)jobs.append(el("p","Istoric profesional necompletat."));
  for(const job of info.jobs||[]){
   const row=el("div",undefined,"socialIdea"),desc=el("div");
-  desc.append(el("strong",job.role_title+" · "+job.salon),el("small",job.start+" – "+(job.end||"prezent")+" · Istoric declarat, neverificat"));
+  desc.append(el("strong",job.title+" · "+job.salon),el("small",job.start+" – "+(job.end||"prezent")+" · Istoric declarat, neverificat"));
   row.append(desc);
   if(mine)row.append(btn("Șterge",async()=>{if(!confirm("Ștergi această experiență?"))return;
    try{await rpc("bc_social_barber_job_delete",{p_id:job.id});await loadBarberDetails(id,true)}catch(e){msgErr(e)}}));
@@ -181,21 +181,40 @@ $("socialJobForm").onsubmit=async e=>{
  f.reset();await loadBarberDetails(user.id,true);line("Experiență declarată salvată.")}
  catch(e){msgErr(e)}finally{b.disabled=false}
 };
+function portfolioNotice(message,isError=false){
+ const note=$("socialPortfolioStatus");
+ if(note){note.textContent=message;note.dataset.error=isError?"true":"false"}
+ line(message);
+}
 $("socialPortfolioForm").onsubmit=async e=>{
- e.preventDefault();const f=e.currentTarget,b=f.querySelector("button"),file=f.elements.photo.files?.[0];
- if(!file||file.size>5*1024*1024||!["image/jpeg","image/png","image/webp"].includes(file.type)){
- line("Alege o fotografie JPG, PNG sau WebP de maximum 5 MB.");return}
- if(!confirm("Fotografia va fi publică. Confirmi că ai acordul persoanelor fotografiate?"))return;
+ e.preventDefault();
+ const f=e.currentTarget,b=f.querySelector("button"),file=f.elements.namedItem("photo")?.files?.[0];
+ const types={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"};
+ if(!file||file.size>5*1024*1024||!types[file.type]){
+  portfolioNotice("Alege o fotografie JPG, PNG sau WebP de maximum 5 MB.",true);return;
+ }
+ if(!user){portfolioNotice("Conectează-te în contul PRO pentru a publica fotografii.",true);return}
+ if(!confirm("Fotografia va fi publică dacă profilul tău este public. Confirmi că ai acordul persoanelor fotografiate?"))return;
  b.disabled=true;
- const ext={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[file.type];
- const path=user.id+"/"+crypto.randomUUID()+"."+ext;
+ const oldLabel=b.textContent;
+ b.textContent="Se publică…";
+ portfolioNotice("Se încarcă fotografia…");
+ const path=user.id+"/"+crypto.randomUUID()+"."+types[file.type];
  try{
   const {error:uploadErr}=await sb.storage.from("bc-barber-portfolio").upload(path,file,{contentType:file.type,upsert:false});
   if(uploadErr)throw uploadErr;
   try{await rpc("bc_social_barber_portfolio_add",{p_path:path,p_caption:f.elements.caption.value.trim()})}
   catch(err){await sb.storage.from("bc-barber-portfolio").remove([path]);throw err}
-  f.reset();await loadBarberDetails(user.id,true);line("Tunsoarea a fost adăugată public în portofoliul tău.");
- }catch(e){msgErr(e)}finally{b.disabled=false}
+  f.reset();
+  try{
+   await loadBarberDetails(user.id,true);
+   portfolioNotice("Fotografia a fost salvată în portofoliu. Devine vizibilă celorlalți când publici profilul social.");
+  }catch(err){
+   portfolioNotice("Fotografia a fost publicată, dar galeria nu s-a reîmprospătat. Reîncarcă pagina.",true);
+  }
+ }catch(err){
+  portfolioNotice("Nu am putut încărca fotografia: "+(err?.message||String(err)),true);
+ }finally{b.disabled=false;b.textContent=oldLabel}
 };
 async function loadIdeas(){
  if(!user)return;
