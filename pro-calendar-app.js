@@ -58,7 +58,10 @@ function columns(){
   return staff.map(s=>({date:a[0],staff:s.id,title:s.name}));
  }
  const chosen=state.filter==="all"?(state.staff.find(s=>s.id===state.user?.id)||state.staff[0])?.id:state.filter;
- return a.map(date=>({date,staff:chosen,title:date.toLocaleDateString("ro-RO",{weekday:"short",day:"numeric"})}));
+ // Short labels keep all 3 or 7 days readable on the phone, no sideways scroll.
+ return a.map(date=>({date,staff:chosen,title:state.mode==="week"
+   ?["D","L","M","M","J","V","S"][date.getDay()]+" "+date.getDate()
+   :date.toLocaleDateString("ro-RO",{weekday:"short",day:"numeric"})}));
 }
 function showFilter(){
  const box=$("staffBar");box.replaceChildren();
@@ -101,6 +104,7 @@ function paintSelection(){
 // browser page, horizontal barber columns and the booking durations stay fixed.
 const activeTouches=new Map();
 let pinch=null,ignoreCalendarClickUntil=0,zoomNoticeTimer=null,outerPan=null;
+let nativeTouchPinch=false,ignoreTouchPointersUntil=0;
 const clampQuarterHeight=n=>Math.max(minimumQuarterHeight,Math.min(maximumQuarterHeight,n));
 const fingerDistance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 function showZoomNotice(){
@@ -147,13 +151,66 @@ function beginPinch(){
  ignoreCalendarClickUntil=Date.now()+800;
 }
 function pointerDownOnCalendar(e){
- if(e.pointerType!=="touch"||!$("sheetBackdrop").hidden)return;
+ if(e.pointerType!=="touch"||nativeTouchPinch||Date.now()<ignoreTouchPointersUntil||!$("sheetBackdrop").hidden)return;
  activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(activeTouches.size===2)beginPinch();
  else if(activeTouches.size===1&&!e.target.closest(".timeCell")){
   outerPan={id:e.pointerId,y:e.clientY,x:e.clientX,lastTick:performance.now(),velocityY:0,moved:false};
  }
 }
+// Android browsers may deliver touch events even when pointer capture keeps
+// each finger on a different slot. Handle native two-finger gestures explicitly.
+function nativePinchDistance(touches){
+ const a=touches[0],b=touches[1];
+ return Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+}
+function nativePinchMidpoint(touches){
+ return (touches[0].clientY+touches[1].clientY)/2;
+}
+function startNativePinch(event){
+ if(event.touches.length<2||!$("sheetBackdrop").hidden)return;
+ const touches=event.touches,dist=nativePinchDistance(touches);
+ if(dist<12)return;
+ event.preventDefault();
+ nativeTouchPinch=true;
+ ignoreTouchPointersUntil=Date.now()+900;
+ if(state.gesture){
+  clearTimeout(state.gesture.timer);
+  state.gesture=null;
+ }
+ outerPan=null;state.selection=null;
+ timeline.querySelectorAll(".timeCell.selected").forEach(c=>c.classList.remove("selected"));
+ const rect=scroller.getBoundingClientRect(),mid=nativePinchMidpoint(touches);
+ pinch={
+  distance:dist,initialHeight:pixelPerQuarter,
+  focalQuarter:(scroller.scrollTop+mid-rect.top-52)/pixelPerQuarter
+ };
+ ignoreCalendarClickUntil=Date.now()+1000;
+}
+function moveNativePinch(event){
+ if(!nativeTouchPinch||!pinch)return;
+ event.preventDefault();
+ if(event.touches.length<2)return;
+ const distance=nativePinchDistance(event.touches);
+ const mid=nativePinchMidpoint(event.touches);
+ changeQuarterHeight(pinch.initialHeight*distance/pinch.distance,mid,pinch.focalQuarter);
+}
+function finishNativePinch(event){
+ if(!nativeTouchPinch||event.touches.length>=2)return;
+ event.preventDefault();
+ nativeTouchPinch=false;pinch=null;
+ ignoreTouchPointersUntil=Date.now()+900;
+ ignoreCalendarClickUntil=Date.now()+900;
+ activeTouches.clear();outerPan=null;
+ if(state.gesture)clearTimeout(state.gesture.timer);
+ state.gesture=null;state.selection=null;
+ timeline.querySelectorAll(".timeCell.selected").forEach(c=>c.classList.remove("selected"));
+ try{localStorage.setItem(zoomKey,String(Math.round(pixelPerQuarter*100)/100))}catch(_){}
+}
+scroller.addEventListener("touchstart",startNativePinch,{passive:false,capture:true});
+scroller.addEventListener("touchmove",moveNativePinch,{passive:false,capture:true});
+scroller.addEventListener("touchend",finishNativePinch,{passive:false,capture:true});
+scroller.addEventListener("touchcancel",finishNativePinch,{passive:false,capture:true});
 scroller.addEventListener("pointerdown",pointerDownOnCalendar,true);
 scroller.addEventListener("click",event=>{
  if(Date.now()<ignoreCalendarClickUntil){
@@ -161,6 +218,7 @@ scroller.addEventListener("click",event=>{
  }
 },true);
 function handlePointerMove(e){
+ if(e.pointerType==="touch"&&(nativeTouchPinch||Date.now()<ignoreTouchPointersUntil))return;
  if(activeTouches.has(e.pointerId)){
   activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(pinch&&activeTouches.size>=2){
@@ -183,6 +241,13 @@ function handlePointerMove(e){
  if(!pinch&&activeTouches.size<2)moveSelection(e);
 }
 function finishPointer(e,cancel){
+ if(e.pointerType==="touch"&&(nativeTouchPinch||Date.now()<ignoreTouchPointersUntil)){
+  activeTouches.delete(e.pointerId);
+  if(state.gesture&&state.gesture.id===e.pointerId){
+   clearTimeout(state.gesture.timer);state.gesture=null;state.selection=null;
+  }
+  return;
+ }
  const wasPinching=!!pinch;
  if(wasPinching)ignoreCalendarClickUntil=Date.now()+650;
  if(!wasPinching&&outerPan&&outerPan.id===e.pointerId){
@@ -200,7 +265,7 @@ function finishPointer(e,cancel){
  }
 }
 function startSelection(e,cell,column,q){
- if(e.button!==0||pinch||activeTouches.size>=2||!$("sheetBackdrop").hidden)return;
+ if(e.button!==0||pinch||nativeTouchPinch||Date.now()<ignoreTouchPointersUntil||activeTouches.size>=2||!$("sheetBackdrop").hidden)return;
  e.preventDefault();
  const rect=scroller.getBoundingClientRect();
  const touch=e.pointerType==="touch"||e.pointerType==="pen";
@@ -282,9 +347,14 @@ function renderTimeline(){
  dateTitle();
  const cols=columns(),count=cols.length;
  timeline.replaceChildren();
- const width=Math.max(130,count>5?122:count>2?143:160);
- timeline.style.gridTemplateColumns="48px repeat("+count+",minmax("+width+"px,1fr))";
- timeline.style.minWidth=(48+count*width)+"px";
+ // Multi-day grid always fits *exactly* the available viewport width.
+ // Day view also fits staff where practical; 3 and 7 days never scroll sideways.
+ const gutter=count>=7?30:count===3?40:48;
+ timeline.dataset.view=state.mode;
+ timeline.style.gridTemplateColumns=gutter+"px repeat("+count+",minmax(0,1fr))";
+ timeline.style.width="100%";
+ timeline.style.minWidth="0px";
+ scroller.scrollLeft=0;
  const corner=makeElement("div","timeCorner","Ora");
  corner.style.gridColumn="1";corner.style.gridRow="1";put(timeline,corner);
  cols.forEach((col,i)=>{
@@ -295,7 +365,8 @@ function renderTimeline(){
   const n=state.events.filter(ev=>ev.status==="confirmed"&&
     (!ev.specialist_user_id||ev.specialist_user_id===col.staff)&&
     sameDate(new Date(ev.starts_at),col.date)).length;
-  put(head,makeElement("small","",isDay?n+" programări":"✂ "+specialistName(col.staff)));
+  if(isDay)put(head,makeElement("small","",n+" programări"));
+  else if(state.mode==="three")put(head,makeElement("small","",specialistName(col.staff)));
   put(timeline,head);
  });
  for(let q=0;q<hourRows;q++){
