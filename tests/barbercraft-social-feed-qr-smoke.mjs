@@ -56,7 +56,7 @@ function shape(tag){return {tag,attrs:{},children:[],setAttribute(k,v){this.attr
 const sandbox={window:{qrcode:()=>({addData(){},make(){},getModuleCount:()=>21,
  isDark:(r,c)=>r%3===0||c%5===0})},document:{createElementNS:(_,tag)=>shape(tag)}};
 vm.runInNewContext(read("passport-qr-render.js"),sandbox);
-const root={children:[],replaceChildren(...children){this.children=children}};
+const root={children:[],replaceChildren(...children){this.children=children},append(child){this.children.push(child)}};
 assert.equal(sandbox.window.BCRenderPassportQr(root,"BCP1|mock-identity"),true);
 assert.equal(root.children[0].tag,"svg","Vector QR is rendered, not an empty image");
 assert.equal(root.children[0].attrs.viewBox,"0 0 29 29");
