@@ -20,7 +20,7 @@ body{margin:0;font-family:"DM Sans",system-ui,sans-serif}*{box-sizing:border-box
 .bc-ig-lightbox{position:fixed;inset:0;background:#08090bf0;z-index:200;display:grid;place-items:center;padding:20px}
 .bc-ig-lightbox[hidden]{display:none!important}
 .bc-ig-lightbox img{max-width:min(90vw,700px);max-height:75vh;object-fit:contain;border-radius:12px}
-.bc-ig-lightbox button{position:absolute;top:25px;right:20px;background:#272730;border:1px solid #555;color:#fff;border-radius:10px;padding:8px 15px}
+.bc-ig-lightbox-top{position:absolute;top:max(12px,env(safe-area-inset-top));left:15px;right:15px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:201;color:#f7d587;font-size:12px;font-weight:800}.bc-ig-lightbox-actions{display:flex;gap:9px}.bc-ig-lightbox-actions a,.bc-ig-lightbox-actions button{display:grid;place-items:center;width:44px;height:44px;border:1px solid #62616b;border-radius:11px;padding:0;background:#292c34;color:#faf7f1;text-decoration:none;font-size:24px;font-weight:800}.bc-ig-lightbox-actions a{color:#f5d378}
 .bc-ig-lightbox p{max-width:85vw;color:#e2cfa7;font-size:12px}
 .bc-ig-photo-shell{display:grid;gap:10px;justify-items:center}
 .bc-ig-photonote{font-size:10px;color:#aaa;display:block;text-align:center;padding:9px}
@@ -42,5 +42,5 @@ body{margin:0;font-family:"DM Sans",system-ui,sans-serif}*{box-sizing:border-box
 <section id="profileReviews" aria-label="Notițele mele"><h2 class="bc-preview-grid-label">Jurnalul meu de frizerie</h2><div id="profileNotes" class="panel"></div></section>
 <section id="profileVisitsList" aria-label="Istoricul vizitelor"><h2 class="bc-preview-grid-label">Vizite confirmate</h2><div id="profileHistory" class="panel"></div>
 <p class="bc-profile-notice">Check-in-ul prin QR este separat de o vizită efectiv finalizată. XP-ul și punctele provin numai din activități validate de sistem.</p></section>
-</main><div class="bc-ig-lightbox" id="profileLightbox" hidden role="dialog" aria-modal="true" aria-label="Fotografie mărită"><button id="lightboxClose" type="button">Închide ✕</button><div class="bc-ig-photo-shell"><img id="lightboxImage" alt=""><p id="lightboxText"></p></div></div>
+</main><div class="bc-ig-lightbox" id="profileLightbox" hidden role="dialog" aria-modal="true" aria-label="Fotografie mărită"><div class="bc-ig-lightbox-top"><span>Fotografie</span><div class="bc-ig-lightbox-actions"><a id="lightboxNewTab" href="#" target="_blank" rel="noopener noreferrer" aria-label="Deschide fotografia în tab nou" title="Deschide în tab nou">↗</a><button id="lightboxClose" type="button" aria-label="Închide" title="Închide">✕</button></div></div><div class="bc-ig-photo-shell"><img id="lightboxImage" alt=""><p id="lightboxText"></p></div></div>
 <script src="./passport-preview.js" defer></script><script src="./preview-social.js" defer></script></body></html>
