@@ -31,16 +31,6 @@ try{
  const {data:identity,error:userError}=await client.auth.getUser();
  if(userError||!identity?.user)throw userError||new Error("Sesiunea nu este verificată.");
  const pro=identity.user.user_metadata?.barbercraft_account_type==="professional";
- if(pro&&session.access_token&&session.refresh_token){
-  const professional=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,
-   window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY,{auth:{
-    storageKey:"barbercraft-pro-session",persistSession:true,autoRefreshToken:true,detectSessionInUrl:false
-   }});
-  const transfer=await professional.auth.setSession({
-   access_token:session.access_token,refresh_token:session.refresh_token
-  });
-  if(transfer.error)throw transfer.error;
- }
  title.textContent="E-mail confirmat!";
  icon.textContent="✓";
  status.textContent="Contul tău este confirmat. Poți continua în "+(pro?"Portalul PRO":"aplicația BARBERCRAFT")+
