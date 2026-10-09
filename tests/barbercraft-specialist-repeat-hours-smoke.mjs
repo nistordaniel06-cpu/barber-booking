@@ -84,7 +84,7 @@ await panel.children[5].children[1].onclick();
 assert.equal(result.length,2);
 assert.equal(result[1].p_hours["7"].open,"10:30");
 assert.equal(result[1].p_hours["7"].closed,false);
-assert.equal(result[1].p_prices.constructor,Object);
+assert.equal(Object.keys(result[1].p_prices).length,0,"Prices are unchanged");
 
 assert.match(source,/apply\.onclick=async\(\)=>\{[\s\S]*?await save\.onclick\(\)/,"Salon repeat automatically invokes Save");
 const migration=fs.readFileSync("supabase/migrations/20261010_scope_pro_working_hours_to_salon.sql","utf8");
