@@ -28,7 +28,7 @@ async function draw(){
  if(user){
   const gate=mode==="pro"?"bc_pro_portal_access":"bc_client_my_approval";
   const {data,error}=await active.rpc(gate);
-  const allowed=!error&&(mode==="pro"?data?.allowed===true:data?.status!=="wrong_portal");
+  const allowed=!error&&(mode==="pro"?data?.allowed===true:!!data&&data.status!=="wrong_portal"&&data.status!=="login_required");
   if(!allowed){
    await active.auth.signOut({scope:"local"});
    active=null;user=null;
@@ -85,13 +85,14 @@ function renderLink(code,audience){
 }
 $("refLogin").onsubmit=async e=>{
  e.preventDefault();const f=e.currentTarget;const kind=e.submitter?.value||"login";
- scope=f.elements.scope.value;const target=clients[scope];active=target;
+ scope=mode;const target=clients[mode];active=target;
  const email=f.elements.email.value.trim(),password=f.elements.password.value;
  const redirect=new URL(location.href);redirect.hash="";
  const {data,error}=kind==="signup"?
   await target.auth.signUp({email,password,options:{emailRedirectTo:redirect.href,data:{barbercraft_account_type:scope==="pro"?"professional":"client"}}}):
   await target.auth.signInWithPassword({email,password});
  if(error){status(error.message);return}
+ window.BCCommitPortalLogin?.(mode);
  if(kind==="signup"&&!data.session){status("Verifică e-mailul pentru activarea contului, apoi revino pe același link.");return}
  await draw();
 };
