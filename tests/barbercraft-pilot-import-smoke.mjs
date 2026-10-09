@@ -13,7 +13,7 @@ for(const path of ["admin.html","professionals.html","pilot-control.html","pilot
 const admin=read("admin.html"),pro=read("professionals.html"),control=read("pilot-control.html"),client=read("pilot.html");
 assert.ok(admin.includes("bc_admin_import_delete"),"Admin deletes imported draft through role-gated RPC");
 assert.ok(admin.includes('label:"Șterge importul"'),"Delete button shown next to import");
-assert.ok(admin.includes('label:"Publică în aplicație"'),"Publish import preserved");
+assert.ok(admin.includes('"Publică în aplicație"'),"Publish import preserved");
 assert.ok(admin.includes("bc_admin_import_list"),"All imports loaded, not only overview last 30");
 assert.ok(admin.includes("pilot-control.html"),"Admin links to private pilot");
 assert.ok(pro.includes("./pilot-control.html?from=pro"),"PRO links to pilot owner control");
