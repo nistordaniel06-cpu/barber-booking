@@ -114,7 +114,7 @@ $("meroPreviewBtn").onclick=async()=>{
  const data=await resp.json();
  if(!resp.ok)throw Error(data.error||"Profilul nu a putut fi citit.");
  meroCurrent=data;
- $("meroName").value=data.salon_name||"";$("meroAddress").value=data.address||"";
+ $("meroName").value=data.salon_name||"";$("meroAddress").value=String(data.address||"").replace(/<[^>]*>/g," ").replace(/\\s+/g," ").trim();
  $("meroRating").textContent=data.public_rating===null?"Ratingul public nu a fost identificat.":("Rating: "+data.public_rating+" · "+(data.public_review_count??"—")+" evaluări.");
  $("meroServices").replaceChildren();
  for(const svc of data.services||[]){const item=document.createElement("div");item.className="item";const name=document.createElement("span");name.textContent=svc.name;const detail=document.createElement("small");detail.textContent=svc.duration+" · "+svc.price;item.append(name,detail);$("meroServices").append(item);}
@@ -197,7 +197,7 @@ async function renderClientImport(){
  const section=$("proClientsPanel");if(section.dataset.ready)return;section.dataset.ready="1";const panel=section.querySelector(".pane");const h=document.createElement("h3");h.textContent="Import clienți din CSV";const desc=document.createElement("p");desc.className="muted";desc.textContent="Fișier CSV cu antetele nume,telefon,email. Importă doar date pe care ai dreptul să le prelucrezi. Fără mesaje automate.";
  const file=document.createElement("input");file.type="file";file.accept=".csv,text/csv";const btn=document.createElement("button");btn.className="primary";btn.textContent="Importă lista";const status=document.createElement("p");status.className="status";panel.append(h,desc,file,btn,status);
  btn.onclick=async()=>{const salon=$("calSalon").value;if(!salon){status.textContent="Asociază mai întâi un salon.";return;}const {data:access}=await client.rpc("bc_my_professional_access");if(!access?.some(s=>s.salon_id===salon&&["owner","admin","manager"].includes(s.member_role))){status.textContent="Nu ai drepturi de import pentru acest salon.";return;}if(!file.files?.[0]){status.textContent="Selectează fișierul CSV.";return;}
- const text=await file.files[0].text();const lines=text.replace(/^\\uFEFF/,"").split(/\\r?\\n/).filter(Boolean);if(lines.length>101){status.textContent="Importă maximum 100 de clienți pe lot.";return;}const headings=lines.shift().split(",").map(s=>s.trim().toLowerCase());if(!headings.includes("nume")){status.textContent="Prima linie trebuie să conțină coloana nume.";return;}
+ const text=await file.files[0].text();const lines=text.replace(/^\uFEFF/,"").split(/\r?\n/).filter(Boolean);if(lines.length>101){status.textContent="Importă maximum 100 de clienți pe lot.";return;}const headings=lines.shift().split(",").map(s=>s.trim().toLowerCase());if(!headings.includes("nume")){status.textContent="Prima linie trebuie să conțină coloana nume.";return;}
  const records=lines.map(line=>{const cells=line.split(",");const val=key=>cells[headings.indexOf(key)]?.trim()||"";return{salon_id:salon,display_name:val("nume"),phone:val("telefon")||null,email:val("email")||null}});if(records.some(x=>!x.display_name)){status.textContent="Un client nu are nume.";return;}
  const {error}=await client.from("bc_pro_clients").insert(records);status.textContent=error?"Eroare: "+error.message:"Au fost importați "+records.length+" clienți în agenda privată a salonului.";};
 }
