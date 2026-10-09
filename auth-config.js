@@ -10,11 +10,13 @@ window.BARBERCRAFT_SESSION_KEYS = Object.freeze({
  pro: "barbercraft-pro-session",
  admin: "barbercraft-admin-session"
 });
+const barbercraftClients = new Map();
 window.BCAuthClient = function(scope, authOverrides = {}) {
  const storageKey=window.BARBERCRAFT_SESSION_KEYS[scope];
  if(!storageKey)throw new Error("Invalid BARBERCRAFT portal");
  if(!window.supabase||!window.BARBERCRAFT_SUPABASE_URL||!window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY)return null;
- return window.supabase.createClient(
+ if(barbercraftClients.has(scope))return barbercraftClients.get(scope);
+ const instance=window.supabase.createClient(
   window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY,
   {auth:{
    storageKey,
@@ -24,4 +26,6 @@ window.BCAuthClient = function(scope, authOverrides = {}) {
    ...authOverrides
   }}
  );
+ barbercraftClients.set(scope,instance);
+ return instance;
 };
