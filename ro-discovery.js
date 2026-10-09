@@ -31,7 +31,7 @@ controls.insertAdjacentElement("afterend",drawer);
 const mapCard=document.createElement("section");mapCard.className="bcCountryMap";mapCard.hidden=true;
 mapCard.innerHTML='<div class="bcMapHeader"><div><strong>Explorează saloanele din România</strong><small>Marcaje agregate pe oraș. Nu sunt poziții exacte ale saloanelor.</small></div><button id="bcMapClose" type="button">Închide</button></div><div id="bcMapRoot" aria-label="Harta României cu saloane grupate pe oraș"></div><div id="bcMapLegend"></div>';
 drawer.insertAdjacentElement("afterend",mapCard);
-let map=null,markers=null,lastCity=null;
+let map=null,markers=null,lastCity=null,pendingCity=null;
 const notice=$("bcLocationNotice");
 function refreshSearch(){window.BCRefreshSearch?.();}
 function setAll(){
@@ -43,7 +43,11 @@ function setAll(){
 }
 function setNearest(name){
  const options=[...city.options],opt=options.find(x=>norm(x.value)===norm(name));
- if(!opt){setAll();notice.textContent="Nu sunt încă saloane indexate în "+name+". Vezi toată România.";return}
+ if(!opt){
+  if(!window.BCDemoCatalog){pendingCity=name;notice.textContent="Se încarcă saloanele pentru "+name+"…";return}
+  setAll();notice.textContent="Nu sunt încă saloane indexate în "+name+". Vezi toată România.";return
+ }
+ pendingCity=null;
  city.value=opt.value;county.value="";
  // The county option, when available, is re-synchronized after city selection; no arbitrary sector selection.
  sector.value="";
@@ -105,6 +109,9 @@ $("bcShowMap").onclick=()=>{
  if(!mapCard.hidden){initMap();setTimeout(()=>map?.invalidateSize(),70);updatePins()}
 };
 $("bcMapClose").onclick=()=>{mapCard.hidden=true;$("bcShowMap").setAttribute("aria-pressed","false")};
+// Asynchronous catalogue load may finish after GPS resolution.
+const retryOnOptions=new MutationObserver(()=>{if(pendingCity&&window.BCDemoCatalog)setNearest(pendingCity)});
+retryOnOptions.observe(city,{childList:true});
 const toolbar=$("bcLocationTitle");
 if(toolbar)toolbar.onclick=()=>{drawer.open=true;drawer.scrollIntoView({block:"nearest",behavior:"smooth"})};
 const mode=(()=>{try{return sessionStorage.getItem("bc-location-mode")}catch{return null}})();
