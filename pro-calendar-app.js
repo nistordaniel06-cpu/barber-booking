@@ -45,7 +45,7 @@ function popupURL(kind){
   const selected=selectionText(state.selection);
   url.searchParams.set("from",datetime(selected.from));
   url.searchParams.set("to",datetime(selected.to));
-  if(selected.staff)url.searchParams.set("staff",selected.staff);
+  if(state.selection.staff)url.searchParams.set("staff",state.selection.staff);
  }else if(kind==="edit"){
   const from=$("startAt").value,to=$("endAt").value,staff=$("eventStaff").value;
   if(from)url.searchParams.set("from",from);
