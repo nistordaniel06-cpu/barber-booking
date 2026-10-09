@@ -1,7 +1,7 @@
 (async()=>{"use strict";
 const $=id=>document.getElementById(id),status=$("kingStatus");
 if(!window.supabase)return;
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=window.BCAuthClient("client");
 const {data:{user}}=await sb.auth.getUser();
 if(!user){status.textContent="Autentifică-te în BARBERCRAFT pentru a juca. Satul este asociat contului tău.";const a=document.createElement("a");a.href="./#account";a.textContent="Autentificare →";status.append(" ",a);return}
 const kinds=[
