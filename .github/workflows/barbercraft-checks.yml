@@ -10,6 +10,7 @@ on:
       - feature/barbercraft-social-passports-verified-reviews
       - feature/ro-map-referrals-kingdoms-salon-removal
       - fix/social-feed-responsive-qr-geolocation
+      - feature/kingdom-polish-explore-admin-mobile
 permissions:
   contents: read
 jobs:
@@ -29,3 +30,4 @@ jobs:
           node tests/barbercraft-social-smoke.mjs
           node tests/barbercraft-growth-smoke.mjs
           node tests/barbercraft-social-feed-qr-smoke.mjs
+          node tests/barbercraft-kingdom-explore-mobile-smoke.mjs
