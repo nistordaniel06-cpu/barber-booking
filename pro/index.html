@@ -501,14 +501,7 @@ function updateCalendarBulkSummary(){
   $("calendarBulkSummary").textContent="Perioada: "+start.toLocaleDateString("ro-RO",{day:"numeric",month:"long",year:"numeric"})+" – "+until.toLocaleDateString("ro-RO",{day:"numeric",month:"long",year:"numeric"})+" (inclusiv).";
  }catch(e){$("calendarBulkSummary").textContent=e.message}
 }
-$("calendarDragToggle").onclick=()=>{
- calendarDragEnabled=!calendarDragEnabled;clearCalendarDragPreview();
- const toggle=$("calendarDragToggle");
- toggle.setAttribute("aria-pressed",String(calendarDragEnabled));
- toggle.textContent=calendarDragEnabled?"↕ Glisează pentru blocaj · ON":"↕ Glisează pentru blocaj · OFF";
- $("calWeek").classList.toggle("calDragActive",calendarDragEnabled);
- $("calendarDragHelp").textContent=calendarDragEnabled?"Apasă și glisează în jos pe aceeași zi. Selecția se ajustează din 15 în 15 minute. Dezactivează pentru derulare.":"Activează «Glisează» pentru blocaje de 15/30/45 minute. Dezactivează pentru derulare normală.";
-};
+// Drag-to-select is always enabled. No ON/OFF control in the PRO calendar.
 $("calendarBulkToggle").onclick=()=>{
  if(!proCalendarCanManageSalon()){$("calStatus").textContent="Blocajul general este rezervat proprietarului sau managerului. Ca frizer poți bloca propriul interval din grilă.";return;}
  const panel=$("calendarBulkPanel");panel.hidden=!panel.hidden;
