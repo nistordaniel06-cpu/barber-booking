@@ -189,7 +189,7 @@ function readICSDate(line){
  if(!/^\d{8}T\d{6}Z?$/.test(value))return null;
  const year=+value.slice(0,4),month=+value.slice(4,6)-1,day=+value.slice(6,8),hour=+value.slice(9,11),minute=+value.slice(11,13),second=+value.slice(13,15);
  const hasZulu=value.endsWith("Z");const tzid=line.match(/TZID=([^;:]+)/i)?.[1];
- if(tzid&&!["Europe/Bucharest","Europe/Budapest","UTC","Etc/UTC"].includes(tzid))return null;
+ if(tzid&&!["Europe/Bucharest","UTC","Etc/UTC"].includes(tzid))return null;
  return hasZulu||tzid==="UTC"||tzid==="Etc/UTC"?new Date(Date.UTC(year,month,day,hour,minute,second)):new Date(year,month,day,hour,minute,second);
 }
 function parseICS(text){
@@ -363,12 +363,13 @@ async function renderSalonProfileEditor(body){
  };
 }
 const meroImportPanel=$("meroImport");
+const applicationPanes=[$("apply"),$("applications"),$("verifiedAccess")].map(el=>el?.closest(".pane")).filter(Boolean);
 const proDetailTitles={services:"Servicii",team:"Echipă",packages:"Abonamente și pachete",products:"Produse și gestiune",profile:"Profil online",hours:"Program de lucru",messages:"Mesaje programări",reviews:"Recenzii",applications:"Verificare și cereri"};
 function showProSettings(key){
  $("proDetailTitle").textContent=proDetailTitles[key]||"Setări";
  const body=$("proDetailBody");body.replaceChildren();
  if(key==="profile"){renderSalonProfileEditor(body);if(meroImportPanel)body.append(meroImportPanel);}else if(key==="hours"){renderHoursEditor(body);}else if(key==="team"){renderStaffEditor(body);}else if(key==="share"){renderSalonShare(body);}
- else if(key==="applications"){body.append(document.getElementById("apply").closest(".pane"),document.getElementById("applications").closest(".pane"),document.getElementById("verifiedAccess").closest(".pane"));}
+ else if(key==="applications"){body.append(...applicationPanes);}
  else {const p=document.createElement("div");p.className="proPlaceholder";p.textContent=key==="team"?"Programul și specialiștii vor putea fi administrați după asocierea unui salon aprobat.":key==="services"?"Editorul de servicii va fi conectat catalogului salonului; momentan poți importa și verifica servicii în Profil online.":"Acest modul va fi activat după configurarea salonului și a serviciilor necesare.";body.append(p);}
  proNavigate("detail");
 }
