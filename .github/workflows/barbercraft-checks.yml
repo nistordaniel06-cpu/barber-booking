@@ -52,5 +52,6 @@ jobs:
           node tests/barbercraft-calendar-feed-throttle-smoke.mjs
           node tests/barbercraft-calendar-fullscreen-phone-sync-smoke.mjs
           node tests/barbercraft-repeat-working-hours-smoke.mjs
+          node tests/barbercraft-specialist-repeat-hours-smoke.mjs
           node tests/barbercraft-pro-salon-cover-rls-smoke.mjs
           node tests/barbercraft-auth-resend-recovery-smoke.mjs
