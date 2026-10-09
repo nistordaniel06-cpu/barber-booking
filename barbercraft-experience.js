@@ -27,7 +27,7 @@ function translate(){
  const privacy=document.getElementById("bcCookieNotice");if(privacy)privacy.querySelector("#bcCookieText").textContent=tr.consent;
 }
 function languageSelector(){
- const section=document.querySelector("#accountGuest")||document.querySelector("#member")||document.querySelector("#dashboard");
+ const section=document.querySelector("#account")||document.querySelector("#member")||document.querySelector("#dashboard");
  if(!section)return;
  const row=document.createElement("label");row.className="bcLanguageSelect";
  const label=document.createElement("span");label.textContent="Limbă / Language";
