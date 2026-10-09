@@ -34,8 +34,8 @@ returns uuid language plpgsql security definer set search_path=''
 as $$declare u uuid;visits integer;result uuid;
 begin
  u:=(select auth.uid());if u is null then raise exception 'LOGIN_REQUIRED';end if;
- select count(distinct day) into visits from (
-  select (verified_at at time zone 'Europe/Bucharest')::date day
+ select count(distinct visit_day) into visits from (
+  select (verified_at at time zone 'Europe/Bucharest')::date AS visit_day
   from public.bc_service_visits where user_id=u and salon_id=p_salon
   union all
   select (occurred_at at time zone 'Europe/Bucharest')::date
@@ -60,8 +60,8 @@ as $$declare u uuid;begin
  return coalesce((select jsonb_agg(jsonb_build_object('salon_id',x.salon_id,'salon',s.name,
  'visits',x.days,'eligible',x.days>=5) order by x.days desc)
  from (
-  select salon_id,count(distinct day) days from (
-   select salon_id,(verified_at at time zone 'Europe/Bucharest')::date day
+  select salon_id,count(distinct visit_day) AS days from (
+   select salon_id,(verified_at at time zone 'Europe/Bucharest')::date AS visit_day
    from public.bc_service_visits where user_id=u
    union all
    select salon_id,(occurred_at at time zone 'Europe/Bucharest')::date day
