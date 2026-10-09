@@ -57,6 +57,16 @@ body{background:#f6f6f8;color:#17181d}
 .hoursTime input{width:100%;height:45px;padding:8px;border-radius:12px;border:1px solid #42444e;background:#25262f;color:#fafafa;color-scheme:dark;font-size:15px;box-sizing:border-box}
 .hoursTime input:disabled{opacity:.43}
 .hoursSwitchLabel{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px;color:inherit;font-size:13px;font-weight:650}
+.staffRepeatButton{grid-column:1/-1;justify-self:start;border:1px solid #725c38;border-radius:10px;color:#f4c66b;background:#29262a;font-size:12px;font-weight:750;padding:9px 12px;min-height:40px}
+.staffRepeatButton:disabled{opacity:.4}
+.staffRepeatPanel{display:grid;gap:11px;border:1px solid #816641;border-radius:15px;padding:15px;background:#22242b;color:#f5f5f7;margin:10px 0 18px;min-width:0}
+.staffRepeatPanel>strong{color:#f7d286;font-size:14px}
+.staffRepeatPanel>.muted{font-size:12px;line-height:1.4;margin:0}
+.staffRepeatDays{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.staffRepeatChoice{display:flex;align-items:center;gap:7px;background:#2c3039;border:1px solid #494b55;border-radius:10px;min-height:42px;padding:8px;font-size:12px;min-width:0}
+.staffRepeatChoice input{accent-color:#e7bc53;height:17px;width:17px;flex-shrink:0}
+.staffRepeatChoice small{color:#dab979;font-size:10px;margin-left:auto}
+@media(max-width:420px){.staffRepeatChoice{flex-wrap:wrap}.staffRepeatChoice small{padding-left:24px;width:100%}}
 .hoursRepeatButton{grid-column:1/-1;justify-self:start;background:transparent;border:1px solid #6f5b31;border-radius:11px;color:#f1c767;font-size:12px;font-weight:750;padding:10px 13px;min-height:40px;cursor:pointer}
 .hoursRepeatButton:disabled{opacity:.38;cursor:not-allowed}
 .hoursRepeatPanel{display:grid;gap:11px;margin:12px 0 20px;padding:17px;background:#222329;border:1px solid #75603d;border-radius:15px;color:#f5f1e9;min-width:0}
@@ -702,7 +712,7 @@ async function renderHoursEditor(body){
  const {data,error}=await client.from("bc_pro_working_hours").select("weekday,opens,closes,is_closed").eq("salon_id",salon);
  if(error){body.textContent="Eroare la citire: "+error.message;return;}
  const hint=document.createElement("p");hint.className="muted";
- hint.textContent="Configurează orele salonului. Poți copia rapid orele unei zile în celelalte zile. Zilele libere nu se deschid automat.";
+ hint.textContent="Configurează programul salonului. «Repetă orele» copiază și salvează automat în zilele alese. Zilele libere rămân închise.";
  body.append(hint);
  const existing=new Map((data||[]).map(x=>[x.weekday,x]));
  const days=["Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă","Duminică"],rows=[];
@@ -747,7 +757,7 @@ async function renderHoursEditor(body){
   const cancel=document.createElement("button");cancel.type="button";cancel.className="outline";cancel.textContent="Renunță";
   cancel.onclick=closeCopy;
   const apply=document.createElement("button");apply.type="button";apply.className="primary";apply.textContent="Aplică orele";
-  apply.onclick=()=>{
+  apply.onclick=async()=>{
    if($("calSalon").value!==salon){say("Salonul s-a schimbat. Deschide din nou programul de lucru.");closeCopy();return;}
    const targets=destinations.filter(x=>x.input.checked);
    if(!targets.length){say("Selectează cel puțin o zi în care repeți programul.");return;}
@@ -758,8 +768,11 @@ async function renderHoursEditor(body){
     if(reopen.checked)row.closed.checked=false;
     row.update();
    }
-   say("Orele "+from+" – "+to+" au fost copiate pentru "+targets.map(x=>days[x.row.weekday-1]).join(", ")+". Apasă «Salvează programul» pentru confirmare.");
-   closeCopy();
+   say("Orele "+from+" – "+to+" au fost copiate în "+targets.length+" zile. Se salvează…");
+   apply.disabled=true;
+   await save.onclick();
+   apply.disabled=false;
+   if(feedback.textContent.startsWith("Program salvat"))closeCopy();
   };
   buttons.append(cancel,apply);
   panel.append(heading,desc,presets,list,openLabel,warning,buttons);
@@ -906,15 +919,84 @@ async function renderStaffEditor(body){
   const member=teamMap.get(m.user_id);
   const heading=document.createElement("summary");heading.textContent=(member?.display_name||member?.email||"Programul meu")+" · "+(m.role==="owner"?"Admin":m.role);detail.append(heading);
   const fields=document.createElement("div");fields.className="staffEditorFields";
-  const rows=[];for(let n=1;n<=7;n++){
+  const rows=[];
+  let repeatPanel=null;
+  function dismissRepeat(){
+   if(repeatPanel){repeatPanel.remove();repeatPanel=null;}
+  }
+  function showRepeat(source){
+   if(source.toggle.checked)return;
+   dismissRepeat();
+   const panel=document.createElement("section");panel.className="staffRepeatPanel";
+   panel.setAttribute("aria-label","Repetă orele de "+days[source.n-1]);
+   const heading=document.createElement("strong");
+   heading.textContent="Repetă "+days[source.n-1]+" · "+source.opens.value+"–"+source.closes.value;
+   const guide=document.createElement("p");guide.className="muted";
+   guide.textContent="Selectează zilele în care vrei aceleași ore. Zilele libere rămân închise dacă nu le activezi mai jos.";
+   const targets=document.createElement("div");targets.className="staffRepeatDays";
+   const choices=[];
+   for(const dest of rows){
+    if(dest.n===source.n)continue;
+    const lbl=document.createElement("label");lbl.className="staffRepeatChoice";
+    const input=document.createElement("input");input.type="checkbox";input.checked=dest.n<=5;
+    const name=document.createElement("span");name.textContent=days[dest.n-1];
+    lbl.append(input,name);
+    if(dest.toggle.checked){const closed=document.createElement("small");closed.textContent="Liber";lbl.append(closed);}
+    targets.append(lbl);choices.push({input,dest});
+   }
+   const actions=document.createElement("div");actions.className="hoursRepeatPresets";
+   const weekdays=document.createElement("button");weekdays.type="button";weekdays.className="outline";weekdays.textContent="Luni–Vineri";
+   weekdays.onclick=()=>choices.forEach(x=>x.input.checked=x.dest.n<=5);
+   const all=document.createElement("button");all.type="button";all.className="outline";all.textContent="Toate zilele";
+   all.onclick=()=>choices.forEach(x=>x.input.checked=true);
+   actions.append(weekdays,all);
+   const reOpenLabel=document.createElement("label");reOpenLabel.className="hoursRepeatOpen";
+   const reOpen=document.createElement("input");reOpen.type="checkbox";
+   reOpenLabel.append(reOpen,document.createTextNode("Transformă zilele libere selectate în zile lucrătoare"));
+   const confirmation=document.createElement("div");confirmation.className="hoursRepeatActions";
+   const cancel=document.createElement("button");cancel.type="button";cancel.className="outline";cancel.textContent="Anulează";cancel.onclick=dismissRepeat;
+   const apply=document.createElement("button");apply.type="button";apply.className="primary";apply.textContent="Repetă și salvează";
+   const notice=document.createElement("p");notice.className="status";notice.setAttribute("role","status");notice.setAttribute("aria-live","polite");
+   apply.onclick=async()=>{
+    if($("calSalon").value!==salon){notice.textContent="Salonul s-a schimbat. Reîncarcă setările.";return;}
+    const chosen=choices.filter(x=>x.input.checked);
+    if(!chosen.length){notice.textContent="Bifează cel puțin o zi.";return;}
+    if(!source.opens.value||!source.closes.value||source.opens.value>=source.closes.value){
+     notice.textContent="Corectează orele zilei sursă înainte de copiere.";return;
+    }
+    apply.disabled=true;
+    for(const {dest} of chosen){
+     dest.opens.value=source.opens.value;dest.closes.value=source.closes.value;
+     if(reOpen.checked)dest.toggle.checked=false;
+     dest.update();
+    }
+    notice.textContent="Se salvează zilele selectate…";
+    await save.onclick();
+    notice.textContent=result.textContent;
+    apply.disabled=false;
+    if(result.textContent.startsWith("Programul și prețurile specialistului au fost salvate")){
+     dismissRepeat();
+    }
+   };
+   confirmation.append(cancel,apply);
+   panel.append(heading,guide,actions,targets,reOpenLabel,confirmation,notice);
+   source.element.after(panel);repeatPanel=panel;
+   panel.scrollIntoView?.({behavior:"smooth",block:"nearest"});
+  }
+  for(let n=1;n<=7;n++){
    const d=m.hours?.[n]||{open:"09:00",close:"19:00",closed:n===7};
    const row=document.createElement("div");row.className="staffDayRow";
    const title=document.createElement("strong");title.textContent=days[n-1];
    const opens=document.createElement("input");opens.type="time";opens.value=d.open||"09:00";opens.setAttribute("aria-label",days[n-1]+" începere");
    const closes=document.createElement("input");closes.type="time";closes.value=d.close||"19:00";closes.setAttribute("aria-label",days[n-1]+" încheiere");
    const free=document.createElement("label");free.textContent="Liber ";const toggle=document.createElement("input");toggle.type="checkbox";toggle.checked=!!d.closed;free.append(toggle);
-   const update=()=>{opens.disabled=toggle.checked;closes.disabled=toggle.checked};toggle.onchange=update;update();
-   row.append(title,opens,closes,free);fields.append(row);rows.push({n,opens,closes,toggle});
+   const repeat=document.createElement("button");repeat.type="button";repeat.className="staffRepeatButton";
+   repeat.textContent="↗ Repetă în alte zile";repeat.setAttribute("aria-label","Repetă orele de "+days[n-1]);
+   const entry={n,element:row,opens,closes,toggle,update:null};
+   const update=()=>{opens.disabled=toggle.checked;closes.disabled=toggle.checked;repeat.disabled=toggle.checked;};
+   entry.update=update;toggle.onchange=()=>{update();dismissRepeat();};update();
+   repeat.onclick=()=>showRepeat(entry);
+   row.append(title,opens,closes,free,repeat);fields.append(row);rows.push(entry);
   }
   const prices=document.createElement("div");prices.className="staffPrices";
   const priceInputs=[];const label=document.createElement("h4");label.textContent="Prețuri individuale (lei)";prices.append(label);
@@ -923,6 +1005,7 @@ async function renderStaffEditor(body){
   const save=document.createElement("button");save.type="button";save.className="primary";save.textContent="Salvează programul și prețurile";
   const result=document.createElement("p");result.className="status";result.setAttribute("role","status");
   save.onclick=async()=>{
+   if($("calSalon").value!==salon){result.textContent="Salonul a fost schimbat. Deschide din nou setările.";return;}
    const hours={};for(const r of rows){if(!r.toggle.checked&&r.opens.value>=r.closes.value){result.textContent="Verifică orele pentru "+days[r.n-1];return;}hours[r.n]={open:r.opens.value,close:r.closes.value,closed:r.toggle.checked};}
    const prices={};for(const p of priceInputs){if(p.input.value==="")continue;const num=Number(p.input.value);if(!Number.isFinite(num)||num<0||num>10000){result.textContent="Preț invalid pentru "+p.name;return;}prices[p.name]=num;}
    save.disabled=true;result.textContent="Se salvează...";
