@@ -301,7 +301,19 @@ $("googleCalendarBtn").onclick=()=>openCalendar("google");$("appleCalendarBtn").
 $("whatsappBtn").onclick=()=>{const d=calendarData();if(!d)return;const text="Salut! Vreau să verific disponibilitatea pentru "+state.service.name+" la "+state.barber.name+", "+state.date+" ora "+state.time+" (BARBERCRAFT; cerere neconfirmată).";window.open("https://api.whatsapp.com/send?text="+encodeURIComponent(text),"_blank","noopener");};
 const authClient=window.supabase && window.BARBERCRAFT_SUPABASE_URL && window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY ? window.BCAuthClient("client"):null;
 let currentUser=null;
-async function refreshAccount(){if(!authClient)return;const {data}=await authClient.auth.getUser();currentUser=data?.user||null;$("accountGuest").hidden=!!currentUser;$("accountUser").hidden=!currentUser;$("accountIdentity").textContent=currentUser?"Conectat ca "+(currentUser.email||"utilizator"):"";
+async function refreshAccount(){
+ if(!authClient)return;
+ const {data}=await authClient.auth.getUser();
+ currentUser=data?.user||null;
+ if(currentUser){
+  const {data:approval,error:approvalError}=await authClient.rpc("bc_client_my_approval");
+  if(!approvalError&&approval?.status==="wrong_portal"){
+   await authClient.auth.signOut({scope:"local"});
+   currentUser=null;
+   $("authStatus").textContent="Acesta este un cont PRO. Intră în portalul PRO; pentru Client folosește contul tău de client.";
+  }
+ }
+ $("accountGuest").hidden=!!currentUser;$("accountUser").hidden=!currentUser;$("accountIdentity").textContent=currentUser?"Conectat ca "+(currentUser.email||"utilizator"):"";
 if(currentUser){const box=$("clientRewardPreview");box.textContent="Se încarcă recompensele...";const {data:wallet,error}=await authClient.rpc("bc_client_rewards_summary");if(error){box.textContent="Nu s-au putut încărca beneficiile: "+error.message;}else{const money=new Intl.NumberFormat("ro-RO",{style:"currency",currency:"RON"}).format((wallet.verified_spend_minor||0)/100);box.textContent=(wallet.xp||0)+" XP · "+(wallet.loyalty_points||0)+" puncte de fidelitate · "+money+" cheltuieli verificate · "+(wallet.pending_prizes?.length||0)+" premii în verificare";}}
 }
 if(authClient){authClient.auth.onAuthStateChange(()=>{setTimeout(refreshAccount,0)});refreshAccount();}
