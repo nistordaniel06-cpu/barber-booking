@@ -10,6 +10,13 @@ section.append(title,description,grid);$("salongrid")?.insertAdjacentElement("af
 const dialog=n("dialog",undefined,"bcSampleDialog");
 dialog.innerHTML='<div class="bcSamplePopupHeader"><span>Profilul salonului</span><div class="bcSamplePopupActions"><a id="bcSampleNewTab" target="_blank" rel="noopener noreferrer" href="./client/" aria-label="Deschide profilul în tab nou" title="Deschide în tab nou">↗</a><button id="bcSampleClose" type="button" aria-label="Închide" title="Închide">✕</button></div></div><img class="bcSampleModalCover" src="./assets/salon-placeholder.svg" alt="Copertă salon"><div class="bcSampleBody" id="bcSampleDialogBody"></div>';
 dialog.querySelector("#bcSampleClose").onclick=()=>dialog.close();
+dialog.addEventListener("close",()=>{
+ const url=new URL(window.location.href);
+ if(url.searchParams.has("previewSalon")){
+  url.searchParams.delete("previewSalon");
+  history.replaceState(null,"",url.pathname+url.search+url.hash);
+ }
+});
 document.body.append(dialog);
 const norm=v=>String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 const city=$("cityFilter"),county=$("countyFilter"),sector=$("sectorFilter");
