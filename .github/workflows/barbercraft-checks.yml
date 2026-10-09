@@ -9,6 +9,7 @@ on:
       - fix/war-map-single-controls-admin-pro
       - feature/barbercraft-social-passports-verified-reviews
       - feature/ro-map-referrals-kingdoms-salon-removal
+      - fix/social-feed-responsive-qr-geolocation
 permissions:
   contents: read
 jobs:
@@ -27,3 +28,4 @@ jobs:
           node tests/barbercraft-map-regressions.mjs
           node tests/barbercraft-social-smoke.mjs
           node tests/barbercraft-growth-smoke.mjs
+          node tests/barbercraft-social-feed-qr-smoke.mjs
