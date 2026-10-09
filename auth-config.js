@@ -47,7 +47,7 @@ window.BCAuthClient=function(scope,authOverrides={}){
    ...authOverrides
   }}
  );
- window.addEventListener("storage",event=>{
+ window.addEventListener?.("storage",event=>{
   if(event.key!=="barbercraft-active-portal"||!event.newValue)return;
   const active=event.newValue.split(":")[0];
   if(active!==scope&&window.BARBERCRAFT_SESSION_KEYS[active]){
