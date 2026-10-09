@@ -71,6 +71,16 @@ $("pilotBookingForm").onsubmit=async e=>{
   if(err.message==="SLOT_TAKEN")await slots();
  }finally{busy=false;$("pilotSubmit").disabled=false}
 };
+$("pilotFeedbackForm").onsubmit=async event=>{
+ event.preventDefault();
+ const form=event.currentTarget,button=form.querySelector("button"),notice=$("pilotFeedbackStatus");
+ button.disabled=true;
+ try{
+  await rpc("bc_pilot_feedback_send",{p_booking_code:$("pilotBookingCode").textContent,
+   p_rating:Number($("pilotRating").value),p_comment:$("pilotComment").value.trim()});
+  notice.textContent="Mulțumim! Feedbackul a fost trimis salonului.";form.hidden=true;
+ }catch(e){notice.textContent="Feedbackul nu a fost trimis: "+e.message;button.disabled=false}
+};
 $("pilotCopyCode").onclick=async()=>{
  const content=$("pilotResult").textContent+" Cod: "+$("pilotBookingCode").textContent;
  try{await navigator.clipboard.writeText(content);setStatus("Confirmarea a fost copiată.")}
