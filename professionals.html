@@ -7,26 +7,29 @@
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
-const client=window.supabase?.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY,{auth:{storageKey:"barbercraft-pro-session",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const client=window.supabase&&window.BARBERCRAFT_SUPABASE_URL&&window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY?window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY,{auth:{storageKey:"barbercraft-pro-session",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
 let user=null;
-async function refresh(){if(!client)return;const {data,error}=await client.auth.getUser();user=error?null:data.user;if(user?.user_metadata?.barbercraft_account_type==="client"){$("authStatus").textContent="Acest e-mail are deja un cont de client. Pentru un cont profesional separat, folosește altă adresă de e-mail.";user=null;} $("guest").hidden=!!user;$("member").hidden=!user;$("identity").textContent=user?"Autentificat: "+(user.email||""):"";if(user){$("contactEmail").value=user.email||"";await loadApplications();await loadVerifiedAccess();}}
+async function refresh(){if(!client)return;const {data,error}=await client.auth.getUser();user=error?null:data.user;$("guest").hidden=!!user;$("member").hidden=!user;$("identity").textContent=user?"Autentificat: "+(user.email||""):"";if(user){$("contactEmail").value=user.email||"";await loadApplications();await loadVerifiedAccess();}}
 async function authenticate(type){
-const btn=type==="signUp"?$("signUp"):$("signIn");
-const email=$("email").value.trim(),password=$("password").value;
-if(!client){$("authStatus").textContent="Supabase nu s-a încărcat. Reîncarcă pagina.";return;}
-if(!email||password.length<8){$("authStatus").textContent="Completează e-mailul și parola (minimum 8 caractere).";return;}
-btn.disabled=true;$("authStatus").textContent=type==="signUp"?"Se creează contul profesional...":"Se verifică autentificarea...";
-try{
- const {data,error}=type==="signUp"
- ?await client.auth.signUp({email,password,options:{emailRedirectTo:"https://nistordaniel06-cpu.github.io/barber-booking/professionals.html",data:{barbercraft_account_type:"professional"}}})
- :await client.auth.signInWithPassword({email,password});
- if(error){$("authStatus").textContent="Autentificare eșuată: "+error.message;return;}
- if(type==="signUp"&&!data.session){$("authStatus").textContent="Verifică e-mailul și confirmă contul, apoi revino pentru autentificare.";return;}
- if(data.user?.user_metadata?.barbercraft_account_type==="client"){$("authStatus").textContent="Acest e-mail este asociat unui cont de client. Pentru înregistrare PRO separată, folosește alt e-mail.";await client.auth.signOut();return;}
- $("authStatus").textContent="Autentificare reușită.";
- await refresh();
-}catch(e){$("authStatus").textContent="Conexiunea a eșuat: "+(e?.message||"Încearcă din nou.");}
-finally{btn.disabled=false;}
+ const btn=type==="signUp"?$("signUp"):$("signIn");
+ const status=$("authStatus");
+ const email=$("email").value.trim();
+ const password=$("password").value;
+ status.textContent=type==="signUp"?"Se verifică datele pentru contul PRO...":"Se încearcă autentificarea PRO...";
+ if(!client){status.textContent="Biblioteca de autentificare nu s-a încărcat. Reîncarcă pagina în Chrome.";return;}
+ if(!email||!email.includes("@")||password.length<8){status.textContent="Completează e-mailul și parola de minimum 8 caractere.";return;}
+ $("signIn").disabled=true;$("signUp").disabled=true;
+ try{
+  const operation=type==="signUp"
+  ?client.auth.signUp({email,password,options:{emailRedirectTo:"https://nistordaniel06-cpu.github.io/barber-booking/professionals.html",data:{barbercraft_account_type:"professional"}}})
+  :client.auth.signInWithPassword({email,password});
+  const result=await Promise.race([operation,new Promise((_,reject)=>setTimeout(()=>reject(new Error("Conexiunea a expirat după 15 secunde. Verifică internetul și încearcă din Chrome.")),15000))]);
+  if(result.error){status.textContent="Eroare PRO: "+result.error.message;return;}
+  if(type==="signUp"&&!result.data.session){status.textContent="Dacă adresa poate fi înregistrată, vei primi un e-mail de confirmare. Dacă există deja un cont, folosește Autentificare sau o altă adresă.";return;}
+  status.textContent="Autentificare reușită. Se încarcă profilul...";
+  await refresh();
+ }catch(e){status.textContent="Eroare de conectare: "+(e?.message||"necunoscută");}
+ finally{$("signIn").disabled=false;$("signUp").disabled=false;}
 }
 $("signIn").onclick=()=>authenticate("signIn");$("signUp").onclick=()=>authenticate("signUp");$("signOut").onclick=async()=>{await client.auth.signOut();await refresh();};
 async function loadVerifiedAccess(){
@@ -80,5 +83,5 @@ $("meroSubmitBtn").onclick=async()=>{
 };
 
 document.querySelectorAll("[data-toggle-password]").forEach(b=>b.onclick=()=>{const input=$(b.dataset.togglePassword);const reveal=input.type==="password";input.type=reveal?"text":"password";b.setAttribute("aria-pressed",String(reveal));b.setAttribute("aria-label",reveal?"Ascunde parola":"Arată parola");b.textContent=reveal?"◎":"◉";});
-if(client){client.auth.onAuthStateChange(()=>setTimeout(refresh,0));refresh();}else{$("authStatus").textContent="Configurația Supabase nu este disponibilă.";}
+if(client){client.auth.onAuthStateChange(()=>setTimeout(()=>refresh().catch(err=>{$("authStatus").textContent="Eroare sesiune: "+err.message;}),0));refresh().catch(err=>{$("authStatus").textContent="Eroare la verificarea sesiunii: "+err.message;});}else{$("authStatus").textContent="Supabase nu este disponibil în acest browser. Deschide pagina în Chrome și reîncarcă.";}
 </script></body></html>
