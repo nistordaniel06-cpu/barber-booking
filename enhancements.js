@@ -13,7 +13,13 @@ if(label){
  const selector=document.createElement("button");
  selector.type="button";selector.id="bcLocationTitle";
  selector.setAttribute("aria-label","Selectează orașul");
- function refreshTitle(){selector.textContent="⌖  "+(city?.value||"Descoperă în România")+"  ⌄"}
+ function refreshTitle(){
+   if(city&&!city.dataset.bcInitialCity&&[...city.options].some(o=>o.value==="București")){
+    city.dataset.bcInitialCity="1";
+    if(!city.value){city.value="București";city.dispatchEvent(new Event("change",{bubbles:true}))}
+   }
+   selector.textContent="⌖  "+(city?.value||"Toată România")+"  ⌄";
+  }
  refreshTitle();label.append(selector);
  selector.onclick=()=>{city?.focus();if(typeof city?.showPicker==="function"){try{city.showPicker()}catch{}}};
  city?.addEventListener("change",refreshTitle);
