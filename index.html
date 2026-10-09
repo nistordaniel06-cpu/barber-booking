@@ -131,22 +131,42 @@ function renderSearch(){
 }
 async function loadCatalog(){
  if(!window.supabase||!window.BARBERCRAFT_SUPABASE_URL)return;
- try{const api=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);const {data,error}=await api.from("bc_public_salon_catalog").select("id,name,address,services,rating,city,county,sector").eq("visibility","listed").limit(100);if(error)throw error;const seen=new Set();catalogSalons=(data||[]).filter(s=>{const key=(s.name+"|"+String(s.address||"").replace(/<[^>]+>/g," ")).toLowerCase().replace(/\s+/g," ").trim();if(seen.has(key))return false;seen.add(key);return true;});for(const [id,field] of [["cityFilter","city"],["countyFilter","county"],["sectorFilter","sector"]]){const sel=document.getElementById(id);if(!sel)continue;const previous=sel.value;sel.replaceChildren(new Option(id==="cityFilter"?"Toate orașele":id==="countyFilter"?"Toate județele":"Toate sectoarele",""));for(const value of [...new Set(catalogSalons.map(s=>s[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ro")))sel.add(new Option(value,value));sel.value=previous;}renderSearch();}catch(err){console.warn("Catalog momentan indisponibil",err.message);}
+ try{const api=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);const {data,error}=await api.from("bc_public_salon_catalog").select("id,salon_id,name,address,services,rating,review_count,city,county,sector,description,cover_image_url,phone,website").eq("visibility","listed").limit(100);if(error)throw error;const seen=new Set();catalogSalons=(data||[]).filter(s=>{const key=(s.name+"|"+String(s.address||"").replace(/<[^>]+>/g," ")).toLowerCase().replace(/\s+/g," ").trim();if(seen.has(key))return false;seen.add(key);return true;});for(const [id,field] of [["cityFilter","city"],["countyFilter","county"],["sectorFilter","sector"]]){const sel=document.getElementById(id);if(!sel)continue;const previous=sel.value;sel.replaceChildren(new Option(id==="cityFilter"?"Toate orașele":id==="countyFilter"?"Toate județele":"Toate sectoarele",""));for(const value of [...new Set(catalogSalons.map(s=>s[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ro")))sel.add(new Option(value,value));sel.value=previous;}renderSearch();}catch(err){console.warn("Catalog momentan indisponibil",err.message);}
 }
 $("heroSearchBtn").onclick=()=>{$("search").focus();$("search").scrollIntoView({behavior:"smooth",block:"center"});};$("showAllSalons").onclick=()=>{$("search").value="";renderSearch();$("salongrid").scrollIntoView({behavior:"smooth",block:"start"});};$("search").addEventListener("input",renderSearch);["cityFilter","countyFilter","sectorFilter"].forEach(id=>document.getElementById(id)?.addEventListener("change",renderSearch));
-function renderCatalogProfile(salon){
- $("catalogTitle").textContent=salon.name||"Salon";
- $("catalogAddress").textContent=String(salon.address||"Adresă încă neconfirmată").replace(/<[^>]+>/g," ");
- $("catalogMeta").textContent=[salon.rating?"Rating public: "+salon.rating:"Rating indisponibil",salon.source_url?"Profil BARBERCRAFT":"Profil BARBERCRAFT"].join(" · ");
- const list=$("catalogServices");list.replaceChildren();
- const services=Array.isArray(salon.services)?salon.services:[];
- if(!services.length)list.append(Object.assign(document.createElement("p"),{className:"sub",textContent:"Serviciile nu au fost încă adăugate de salon."}));
- for(const service of services){
-  const row=document.createElement("div");row.className="catalogService";
-  const title=document.createElement("div");const name=document.createElement("strong");name.textContent=service.name||"Serviciu";const duration=document.createElement("small");duration.textContent=service.duration||"Durată neprecizată";title.append(name,duration);
-  const price=document.createElement("b");price.textContent=service.price||"Preț neprecizat";row.append(title,price);list.append(row);
+function showCatalogTab(tab){
+ for(const name of ["services","team","reviews","contact"]){
+  const pane=document.getElementById("catalog"+name[0].toUpperCase()+name.slice(1)+"Pane");if(pane)pane.hidden=name!==tab;
  }
- go("catalogProfile");
+ document.querySelectorAll("[data-catalog-tab]").forEach(button=>button.classList.toggle("active",button.dataset.catalogTab===tab));
+}
+document.querySelectorAll("[data-catalog-tab]").forEach(button=>button.onclick=()=>showCatalogTab(button.dataset.catalogTab));
+async function renderCatalogProfile(salon){
+ $("catalogTitle").textContent=salon.name||"Salon";
+ $("catalogAddress").textContent=String(salon.address||"Adresă încă neconfirmată").replace(/<[^>]+>/g," ").trim();
+ const image=$("catalogCover");image.hidden=!salon.cover_image_url;if(salon.cover_image_url?.startsWith("https://"))image.src=salon.cover_image_url;
+ $("catalogMeta").textContent=salon.rating?("★ "+salon.rating+(salon.review_count?" · "+salon.review_count+" evaluări":"")):"";
+ $("catalogDescription").textContent=salon.description||"Descrierea salonului va fi adăugată de proprietar.";
+ $("catalogReviewInfo").textContent=salon.rating?("Ratingul public afișat este "+salon.rating+(salon.review_count?" din "+salon.review_count+" evaluări":"")+". Recenziile individuale nu sunt importate fără permisiuni."):"Nu există încă recenzii verificate afișabile în BARBERCRAFT.";
+ const contacts=$("catalogContactDetails");contacts.replaceChildren();
+ for(const value of [salon.address||"Adresă indisponibilă",salon.phone?"Telefon: "+salon.phone:"",salon.website?"Website: "+salon.website:""]){if(value){const p=document.createElement("p");p.textContent=value;contacts.append(p)}}
+ const services=Array.isArray(salon.services)?salon.services:[];
+ const list=$("catalogServices");list.replaceChildren();
+ if(!services.length){const empty=document.createElement("p");empty.className="sub";empty.textContent="Serviciile nu au fost încă adăugate de salon.";list.append(empty)}
+ for(const service of services){const row=document.createElement("div");row.className="catalogService";const title=document.createElement("div");const name=document.createElement("strong");name.textContent=service.name||"Serviciu";const duration=document.createElement("small");duration.textContent=service.duration||"Durată neprecizată";title.append(name,duration);const price=document.createElement("b");price.textContent=service.price||"Preț la salon";row.append(title,price);list.append(row);}
+ const team=$("catalogTeam"),hours=$("catalogHours");team.replaceChildren();hours.replaceChildren();
+ const emptyTeam=document.createElement("p");emptyTeam.className="sub";emptyTeam.textContent="Specialiștii vor apărea după completarea echipei în BARBERCRAFT PRO.";team.append(emptyTeam);
+ const emptyHours=document.createElement("p");emptyHours.className="sub";emptyHours.textContent="Programul salonului este în curs de actualizare.";hours.append(emptyHours);
+ $("catalogDirections").onclick=()=>{const address=String(salon.address||"").replace(/<[^>]+>/g," ").trim();if(address)window.open("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(address),"_blank","noopener,noreferrer");};
+ $("catalogShare").onclick=async()=>{const link=new URL(location.href);link.searchParams.set("salon",salon.id);link.searchParams.delete("q");try{if(navigator.share)await navigator.share({title:salon.name,url:link.href});else if(navigator.clipboard){await navigator.clipboard.writeText(link.href);$("catalogShare").textContent="Link copiat";}}catch{}};
+ showCatalogTab("services");go("catalogProfile");
+ if(!salon.salon_id||!window.supabase)return;
+ try{
+  const api=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+  const [members,opening]=await Promise.all([api.from("bc_public_salon_team").select("display_name,specialty").eq("salon_id",salon.salon_id).eq("visible",true),api.rpc("bc_public_salon_hours",{p_salon:salon.salon_id})]);
+  if(!members.error&&members.data?.length){team.replaceChildren();for(const m of members.data){const row=document.createElement("div");row.className="catalogTeamMember";const avatar=document.createElement("span");avatar.className="catalogTeamAvatar";avatar.textContent=(m.display_name||"S").slice(0,1).toUpperCase();const info=document.createElement("div");const strong=document.createElement("strong");strong.textContent=m.display_name;const small=document.createElement("small");small.textContent=m.specialty||"Specialist";info.append(strong,small);row.append(avatar,info);team.append(row)}}
+  if(!opening.error&&opening.data?.length){hours.replaceChildren();const weekdays=["Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă","Duminică"];for(const d of opening.data){const row=document.createElement("div");row.className="catalogHourRow";const name=document.createElement("span");name.textContent=weekdays[d.weekday-1]||"Zi";const value=document.createElement("strong");value.textContent=d.is_closed?"Închis":String(d.opens||"").slice(0,5)+" – "+String(d.closes||"").slice(0,5);row.append(name,value);hours.append(row)}}
+ }catch(err){console.warn("Extra salon information is not yet available",err);}
 }
 document.addEventListener("click",e=>{
  const b=e.target.closest("[data-catalog-id]");if(!b)return;
