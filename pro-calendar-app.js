@@ -111,6 +111,9 @@ function showZoomNotice(){
  clearTimeout(zoomNoticeTimer);
  zoomNoticeTimer=setTimeout(()=>label.hidden=true,900);
 }
+function focalScrollTop(anchorQuarter,quarterHeight,clientY,viewportTop){
+ return Math.max(0,52+anchorQuarter*quarterHeight-(clientY-viewportTop));
+}
 function changeQuarterHeight(nextHeight,clientY,anchorQuarter){
  const height=clampQuarterHeight(nextHeight);
  if(Math.abs(height-pixelPerQuarter)<.01)return;
@@ -122,7 +125,7 @@ function changeQuarterHeight(nextHeight,clientY,anchorQuarter){
  timeline.style.setProperty("--quarter-height",height+"px");
  // Keep the exact time beneath the fingers instead of jumping to the day start.
  const focusY=clientY===undefined?scroller.clientHeight/2:clientY-visibleTop;
- scroller.scrollTop=Math.max(0,52+anchor*height-focusY);
+ scroller.scrollTop=focalScrollTop(anchor,height,focusY+visibleTop,visibleTop);
  showZoomNotice();
 }
 function beginPinch(){
@@ -248,7 +251,7 @@ function moveSelection(e){
 function coastScroll(g){
  let velocity=g.velocityY*15,frames=0;
  function frame(){
-  if(++frames>24||Math.abs(velocity)<.5||state.gesture)return;
+  if(++frames>24||Math.abs(velocity)<.5||state.gesture||pinch||activeTouches.size>=2)return;
   scroller.scrollTop-=velocity;velocity*=.82;requestAnimationFrame(frame);
  }
  requestAnimationFrame(frame);
