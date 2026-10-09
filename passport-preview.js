@@ -3,7 +3,7 @@ const $=id=>document.getElementById(id),el=(tag,text,klass)=>{const n=document.c
 if(!window.supabase||!window.BARBERCRAFT_SUPABASE_URL){$("profileStatus").textContent="Conexiunea la cont este indisponibilă.";return}
 const sb=await window.BCPassportSession();
 const {data:{user},error:authError}=await sb.auth.getUser();
-if(authError||!user){$("profileStatus").replaceChildren(el("span","Profilul este privat. "),Object.assign(el("a","Autentifică-te →"),{href:"./#account"}));return}
+if(authError||!user){$("profileStatus").replaceChildren(el("span","Profilul este privat. "),Object.assign(el("a","Autentifică-te →"),{href:new URLSearchParams(location.search).get("from")==="pro"?"./professionals.html":"./#account"}));return}
 const fmt=n=>new Intl.NumberFormat("ro-RO").format(Number(n)||0);
 const results=await Promise.all([
  sb.from("bc_profiles").select("display_name").eq("user_id",user.id).maybeSingle(),
