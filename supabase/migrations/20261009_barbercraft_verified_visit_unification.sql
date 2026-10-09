@@ -64,7 +64,7 @@ as $$declare u uuid;begin
    select salon_id,(verified_at at time zone 'Europe/Bucharest')::date AS visit_day
    from public.bc_service_visits where user_id=u
    union all
-   select salon_id,(occurred_at at time zone 'Europe/Bucharest')::date day
+   select salon_id,(occurred_at at time zone 'Europe/Bucharest')::date AS visit_day
    from public.bc_tw_activity where user_id=u
   )all_days group by salon_id
  )x join public.bc_salons s on s.id=x.salon_id),'[]'::jsonb);
