@@ -80,8 +80,14 @@ $("scanBtn").onclick=async()=>{
  }
  $("scanBtn").disabled=true;$("redeemStatus").textContent="Se solicită permisiunea camerei…";
  try{
+  let nativeReady=false;
   if(typeof BarcodeDetector!=="undefined"){
-   detector=new BarcodeDetector({formats:["qr_code"]});
+   try{
+    const supported=typeof BarcodeDetector.getSupportedFormats==="function"?await BarcodeDetector.getSupportedFormats():["qr_code"];
+    if(supported.includes("qr_code")){detector=new BarcodeDetector({formats:["qr_code"]});nativeReady=true}
+   }catch(e){console.warn("Scanner nativ indisponibil",e)}
+  }
+  if(nativeReady){
    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false});
    video.srcObject=stream;await video.play();video.hidden=false;stopped=false;
    $("stopBtn").hidden=false;$("scanBtn").hidden=true;
