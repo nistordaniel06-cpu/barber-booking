@@ -13,6 +13,7 @@ on:
       - feature/kingdom-polish-explore-admin-mobile
       - feature/admin-mero-delete-4men-client-pilot
       - fix/admin-explore-luxury-mobile-tiles
+      - feature/explore-catalog-real-booking
 permissions:
   contents: read
 jobs:
@@ -35,3 +36,4 @@ jobs:
           node tests/barbercraft-kingdom-explore-mobile-smoke.mjs
           node tests/barbercraft-pilot-import-smoke.mjs
           node tests/barbercraft-admin-luxury-smoke.mjs
+          node tests/barbercraft-explore-public-booking-approvals-smoke.mjs
