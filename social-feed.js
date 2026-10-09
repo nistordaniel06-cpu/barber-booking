@@ -118,4 +118,5 @@ $("socialFeedRefresh").onclick=async()=>{await feed(true);await refreshClientCoo
 more.onclick=()=>feed(false);
 window.addEventListener("bc-social-profile-updated",visibility);
 await Promise.all([visibility(),feed(true)]);
+if(user)setInterval(()=>{if(!composer.hidden)void refreshClientCooldown()},60000);
 })();
