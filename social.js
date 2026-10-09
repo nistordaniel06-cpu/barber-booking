@@ -11,7 +11,7 @@ if(!api||!window.BARBERCRAFT_SUPABASE_URL){line("Comunitatea nu este disponibil�
 const sb=api.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
 const {data:{user},error}=await sb.auth.getUser();
 const profileForm=$("socialProfileForm"),self=$("socialMyProfile"),barber=$("socialBarber");
-let me=null,own=null,selected=null,chatWith=null,staff=[],mutuals=[];
+let me=null,own=null,selected=null,chatWith=null,staff=[],mutuals=[],chatTimer=null;
 const uuid=x=>/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(x||"");
 function openTab(name){
  document.querySelectorAll(".socialPanel").forEach(x=>x.hidden=x.id!=="panel"+name[0].toUpperCase()+name.slice(1));
@@ -113,7 +113,9 @@ async function loadMutuals(){
 }
 async function startChat(id,name){
  if(!user){line("Autentifică-te pentru mesaje.");return}
+ if(chatTimer)clearInterval(chatTimer);
  chatWith=id;openTab("messages");
+ chatTimer=setInterval(()=>{if(chatWith===id&&document.visibilityState==="visible")loadConversation()},12000);
  const panel=$("socialChat");panel.hidden=false;$("socialChatName").textContent="Mesaje cu "+name;
  await loadConversation();
  panel.scrollIntoView({behavior:"smooth",block:"start"});
@@ -136,7 +138,7 @@ $("socialChatForm").onsubmit=async e=>{
  try{await rpc("bc_social_message_send",{p_to:chatWith,p_body:txt});form.reset();await loadConversation();line("Mesaj trimis privat.")}
  catch(e){msgErr(e)}finally{b.disabled=false}
 };
-$("socialChatClose").onclick=()=>{chatWith=null;$("socialChat").hidden=true};
+$("socialChatClose").onclick=()=>{chatWith=null;if(chatTimer)clearInterval(chatTimer);chatTimer=null;$("socialChat").hidden=true};
 async function loadBarberDetails(id,mine,target){
  const info=await rpc("bc_social_barber_details",{p_user:id});
  if(!info)return;
@@ -268,6 +270,7 @@ $("socialIdeaForm").onsubmit=async e=>{
  line("Propunerea a ajuns în inboxul salonului.");}
  catch(e){msgErr(e)}finally{b.disabled=false}
 };
+window.addEventListener("pagehide",()=>{if(chatTimer)clearInterval(chatTimer)});
 async function init(){
  if(!user){
   line("Poți descoperi profilurile publice. Pentru follow, mesaje și sondaje este necesar un cont.");
