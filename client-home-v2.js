@@ -1,4 +1,4 @@
-/* Client header menu; public users see only the three requested actions. */
+/* Client header menu: everyone sees exactly the four requested actions. */
 (()=>{"use strict";
 const toggle=document.getElementById("infoBtn");if(!toggle)return;
 const dialog=document.createElement("dialog");dialog.className="bcClientMenu";dialog.setAttribute("aria-label","Meniul BARBERCRAFT");
