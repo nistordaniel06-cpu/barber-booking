@@ -26,34 +26,37 @@ button:disabled{opacity:.5}
 :root[data-theme="light"] body{background:#f6f7f9}:root[data-theme="light"] .card.champion{background:#fff5db}
 @media(max-width:540px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.details{grid-template-columns:1fr}h1{letter-spacing:-1.4px}.wrap{padding-inline:14px}.hero{padding:22px}}
 @media(prefers-reduced-motion:no-preference){button,.card{transition:transform .17s ease,border-color .17s ease}button:active{transform:scale(.98)}}
-</style><link rel="stylesheet" href="./premium.css"></head>
+</style><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="./premium.css"><link rel="stylesheet" href="./battle-map.css"></head>
 <body class="bc-premium bc-war"><div class="wrap"><header><a href="./" class="brand">BARBER<b>CRAFT</b></a><div style="display:flex;gap:8px;align-items:center"><button class="secondary" type="button" data-bc-theme-toggle aria-label="Schimbă tema">◐</button><a href="./passport.html" style="color:#f7d17b;font-size:12px;text-decoration:none">♛ Pașaport</a><a href="./professionals.html">PRO ↗</a></div></header>
 <div class="hero"><div class="eyebrow">BARBERCRAFT · COMPETIȚIE LOCALĂ</div><h1>Bătălia<br>Zonelor.</h1><p>Fiecare vizită finalizată și validată poate aduce puncte pentru zona ta. Începem cu Bucureștiul, apoi extindem competiția pe cartiere și zone din alte orașe.</p><span id="warMode" class="state">Se încarcă regulamentul...</span></div>
-<section><label for="warCity" style="display:block;font-size:12px;font-weight:800;margin-bottom:8px">Alege orașul</label><select id="warCity" style="width:100%;max-width:340px;background:#1b1c20;color:inherit;border:1px solid #5a513e;border-radius:12px;padding:12px"><option value="București">București · pilot</option><option value="Cluj-Napoca">Cluj-Napoca · în pregătire</option><option value="Iași">Iași · în pregătire</option><option value="Timișoara">Timișoara · în pregătire</option><option value="Constanța">Constanța · în pregătire</option><option value="Brașov">Brașov · în pregătire</option></select><p id="warCityStatus" class="status">Deocamdată există clasament doar pentru sectoarele Bucureștiului.</p><h2>Clasamentul zonelor</h2><p id="roundInfo" class="status">Se încarcă ultima rundă încheiată...</p><div class="cards" id="sectorScores"></div></section>
-<section><h2>Progresul tău în Bătălia Zonelor</h2><div class="details"><div class="tile"><span class="status">XP acumulat</span><br><b id="myXp">—</b><p>Numai din vizite validate în sistem</p></div><div class="tile"><span class="status">Puncte de fidelitate</span><br><b id="myLoyalty">—</b><p>Recompensele depind de salon și de regulile campaniei</p></div></div><div class="actions" id="sectorActions"></div><p id="userStatus" class="status"></p><div id="myAwards" class="status"></div></section>
+<section><label for="warCity" style="display:block;font-size:12px;font-weight:800;margin-bottom:8px">Alege orașul</label><select id="warCity" style="width:100%;max-width:340px;background:#1b1c20;color:inherit;border:1px solid #5a513e;border-radius:12px;padding:12px"><option value="București">București · pilot</option><option value="Cluj-Napoca">Cluj-Napoca · în pregătire</option><option value="Iași">Iași · în pregătire</option><option value="Timișoara">Timișoara · în pregătire</option><option value="Constanța">Constanța · în pregătire</option><option value="Brașov">Brașov · în pregătire</option></select><p id="warCityStatus" class="status">Deocamdată există clasament doar pentru sectoarele Bucureștiului.</p></section><section id="battleMapSection" class="battleMapStage" aria-labelledby="battleMapHeading">
+ <div class="battleMapHeader">
+  <div><span class="eyebrow">HARTA COMPETIȚIEI · BUCUREȘTI</span>
+   <h2 id="battleMapHeading">Explorează teritoriile</h2>
+   <p class="status">6 sectoare · atinge o zonă pentru detalii</p></div>
+  <button type="button" id="battleMapReset">↺ Toată harta</button>
+ </div>
+ <div class="battleMapShell">
+  <div id="battleMap" aria-label="Hartă interactivă cu sectoarele Bucureștiului"></div>
+  <div id="battleSchematic" hidden aria-label="Hartă schematică de rezervă"></div>
+  <div class="battleMapBottom">
+   <p id="battleMapStatus" class="status" role="status">Se încarcă harta interactivă…</p>
+   <p class="battleMapAttribution">Limite administrative: stratul public <a href="https://services.arcgis.com/9nrie6KNVyjacEqa/ArcGIS/rest/services/Parcuri_Bucuresti_WFL1/FeatureServer/15" target="_blank" rel="noopener noreferrer">Limite sectoare</a>. Culorile nu indică un câștigător.</p>
+  </div>
+ </div>
+ <nav class="battleSectorNav" id="battleSectorNav" aria-label="Explorează sectoarele"></nav>
+ <div id="battleSectorDetail" aria-live="polite"></div>
+ <div class="battleTeamBlock">
+  <h3>Alege echipa ta</h3>
+  <p class="status">Selectează un sector pe hartă, apoi confirmă alăturarea. Acțiunea respectă limita de schimbare a echipei.</p>
+  <div class="actions" id="sectorActions"></div>
+ </div>
+</section><section><h2>Clasamentul zonelor</h2><p id="roundInfo" class="status">Se încarcă ultima rundă încheiată...</p><div class="cards" id="sectorScores"></div></section>
+<section><h2>Progresul tău în Bătălia Zonelor</h2><div class="details"><div class="tile"><span class="status">XP acumulat</span><br><b id="myXp">—</b><p>Numai din vizite validate în sistem</p></div><div class="tile"><span class="status">Puncte de fidelitate</span><br><b id="myLoyalty">—</b><p>Recompensele depind de salon și de regulile campaniei</p></div></div><p id="userStatus" class="status"></p><div id="myAwards" class="status"></div></section>
 <section><h2>Recompense propuse</h2><div class="details"><div class="tile"><b>🏆 MVP / Comandant</b><p>Voucher pentru tuns, kit fizic de grooming, titlu VIP. Premii acordate doar după validare și revendicare.</p></div><div class="tile"><b>⚡ Bonus de sector</b><p>Reducere 10–15%, XP dublu, cashback dublu și upgrade eligibil numai la saloanele partenere înscrise.</p></div><div class="tile"><b>🎯 Raid</b><p>+150 XP pentru sectorul de origine când o vizită eligibilă are loc într-un alt sector.</p></div><div class="tile"><b>🔥 Underdog & Happy Hour</b><p>1,5× pentru ultimul clasat și 3× la vizitele validate marți și miercuri, 11:00–16:00.</p></div></div></section>
 <p class="foot">BARBERCRAFT nu activează automat reduceri sau premii. Sunt necesare verificarea serviciilor efectiv prestate, consimțământul salonului, limite clare și publicarea regulamentului. Sectoarele nu sunt verificate prin localizare ascunsă.</p>
-</div><script>
-"use strict";
-const $=id=>document.getElementById(id);
-const sb=window.supabase&&window.BARBERCRAFT_SUPABASE_URL?window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY):null;
-async function loadWar(){
- const score=$("sectorScores");score.replaceChildren();$("sectorActions").replaceChildren();$("myAwards").textContent="";if($("warCity").value!=="București"){const city=$("warCity").value;$("warCityStatus").textContent=city+": sezon în pregătire. Vom afișa aici zonele după verificarea saloanelor participante.";score.textContent="Nu există încă un clasament activ în "+city+".";$("roundInfo").textContent="Fără rezultate publicate.";$("userStatus").textContent="Alegerea unei zone va fi disponibilă după lansarea orașului.";return;}$("warCityStatus").textContent="Pilot București — sectoarele 1–6. Nu se acordă puncte pentru vizite nevalidate.";if(!sb){$("roundInfo").textContent="Conexiunea cu Supabase nu este disponibilă.";return;}
- const {data,error}=await sb.rpc("bc_tw_leaderboard");if(error){$("roundInfo").textContent=error.message;return;}
- $("warMode").textContent=data.enabled?"Competiția este activă":"În pregătire · Fără premii acordate automat";
- const last=data.rounds?.[0];$("roundInfo").textContent=last?"Ultima rundă finalizată: "+last.week_start:"Nu există încă runde cu rezultate publicate.";
- for(let i=1;i<=6;i++){const item=last?.sectors?.find(s=>s.sector===i),card=document.createElement("div");card.className="card"+(last?.winner===i?" champion":"");const small=document.createElement("span");small.textContent="București";const title=document.createElement("b");title.textContent="Sector "+i;const value=document.createElement("strong");value.textContent=item?new Intl.NumberFormat("ro-RO").format(item.score)+" XP":"—";const rank=document.createElement("small");rank.textContent=item?"Locul "+item.rank:"Fără scor";card.append(small,title,value,rank);score.append(card);}
- const {data:auth}=await sb.auth.getUser();
- if(!auth?.user){$("userStatus").textContent="Autentifică-te în aplicația clientului pentru a alege sectorul și a vedea XP-ul tău.";const login=document.createElement("a");login.className="button secondary";login.href="./#account";login.textContent="Deschide contul client";$("sectorActions").append(login);return;}
- const {data:summary,error:summaryError}=await sb.rpc("bc_client_rewards_summary");if(summaryError){$("userStatus").textContent=summaryError.message;return;}
- $("myXp").textContent=new Intl.NumberFormat("ro-RO").format(summary.xp||0);
- $("myLoyalty").textContent=new Intl.NumberFormat("ro-RO").format(summary.loyalty_points||0);
- $("userStatus").textContent=summary.home_sector?"Sectorul tău: "+summary.home_sector+". Schimbarea sectorului este limitată pentru a preveni abuzul.":"Alege sectorul cu care vrei să participi. Sectorul este blocat timp de 30 de zile.";
- for(let i=1;i<=6;i++){const btn=document.createElement("button");btn.className=i===summary.home_sector?"":"secondary";btn.textContent=(i===summary.home_sector?"✓ ":"")+"Sector "+i;btn.disabled=i===summary.home_sector;
-  btn.onclick=async()=>{btn.disabled=true;const {error}=await sb.rpc("bc_tw_choose_territory",{p_sector:i});if(error){$("userStatus").textContent="Nu s-a schimbat sectorul: "+error.message;btn.disabled=false;return;}$("sectorActions").replaceChildren();await loadWar();};
-  $("sectorActions").append(btn);}
- if(summary.pending_prizes?.length){$("myAwards").textContent="Recompense în așteptare: "+summary.pending_prizes.map(x=>x.kind+" ("+x.month+")").join(", ");}
-}
-document.getElementById("warCity").addEventListener("change",loadWar);
-loadWar();
-</script><script defer src="./zones-public.js"></script></body></html>
+</div><script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script defer src="./zones-public.js"></script>
+<script defer src="./battle-war-ui.js"></script>
+<script defer src="./battle-map.js"></script></body></html>
