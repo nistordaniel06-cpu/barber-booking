@@ -23,6 +23,11 @@ assert.ok(control.includes('id="pilotBookings"'),"Owner sees confirmed appointme
 assert.ok(client.includes('id="pilotConsent"'),"Client explicitly consents to a real reservation");
 assert.ok(client.includes('id="pilotSlots"'),"Client chooses from server-computed slots");
 assert.ok(client.includes('id="pilotBookingCode"'),"Client receives confirmation code");
+assert.ok(client.includes('id="pilotFeedbackForm"'),"Client can submit post-booking usability feedback");
+assert.ok(control.includes('id="pilotFeedbackList"'),"Owner can read pilot feedback");
+assert.ok(read("pilot-client.js").includes("bc_pilot_feedback_send"),"Feedback submits through verified RPC");
+assert.ok(read("supabase/migrations/20261009_pilot_feedback.sql").includes("BOOKING_NOT_FOUND"),"Feedback requires a confirmed booking");
+
 for(const name of ["bc_pilot_owner_state","bc_pilot_configure","bc_pilot_book","bc_pilot_slots"]){
  assert.ok(read("pilot-control.js").includes(name)||read("pilot-client.js").includes(name),"RPC wired "+name)
 }
