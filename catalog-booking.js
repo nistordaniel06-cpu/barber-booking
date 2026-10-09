@@ -43,7 +43,16 @@ $("catalogAccountLogin").onsubmit=async e=>{
 $("catalogRegister").onclick=async()=>{
  const email=$("catalogAuthEmail").value.trim(),password=$("catalogAuthPassword").value;
  if(!email||password.length<8){$("catalogAccountStatus").textContent="Introdu e-mailul și o parolă de minimum 8 caractere.";return;}
- const {data,error}=await sb.auth.signUp({email,password});
+ // Always send email-confirmation users to our deployed GitHub Pages booking page,
+ // never to the Supabase localhost fallback. This URL must be on Supabase Auth's allowlist.
+ const confirmUrl=new URL("https://nistordaniel06-cpu.github.io/barber-booking/catalog-booking.html");
+ confirmUrl.searchParams.set("salon",salon);
+ const {data,error}=await sb.auth.signUp({
+  email,password,options:{
+   emailRedirectTo:confirmUrl.toString(),
+   data:{barbercraft_account_type:"client"}
+  }
+ });
  if(error){$("catalogAccountStatus").textContent="Nu am putut crea contul: "+error.message;return;}
  if(data.session){
   await checkAccount();
