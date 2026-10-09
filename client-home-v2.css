@@ -56,3 +56,30 @@
 .bcClientMenuInfo{font-size:11px;color:#aeb1b9}
 :root[data-theme=light] .bcClientMenu{background:white;color:#22252b}
 :root[data-theme=light] .bcClientMenuItems>a,:root[data-theme=light] .bcClientMenuItems>button{background:#fafafa;color:#24252a;border-color:#e0e3e8}
+
+/* Strong contrast in light mode across every part of the Client account. */
+:root[data-theme=light] body.bc-premium.bc-client #account,
+:root[data-theme=light] body.bc-premium.bc-client #account .heading,
+:root[data-theme=light] body.bc-premium.bc-client #account .eyebrow,
+:root[data-theme=light] body.bc-premium.bc-client #account .formlabel,
+:root[data-theme=light] body.bc-premium.bc-client #account .bcWallet h3{color:#22262e!important}
+:root[data-theme=light] body.bc-premium.bc-client #account .heading{color:#151924!important;text-shadow:none!important}
+:root[data-theme=light] body.bc-premium.bc-client #account .eyebrow{color:#7e580b!important}
+:root[data-theme=light] body.bc-premium.bc-client #account .onboard,
+:root[data-theme=light] body.bc-premium.bc-client #account .bcWallet,
+:root[data-theme=light] body.bc-premium.bc-client #account .bcAvatarEditor{background:#fff!important;color:#22262e!important;border-color:#dfe1e8!important}
+:root[data-theme=light] body.bc-premium.bc-client #account .helptext,
+:root[data-theme=light] body.bc-premium.bc-client #account .sub,
+:root[data-theme=light] body.bc-premium.bc-client #account .bcAvatarEditor p{color:#555c69!important}
+:root[data-theme=light] body.bc-premium.bc-client #account input{background:#fff!important;color:#222830!important;border-color:#9aa3ae!important}
+:root[data-theme=light] body.bc-premium.bc-client #account input::placeholder{color:#717984!important}
+:root[data-theme=light] body.bc-premium.bc-client #account .secondary{background:#fff!important;color:#24262e!important;border:1px solid #cad0d8!important}
+:root[data-theme=light] body.bc-premium.bc-client #account .primary{color:#282114!important}
+:root[data-theme=light] body.bc-premium.bc-client .bcPartnerBanner{background:#fff4d6!important}
+:root[data-theme=light] body.bc-premium.bc-client #catalogProfile .heading,
+:root[data-theme=light] body.bc-premium.bc-client #catalogProfile h2,
+:root[data-theme=light] body.bc-premium.bc-client #catalogProfile h3{color:#232832!important}
+:root[data-theme=light] body.bc-premium.bc-client #catalogProfile .catalogProfileHero .heading{color:#fff!important}
+.bcHeaderClientAvatar,.bcHeaderClientAvatar:not(.hasPhoto){width:44px!important;min-width:44px!important;max-width:44px!important;flex:0 0 44px!important;height:44px!important;border-radius:50%!important;padding:0!important;font-size:16px!important;letter-spacing:0!important}
+.bcFavoriteHeart{color:#ec345a!important;font-size:24px!important}
+.bcFavoriteHeart:before{content:"";display:none}
