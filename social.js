@@ -281,6 +281,8 @@ async function init(){
   await discover();
   const search=new URLSearchParams(location.search),id=search.get("u");
   if(uuid(id))await showPerson(id);
+  const dest=(location.hash||"").replace("#","");
+  if(["profile","messages","ideas","discover"].includes(dest))openTab(dest);
   line("Comunitatea este disponibilă. Datele tale private rămân separate de profilul social.");
  }catch(e){msgErr(e)}
 }
