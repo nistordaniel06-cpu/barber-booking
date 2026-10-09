@@ -20,6 +20,10 @@ for(const file of ["index.html","professionals.html","admin.html","passport.html
   if(m[1].trim())new vm.Script(m[1],{filename:file+":inline"});
 }
 assert.ok(!client.includes('href="./territory-war.html"'),"Territorial competition hidden from Client");
+assert.ok(!pro.includes('href="./territory-war.html"'),"Territorial links hidden from PRO");
+assert.ok(!admin.includes('href="./territory-war.html"'),"Territorial links hidden from Admin");
+assert.ok(admin.includes('data-tab="zones" class="tab bc-admin-hub-tile" hidden'),"Historical game editor no longer promoted");
+assert.ok(pro.includes('id="proWarOptin" hidden'),"PRO historical participation panel is hidden");
 assert.ok(!menu.includes("Bătălia Zonelor"),"Legacy territory removed from Client menu");
 assert.ok(!read("premium-ui.js").includes('Bătălia Zonelor'),"Legacy role menu removed");
 assert.ok(menu.includes('Portal client')&&menu.includes('Portal profesioniști'),"Four clean guest links");
