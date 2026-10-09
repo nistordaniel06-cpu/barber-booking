@@ -58,7 +58,10 @@ function columns(){
   return staff.map(s=>({date:a[0],staff:s.id,title:s.name}));
  }
  const chosen=state.filter==="all"?(state.staff.find(s=>s.id===state.user?.id)||state.staff[0])?.id:state.filter;
- return a.map(date=>({date,staff:chosen,title:date.toLocaleDateString("ro-RO",{weekday:"short",day:"numeric"})}));
+ // Short labels keep all 3 or 7 days readable on the phone, no sideways scroll.
+ return a.map(date=>({date,staff:chosen,title:state.mode==="week"
+   ?["D","L","M","M","J","V","S"][date.getDay()]+" "+date.getDate()
+   :date.toLocaleDateString("ro-RO",{weekday:"short",day:"numeric"})}));
 }
 function showFilter(){
  const box=$("staffBar");box.replaceChildren();
@@ -282,9 +285,14 @@ function renderTimeline(){
  dateTitle();
  const cols=columns(),count=cols.length;
  timeline.replaceChildren();
- const width=Math.max(130,count>5?122:count>2?143:160);
- timeline.style.gridTemplateColumns="48px repeat("+count+",minmax("+width+"px,1fr))";
- timeline.style.minWidth=(48+count*width)+"px";
+ // Multi-day grid always fits *exactly* the available viewport width.
+ // Day view also fits staff where practical; 3 and 7 days never scroll sideways.
+ const gutter=count>=7?30:count===3?40:48;
+ timeline.dataset.view=state.mode;
+ timeline.style.gridTemplateColumns=gutter+"px repeat("+count+",minmax(0,1fr))";
+ timeline.style.width="100%";
+ timeline.style.minWidth="0px";
+ scroller.scrollLeft=0;
  const corner=makeElement("div","timeCorner","Ora");
  corner.style.gridColumn="1";corner.style.gridRow="1";put(timeline,corner);
  cols.forEach((col,i)=>{
@@ -295,7 +303,8 @@ function renderTimeline(){
   const n=state.events.filter(ev=>ev.status==="confirmed"&&
     (!ev.specialist_user_id||ev.specialist_user_id===col.staff)&&
     sameDate(new Date(ev.starts_at),col.date)).length;
-  put(head,makeElement("small","",isDay?n+" programări":"✂ "+specialistName(col.staff)));
+  if(isDay)put(head,makeElement("small","",n+" programări"));
+  else if(state.mode==="three")put(head,makeElement("small","",specialistName(col.staff)));
   put(timeline,head);
  });
  for(let q=0;q<hourRows;q++){
