@@ -48,7 +48,7 @@ $("pilotBookingForm").onsubmit=async e=>{
  if(!$("pilotConsent").checked){setStatus("Pentru rezervare este necesar acordul privind datele de contact.");return}
  const name=$("pilotClientName").value.trim();
  let phone=$("pilotClientPhone").value.replace(/[\s().-]/g,"");
- if(/^07\d{8}$/.test(phone))phone="+4"+phone.slice(1);
+ if(/^07\d{8}$/.test(phone))phone="+4"+phone;
  if(!/^\+[1-9][0-9]{7,14}$/.test(phone)){setStatus("Introdu un număr valid, de exemplu +407xxxxxxxx.");return}
  if(!confirm("Confirmi această programare REALĂ la "+config.name+" în "+$("pilotDate").value+", ora "+selected+"?"))return;
  busy=true;$("pilotSubmit").disabled=true;
