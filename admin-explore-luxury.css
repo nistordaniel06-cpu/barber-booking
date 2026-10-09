@@ -1,0 +1,286 @@
+/* BARBERCRAFT · Luxury Admin and Explore. Loaded LAST after legacy/premium styles. */
+body.bc-premium.bc-admin{
+ --bc-explore-gold:#f5c970;--bc-explore-line:#474039;--bc-explore-mist:#b7b0a4;
+ overflow-x:clip;
+}
+body.bc-premium.bc-admin .shell{width:min(100%,1280px);max-width:100%;overflow:visible}
+body.bc-premium.bc-admin .panel{overflow:visible;max-width:100%}
+body.bc-premium.bc-admin #content{min-width:0}
+body.bc-premium.bc-admin .bc-admin-hub{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:10px}
+body.bc-premium.bc-admin .bc-admin-hub > .bc-admin-hub-tile{
+ min-width:0!important;max-width:100%;width:100%;height:auto!important;min-height:128px;
+ display:flex!important;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:10px;
+ padding:clamp(12px,3vw,19px)!important;text-align:left!important;
+ white-space:normal!important;overflow:hidden;overflow-wrap:anywhere;word-break:normal;
+ background:linear-gradient(155deg,#202024,#151519);border:1px solid #4d4335;border-radius:18px;
+ box-shadow:inset 0 1px 0 #ffffff09;transition:transform .17s,border-color .17s,background .17s;
+}
+body.bc-premium.bc-admin .bc-admin-hub > .bc-admin-hub-tile:focus-visible{outline:3px solid #ffe6a7;outline-offset:2px}
+body.bc-premium.bc-admin .bc-admin-hub > .bc-admin-hub-tile:active{transform:scale(.987)}
+body.bc-premium.bc-admin .bc-admin-hub > .bc-admin-hub-tile span{
+ display:grid;place-items:center;flex:0 0 35px;width:35px;height:35px;border-radius:11px;
+ background:#3d3020;color:#f6d48c;font-size:21px;line-height:1;
+}
+body.bc-premium.bc-admin .bc-admin-hub > .bc-admin-hub-tile strong{
+ display:block;flex:none;min-width:0;width:100%;max-width:100%;
+ font-size:clamp(12px,3.2vw,15px)!important;line-height:1.35!important;font-weight:800;
+ white-space:normal!important;overflow-wrap:anywhere!important;hyphens:auto;
+}
+body.bc-premium.bc-admin .bc-admin-hub > .bc-admin-hub-tile small{
+ display:block;min-width:0;max-width:100%;font-size:clamp(10px,2.6vw,12px)!important;
+ line-height:1.5!important;white-space:normal!important;overflow-wrap:anywhere!important;
+ color:#bdb8b2;
+}
+body.bc-premium.bc-admin .bc-admin-hub > [data-tab="referrals"]{
+ background:linear-gradient(135deg,#33291c,#17171b 83%);border-color:#8f6e3b;
+}
+body.bc-premium.bc-admin .bc-admin-hub > [data-tab="referrals"] strong{
+ letter-spacing:-.15px;
+}
+body.bc-premium.bc-admin .bc-admin-hub > [data-tab="referrals"] small{
+ color:#e0c793;
+}
+body.bc-premium.bc-admin .bc-admin-hub > [data-tab="explore"]{
+ background:linear-gradient(135deg,#312719,#17181d 85%);border-color:#8f6e3b;
+}
+@media(min-width:770px){
+ body.bc-premium.bc-admin .bc-admin-hub{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:380px){
+ body.bc-premium.bc-admin .bc-admin-hub{gap:8px}
+ body.bc-premium.bc-admin .bc-admin-hub > .bc-admin-hub-tile{
+  padding:12px!important;min-height:150px
+ }
+ body.bc-premium.bc-admin .bc-admin-hub > .bc-admin-hub-tile strong{font-size:12px!important}
+ body.bc-premium.bc-admin .bc-admin-hub > .bc-admin-hub-tile small{font-size:10px!important}
+}
+
+/* Explore has its own viewport containment rather than inheriting generic form grids. */
+body.bc-premium.bc-admin .bcExploreApp{width:100%;max-width:100%;min-width:0;color:#f5f3ee}
+body.bc-premium.bc-admin .bcExploreApp *,body.bc-premium.bc-admin .bcExploreApp *::before,
+body.bc-premium.bc-admin .bcExploreApp *::after{box-sizing:border-box;min-width:0}
+.bcExploreApp .bcExploreHero{
+ position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;
+ padding:clamp(20px,5vw,35px);border:1px solid #725a36;border-radius:22px;overflow:hidden;
+ background:radial-gradient(ellipse at 96% 0%,#91692c45,transparent 56%),linear-gradient(125deg,#2b241c,#17181d 80%);
+}
+.bcExploreApp .bcExploreHeroText{max-width:600px;position:relative;z-index:1}
+.bcExploreApp .bcExploreKicker{color:#eec780;letter-spacing:1.5px;font-size:10px;font-weight:900}
+.bcExploreApp .bcExploreHero h2{
+ color:#fff!important;font-size:clamp(23px,6.4vw,36px)!important;line-height:1.12!important;
+ letter-spacing:-.9px;margin:11px 0!important;overflow-wrap:anywhere;
+}
+.bcExploreApp .bcExploreHero p{color:#d0c5b5;font-size:13px;line-height:1.65;margin:0}
+.bcExploreApp .bcExploreHeroArt{
+ flex:0 0 92px;display:grid;place-items:center;width:92px;height:92px;font-size:56px;
+ color:#f7d592;border:2px solid #98733c;border-radius:22px;background:linear-gradient(145deg,#5b4528,#1b1a19);
+ box-shadow:0 0 0 7px #edbb6410;
+}
+.bcExploreApp .bcExploreStats{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:15px 0;
+}
+.bcExploreApp .bcExploreStat{
+ display:grid;gap:3px;align-content:center;min-height:78px;padding:13px 16px;
+ background:#1e1f24;border:1px solid #484139;border-radius:15px;
+}
+.bcExploreApp .bcExploreStat strong{font-size:clamp(22px,5vw,29px);font-variant-numeric:tabular-nums;color:#ffcf77}
+.bcExploreApp .bcExploreStat span{font-size:11px;line-height:1.4;color:#b8b3ad}
+.bcExploreApp .bcExploreNotice{
+ color:#d8c09b;font-size:12px;line-height:1.5;padding:10px 13px;
+ background:#28231a;border:1px solid #56452e;border-radius:12px;margin:10px 0 0;
+}
+.bcExploreApp .bcExploreStatus{
+ color:#f6ca70;font-size:12px;line-height:1.6;margin:10px 0;min-height:18px;overflow-wrap:anywhere;
+}
+.bcExploreApp .bcExploreStatus[data-kind="error"]{color:#ffaba4}
+.bcExploreApp .bcExploreStatus[data-kind="success"]{color:#a8e7bd}
+.bcExploreApp .bcExploreToolbar{
+ display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) auto;gap:11px;
+ align-items:end;margin:22px 0 18px;padding:17px;background:#1b1b20;
+ border:1px solid #383940;border-radius:18px;
+}
+.bcExploreApp .bcExploreField{display:grid!important;gap:8px!important;max-width:100%;width:100%;
+ margin:0!important;font-weight:700;font-size:12px;line-height:1.4;color:#ebe7e2;
+ white-space:normal;align-content:start;
+}
+.bcExploreApp .bcExploreLabel{display:block!important;color:#e1dcd3;font-size:12px;font-weight:800;line-height:1.4}
+.bcExploreApp .bcExploreField input,
+.bcExploreApp .bcExploreField textarea,
+.bcExploreApp .bcExploreField select{
+ display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;
+ box-sizing:border-box!important;min-height:46px;background:#111216!important;color:#fff!important;
+ border:1px solid #56535b!important;border-radius:11px!important;padding:11px 13px!important;
+ font-size:14px!important;font-weight:500!important;line-height:1.4!important;
+ overflow-wrap:anywhere;resize:vertical;
+}
+.bcExploreApp .bcExploreField input:focus-visible,
+.bcExploreApp .bcExploreField textarea:focus-visible,
+.bcExploreApp .bcExploreField select:focus-visible{outline:2px solid #f9d18c;outline-offset:1px;border-color:#eac678!important}
+.bcExploreApp .bcExploreField input[type=file]{
+ cursor:pointer;font-size:12px!important;padding:11px!important;overflow:hidden;min-height:63px;
+}
+.bcExploreApp .bcExploreField input[type=file]::file-selector-button{
+ background:#3e3020;color:#ffda91;border:1px solid #916d37;border-radius:8px;
+ padding:8px;margin-right:8px;font:inherit;font-weight:800;max-width:100%;
+}
+.bcExploreApp .bcExploreButton{
+ display:inline-flex;justify-content:center;align-items:center;gap:6px;min-height:43px;
+ padding:11px 15px;border-radius:11px;border:1px solid #5d5450;
+ color:#f5efe8;background:#2c2b31;cursor:pointer;
+ font-size:12px;font-weight:850;line-height:1.35;text-align:center;
+ max-width:100%;white-space:normal;overflow-wrap:anywhere;
+}
+.bcExploreApp .bcExploreButton:focus-visible{outline:3px solid #ffdb9b;outline-offset:2px}
+.bcExploreApp .bcExploreButton:disabled{opacity:.45;cursor:not-allowed}
+.bcExploreApp .bcExplorePrimary{
+ background:linear-gradient(135deg,#ffe09c,#f3be56)!important;
+ color:#211708!important;border-color:#e6b65b!important;
+ box-shadow:inset 0 1px 0 #fff4cf7c,0 3px 14px #f0be6222;
+}
+.bcExploreApp .bcExploreSecondary,.bcExploreApp .bcExploreBack{
+ background:#24252a!important;color:#f4ddaf!important;border-color:#655337!important;
+}
+.bcExploreApp .bcExploreDanger{
+ background:#301e22!important;color:#ffc6bd!important;border-color:#8d4849!important;
+}
+.bcExploreApp .bcExploreList{display:grid;gap:12px;min-width:0}
+.bcExploreApp .bcExploreCard{
+ display:grid;grid-template-columns:clamp(115px,21vw,170px) minmax(0,1fr);gap:17px;
+ padding:13px;border:1px solid #4c4136;border-radius:19px;min-width:0;
+ background:linear-gradient(140deg,#222125,#18191e);box-shadow:inset 0 1px 0 #fff2;
+}
+.bcExploreApp .bcExploreCardMedia{width:100%;min-height:132px;overflow:hidden;border-radius:13px;
+ background:#161719;align-self:stretch}
+.bcExploreApp .bcExploreCardMedia img{width:100%;height:100%;max-height:210px;min-height:132px;object-fit:cover;display:block}
+.bcExploreApp .bcExploreNoPhoto{height:100%;min-height:132px;display:grid;place-content:center;
+ justify-items:center;gap:5px;background:radial-gradient(circle at 35% 30%,#5b452c 0,#232124 65%,#151619 100%);
+ color:#f6d18a}
+.bcExploreApp .bcExploreNoPhoto span{font-size:39px}
+.bcExploreApp .bcExploreNoPhoto small{font-size:10px;color:#e8d6ad}
+.bcExploreApp .bcExploreCardContent{display:flex;flex-direction:column;gap:12px;min-width:0}
+.bcExploreApp .bcExploreCardHeading{display:grid;gap:6px}
+.bcExploreApp .bcExploreCardHeading strong{font-size:clamp(14px,3.4vw,18px);line-height:1.4;
+ color:#fff;white-space:normal;overflow-wrap:anywhere}
+.bcExploreApp .bcExploreCardHeading small{font-size:11px;color:#b9b7b7;line-height:1.45;overflow-wrap:anywhere}
+.bcExploreApp .bcExploreBadges{display:flex;flex-wrap:wrap;gap:7px}
+.bcExploreApp .bcExploreBadge{display:inline-flex;align-items:center;
+ border:1px solid #56545a;border-radius:99px;color:#c2bfc0;padding:5px 9px;
+ font-size:10px;line-height:1.4}
+.bcExploreApp .bcExploreBadge.is-visible{color:#b5e7bd;border-color:#478054;background:#1a2a20}
+.bcExploreApp .bcExploreBadge.is-hidden{color:#f1c092;border-color:#8a593f;background:#34251e}
+.bcExploreApp .bcExploreCardActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+.bcExploreApp .bcExploreCardActions .bcExploreButton{flex:1 1 100px}
+.bcExploreApp .bcExploreEmpty{border:1px dashed #75634b;border-radius:15px;
+ padding:23px;background:#201e20;color:#dac8a7;text-align:center}
+.bcExploreApp .bcExploreEditorHead{display:flex;justify-content:space-between;gap:12px;align-items:center;
+ flex-wrap:wrap;margin:12px 0}
+.bcExploreApp .bcExploreEditTitle{font-size:clamp(23px,6vw,32px)!important;
+ margin:12px 0 22px!important;line-height:1.2;overflow-wrap:anywhere}
+.bcExploreApp .bcExploreForm{display:grid;gap:17px;width:100%;min-width:0}
+.bcExploreApp .bcExploreSection{
+ background:linear-gradient(150deg,#201f24,#18191d 88%);
+ border:1px solid #5e4b35;border-radius:18px;padding:clamp(14px,3.7vw,24px);
+ min-width:0;
+}
+.bcExploreApp .bcExploreSectionHeading{display:flex;align-items:center;gap:12px;margin-bottom:19px}
+.bcExploreApp .bcExploreSectionIcon{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;
+ background:#35291b;border:1px solid #9b7840;border-radius:12px;
+ font-size:21px;color:#f5cf84}
+.bcExploreApp .bcExploreSectionHeading h3{font-size:clamp(16px,4.2vw,21px);line-height:1.3;
+ margin:0;color:#ffda8e}
+.bcExploreApp .bcExploreSectionHeading p{font-size:11px;color:#b9b4b0;line-height:1.6;margin:3px 0 0}
+.bcExploreApp .bcExploreFieldGrid,.bcExploreApp .bcExploreServiceFields{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;
+}
+.bcExploreApp .bcExploreWide{grid-column:1/-1}
+.bcExploreApp .bcExploreField textarea{min-height:95px}
+.bcExploreApp .bcExploreServiceList{display:grid;gap:11px}
+.bcExploreApp .bcExploreServiceCard{
+ display:grid;gap:12px;padding:15px;border:1px solid #42434c;background:#181a1e;
+ border-radius:15px;
+}
+.bcExploreApp .bcExploreServiceHeader{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.bcExploreApp .bcExploreServiceHeader strong{color:#f8dfa3;font-size:12px;letter-spacing:.1px}
+.bcExploreApp .bcExploreRemoveService{min-height:35px;padding:7px 12px;font-size:11px}
+.bcExploreApp .bcExploreAddService{margin-top:13px;width:100%;border-style:dashed;
+ color:#f5d18a;background:#342b1e}
+.bcExploreApp .bcExploreUploadGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.bcExploreApp .bcExplorePhotoList{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));
+ gap:12px;margin:14px 0}
+.bcExploreApp .bcExplorePhoto{padding:8px;background:#202126;border:1px solid #49484c;
+ border-radius:12px;display:grid;gap:7px}
+.bcExploreApp .bcExplorePhoto img{width:100%;aspect-ratio:1.3;object-fit:cover;border-radius:8px}
+.bcExploreApp .bcExplorePhoto small{font-size:11px;color:#dac99f}
+.bcExploreApp .bcExplorePhoto .bcExploreButton{min-height:35px}
+.bcExploreApp .bcExploreSwitch{display:flex;align-items:flex-start;gap:11px;font-size:12px;
+ line-height:1.5;color:#e4d4b1;cursor:pointer;margin-top:15px}
+.bcExploreApp .bcExploreSwitch input{flex:0 0 20px!important;width:20px!important;height:20px!important;
+ margin:0!important;accent-color:#e7b85b;cursor:pointer}
+.bcExploreApp .bcExploreSwitch span{flex:1}
+.bcExploreApp .bcExploreSwitch strong,.bcExploreApp .bcExploreSwitch small{display:block}
+.bcExploreApp .bcExploreSwitch small{color:#bcb5a9;font-size:11px;margin-top:5px}
+.bcExploreApp .bcExploreEditorActions{
+ position:sticky;bottom:0;display:flex;gap:10px;justify-content:flex-end;
+ padding:13px 0;background:linear-gradient(0deg,#121317 75%,#12131700);
+ z-index:4;
+}
+.bcExploreApp .bcExploreEditorActions .bcExploreButton{flex:1 1 140px}
+.bcExploreApp .bcExploreDeleteFooter{display:flex;gap:12px;align-items:center;justify-content:space-between;
+ padding:14px;background:#291e20;border:1px solid #6f4540;border-radius:13px}
+.bcExploreApp .bcExploreDeleteFooter small{color:#c1a5a3;font-size:11px;line-height:1.6}
+@media(max-width:760px){
+ .bcExploreApp .bcExploreToolbar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .bcExploreApp .bcExploreToolbar .bcExploreField:first-child{grid-column:1/-1}
+ .bcExploreApp .bcExploreToolbar>.bcExploreButton{width:100%;align-self:end}
+ .bcExploreApp .bcExploreCard{grid-template-columns:110px minmax(0,1fr);gap:12px}
+ .bcExploreApp .bcExploreCardActions .bcExploreButton{flex:1 1 100px}
+}
+@media(max-width:525px){
+ .bcExploreApp .bcExploreHeroArt{flex:0 0 56px;width:56px;height:56px;font-size:35px}
+ .bcExploreApp .bcExploreHero{gap:6px;padding:19px 16px}
+ .bcExploreApp .bcExploreHero p{font-size:11px}
+ .bcExploreApp .bcExploreStats{gap:6px}
+ .bcExploreApp .bcExploreStat{padding:10px 9px;min-height:65px}
+ .bcExploreApp .bcExploreStat span{font-size:10px}
+ .bcExploreApp .bcExploreCard{grid-template-columns:1fr;padding:11px}
+ .bcExploreApp .bcExploreCardMedia{height:132px}
+ .bcExploreApp .bcExploreCardMedia img{height:132px}
+ .bcExploreApp .bcExploreCardContent{padding:4px 3px 3px}
+ .bcExploreApp .bcExploreCardActions .bcExploreButton{flex:1 1 28%;padding:10px 6px;font-size:11px}
+ .bcExploreApp .bcExploreFieldGrid,.bcExploreApp .bcExploreUploadGrid{grid-template-columns:1fr}
+ .bcExploreApp .bcExploreFieldGrid .bcExploreWide{grid-column:auto}
+ .bcExploreApp .bcExploreServiceFields{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .bcExploreApp .bcExploreServiceFields .bcExploreWide{grid-column:1/-1}
+ .bcExploreApp .bcExploreDeleteFooter{align-items:stretch;flex-wrap:wrap}
+ .bcExploreApp .bcExploreDeleteFooter .bcExploreButton{width:100%}
+}
+@media(max-width:350px){
+ .bcExploreApp .bcExploreHeroArt{display:none}
+ .bcExploreApp .bcExploreToolbar{grid-template-columns:1fr}
+ .bcExploreApp .bcExploreToolbar .bcExploreField:first-child{grid-column:auto}
+ .bcExploreApp .bcExploreCardActions .bcExploreButton{flex:1 1 100px}
+ .bcExploreApp .bcExploreEditorActions{flex-wrap:wrap}
+ .bcExploreApp .bcExploreEditorActions .bcExploreButton{flex:1 1 100%}
+}
+@media(prefers-reduced-motion:reduce){
+ .bcExploreApp *,body.bc-premium.bc-admin .bc-admin-hub > .bc-admin-hub-tile{transition:none!important;scroll-behavior:auto!important}
+}
+/* Appearance preference: design remains legible even if global theme is light. */
+:root[data-theme="light"] body.bc-premium.bc-admin .bcExploreApp{
+ color:#25211b
+}
+:root[data-theme="light"] .bcExploreApp .bcExploreCard,
+:root[data-theme="light"] .bcExploreApp .bcExploreSection,
+:root[data-theme="light"] .bcExploreApp .bcExploreToolbar{
+ background:#f9f7f2;border-color:#cdbda6;color:#24211d;
+}
+:root[data-theme="light"] .bcExploreApp .bcExploreCardHeading strong,
+:root[data-theme="light"] .bcExploreApp .bcExploreSectionHeading h3{
+ color:#28211a
+}
+:root[data-theme="light"] .bcExploreApp .bcExploreField input,
+:root[data-theme="light"] .bcExploreApp .bcExploreField textarea,
+:root[data-theme="light"] .bcExploreApp .bcExploreField select{
+ background:#fff!important;color:#28221b!important;border-color:#ad9e89!important
+}
+:root[data-theme="light"] .bcExploreApp .bcExploreLabel{color:#4d4336}

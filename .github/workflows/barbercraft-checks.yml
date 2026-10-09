@@ -12,6 +12,7 @@ on:
       - fix/social-feed-responsive-qr-geolocation
       - feature/kingdom-polish-explore-admin-mobile
       - feature/admin-mero-delete-4men-client-pilot
+      - fix/admin-explore-luxury-mobile-tiles
 permissions:
   contents: read
 jobs:
@@ -33,3 +34,4 @@ jobs:
           node tests/barbercraft-social-feed-qr-smoke.mjs
           node tests/barbercraft-kingdom-explore-mobile-smoke.mjs
           node tests/barbercraft-pilot-import-smoke.mjs
+          node tests/barbercraft-admin-luxury-smoke.mjs
