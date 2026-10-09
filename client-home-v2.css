@@ -1,0 +1,58 @@
+/* More readable light mode, overriding the premium DARK-only palette. */
+:root[data-theme=light] body.bc-premium.bc-client{color:#20232a!important;background:#f3f4f7!important;--bc-ink:#f3f4f7;--bc-type:#20232a;--surface:#fff;--line:#d8dce4;--muted:#646b77;--yellow:#e1ad31;color-scheme:light}
+:root[data-theme=light] body.bc-premium.bc-client .shell,
+:root[data-theme=light] body.bc-premium.bc-client .page{background:#f3f4f7!important;color:#20232a!important}
+:root[data-theme=light] body.bc-premium.bc-client .top,
+:root[data-theme=light] body.bc-premium.bc-client .bottom{background:#ffffffed!important;color:#23262e!important;border-color:#dfe1e8!important}
+:root[data-theme=light] body.bc-premium.bc-client .wordmark{color:#20232a!important}
+:root[data-theme=light] body.bc-premium.bc-client .search,
+:root[data-theme=light] body.bc-premium.bc-client .saloncard,
+:root[data-theme=light] body.bc-premium.bc-client .notice,
+:root[data-theme=light] body.bc-premium.bc-client .catalogService,
+:root[data-theme=light] body.bc-premium.bc-client .catalogTeamMember,
+:root[data-theme=light] body.bc-premium.bc-client .catalogHourRow,
+:root[data-theme=light] body.bc-premium.bc-client .bcSampleCard,
+:root[data-theme=light] body.bc-premium.bc-client .bcSampleArea,
+:root[data-theme=light] body.bc-premium.bc-client .bcAdvancedFilters,
+:root[data-theme=light] body.bc-premium.bc-client .bcCountryMap,
+:root[data-theme=light] body.bc-premium.bc-client .onboard,
+:root[data-theme=light] body.bc-premium.bc-client .panel{background:#fff!important;color:#242730!important;border-color:#dfe1e7!important;box-shadow:0 2px 14px #18202c0b}
+:root[data-theme=light] body.bc-premium.bc-client .search input,
+:root[data-theme=light] body.bc-premium.bc-client .formfield,
+:root[data-theme=light] body.bc-premium.bc-client .input{background:#fff!important;color:#222730!important}
+:root[data-theme=light] body.bc-premium.bc-client .search input::placeholder{color:#777f8c!important}
+:root[data-theme=light] body.bc-premium.bc-client .chip:not(.active),
+:root[data-theme=light] body.bc-premium.bc-client .bcDiscoverActions button,
+:root[data-theme=light] body.bc-premium.bc-client .iconbutton{background:#fff!important;color:#333741!important;border-color:#d5d8e0!important}
+:root[data-theme=light] body.bc-premium.bc-client .bcAdvancedFilters>summary,
+:root[data-theme=light] body.bc-premium.bc-client .sectiontitle,
+:root[data-theme=light] body.bc-premium.bc-client .bcSampleArea h3{color:#6d500e!important}
+:root[data-theme=light] body.bc-premium.bc-client .sub,
+:root[data-theme=light] body.bc-premium.bc-client .tiny,
+:root[data-theme=light] body.bc-premium.bc-client .bcLocationNotice,
+:root[data-theme=light] body.bc-premium.bc-client .helptext{color:#5d6470!important}
+:root[data-theme=light] body.bc-premium.bc-client .nav{color:#5c646e!important}
+:root[data-theme=light] body.bc-premium.bc-client .nav.selected{color:#201708!important}
+:root[data-theme=light] body.bc-premium.bc-client .hero{background:linear-gradient(115deg,#fffbf0,#e8d7bb)!important;color:#24242a!important;border:1px solid #dcc9a6}
+:root[data-theme=light] body.bc-premium.bc-client .bcPartnerBanner{background:#fff6e0;color:#2c2b2f}
+:root[data-theme=light] body.bc-premium.bc-client .bcPartnerBanner strong{color:#62490f}
+:root[data-theme=light] body.bc-premium.bc-client .bcPartnerBanner p{color:#555a60}
+.bcHeaderClientAvatar{border:1px solid #b89140!important;border-radius:30px!important;display:grid!important;place-items:center;flex:0 0 auto;width:54px;min-width:54px;height:44px;max-width:70px;color:#f4d786;background:#28241a;font-size:12px;font-weight:900;overflow:hidden;padding:0!important}
+.bcHeaderClientAvatar:not(.hasPhoto):not(:empty){padding:0 6px!important}
+.bcHeaderClientAvatar.hasPhoto{width:44px!important;min-width:44px}
+.bcHeaderClientAvatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+:root[data-theme=light] .bcHeaderClientAvatar{background:#ffe4a5!important;color:#403015!important}
+.bcAvatarEditor{display:grid;gap:9px;padding:15px;border:1px solid var(--line,#43454f);border-radius:14px;margin:12px 0;background:var(--surface,#212329)}
+.bcAvatarEditor strong{font-size:14px}.bcAvatarEditor p{margin:0;font-size:12px;color:var(--muted,#aaa)}
+.bcAvatarPick{display:flex;align-items:center;gap:9px;flex-wrap:wrap;border:1px solid #bd9550;border-radius:12px;padding:12px;font-weight:750;font-size:12px;cursor:pointer}
+.bcAvatarPick input{min-width:0;width:100%;font-size:11px}
+.bcClientMenu{width:min(92vw,450px);max-height:75dvh;overflow:auto;border:1px solid #b28f4f;border-radius:22px;padding:17px;background:#202228;color:#f5f5f7;box-shadow:0 20px 70px #0009}
+.bcClientMenu::backdrop{background:#090a0dcc}
+.bcClientMenuTop{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:9px}
+.bcClientMenuTop strong{font-size:15px}.bcClientMenuTools{display:flex;gap:8px}
+.bcClientMenuTools>a,.bcClientMenuTools>button{display:grid;place-items:center;width:44px;height:44px;border:1px solid #646570;border-radius:12px;background:#30333d;color:#f1d079;text-decoration:none;font-size:23px}
+.bcClientMenuItems{display:grid;gap:9px}
+.bcClientMenuItems>button,.bcClientMenuItems>a{display:block;width:100%;padding:16px;text-align:left;background:#2b2d36;color:#f5f5f7;border:1px solid #484a56;border-radius:13px;font-size:14px;font-weight:800;text-decoration:none}
+.bcClientMenuInfo{font-size:11px;color:#aeb1b9}
+:root[data-theme=light] .bcClientMenu{background:white;color:#22252b}
+:root[data-theme=light] .bcClientMenuItems>a,:root[data-theme=light] .bcClientMenuItems>button{background:#fafafa;color:#24252a;border-color:#e0e3e8}
