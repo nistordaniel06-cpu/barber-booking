@@ -159,7 +159,7 @@ function renderSearch(){
   }
   const haystack=[s.name,s.address,s.city,s.county,s.sector,s.description,
    ...(Array.isArray(s.services)?s.services.flatMap(x=>[x.name,x.category]):[])].map(normalize).join(" ");
-  return query.split(/\\s+/).filter(Boolean).every(term=>haystack.includes(term));
+  return query.split(/\s+/).filter(Boolean).every(term=>haystack.includes(term));
  });
  // Quality sorting is based only on actual stored ratings/review counts.
  // The top recommendation group requires >=4.6 stars AND >=20 reviews.
