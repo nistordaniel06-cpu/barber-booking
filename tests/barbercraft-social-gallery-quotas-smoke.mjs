@@ -1,0 +1,53 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import vm from "node:vm";
+const read=(path)=>fs.readFileSync(path,"utf8");
+const app=read("social.js"),html=read("social.html"),css=read("social.css");
+const passport=read("passport.html"),preview=read("passport-preview.html");
+const base=read("supabase/migrations/20261009182000_barber_passport_photo_eligibility_quotas.sql");
+const qr=read("supabase/migrations/20261009182100_client_gallery_booking_counts_qr_window.sql");
+
+new vm.Script(app,{filename:"social.js"});
+assert.match(html,/id="socialClientGalleryForm"/);
+assert.match(html,/id="socialClientGalleryVisit"/);
+assert.match(html,/id="socialClientGalleryPhotos"/);
+assert.match(html,/id="socialProQuota"/);
+assert.match(html,/id="socialClientQuota"/);
+assert.match(css,/#socialClientGalleryStatus/);
+assert.match(passport,/social\.html#profile/);
+assert.match(preview,/Publică o tunsoare/);
+
+// Client gallery must share neither the private Passport album nor the PRO bucket.
+assert.match(app,/bc_social_client_gallery_add/);
+assert.match(app,/bc_social_client_gallery_list/);
+assert.match(app,/bc_social_client_gallery_delete/);
+assert.match(app,/bc-client-social-gallery/);
+assert.match(app,/bc_social_gallery_status/);
+assert.ok(!base.includes("alter table public.bc_passport_photos"));
+assert.match(base,/create table if not exists public\.bc_client_social_photo_claims/);
+assert.match(base,/checkin_id uuid primary key/);
+assert.match(base,/create table if not exists public\.bc_client_social_gallery/);
+assert.match(base,/enable row level security/);
+assert.match(base,/bc_client_social_gallery_owner_select/);
+assert.match(base,/bc_client_social_gallery_owner_delete/);
+assert.match(base,/bc_social_client_gallery_upload_allowed/);
+assert.match(base,/bc_pro_portfolio_upload_log/);
+assert.match(base,/pg_advisory_xact_lock/);
+assert.match(base,/interval '1 month'/);
+assert.match(base,/interval '5 months'/);
+assert.match(base,/interval '6 months'/);
+assert.match(base,/interval '1 year'/);
+assert.match(base,/DAILY_PORTFOLIO_LIMIT/);
+// Bookings and QR+staff verified haircuts count uniquely by salon/day.
+assert.match(qr,/bc_tw_activity/);
+assert.match(qr,/bc_service_visits/);
+assert.match(qr,/group by salon_id/);
+assert.match(qr,/count\(\*\)::integer/);
+assert.match(qr,/bc_passport_checkins q/);
+assert.match(qr,/interval '24 hours'/);
+assert.match(qr,/PHOTO_ALREADY_POSTED_FOR_VISIT/);
+assert.match(qr,/THREE_VERIFIED_VISITS_REQUIRED/);
+assert.match(qr,/QR_24H_WINDOW_EXPIRED/);
+assert.ok(app.includes('loadClientGallery(user.id,true)'));
+assert.ok(app.includes('loadClientGallery(id,false,box)'));
+console.log("PASS: social client/pro gallery eligibility and UI wiring");

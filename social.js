@@ -10,7 +10,7 @@ const api=window.supabase;
 if(!api||!window.BARBERCRAFT_SUPABASE_URL){line("Comunitatea nu este disponibilă.");return}
 const sb=await window.BCPassportSession();
 const {data:{user},error}=await sb.auth.getUser();
-const profileForm=$("socialProfileForm"),self=$("socialMyProfile"),barber=$("socialBarber");
+const profileForm=$("socialProfileForm"),self=$("socialMyProfile"),barber=$("socialBarber"),clientGallery=$("socialClientGallery");
 let me=null,own=null,selected=null,chatWith=null,staff=[],mutuals=[],chatTimer=null;
 const uuid=x=>/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(x||"");
 function openTab(name){
@@ -39,9 +39,15 @@ async function loadMyProfile(){
  const pro=await rpc("bc_social_is_barber",{p_user:user.id});
  barber.hidden=!pro;
  const ideasTab=$("socialClientIdeasTab");if(ideasTab)ideasTab.hidden=!!pro;
- if(pro){await loadBarberDetails(user.id,true);
+ if(pro){
+  clientGallery.hidden=true;
+  await loadBarberDetails(user.id,true);
   if(location.hash==="#ideas")openTab("profile");
+ }else{
+  clientGallery.hidden=false;
+  await loadClientGallery(user.id,true);
  }
+ await refreshGalleryStatus();
 }
 profileForm.onsubmit=async e=>{
  e.preventDefault();const b=profileForm.querySelector("button");b.disabled=true;
@@ -99,6 +105,9 @@ async function showPerson(id){
   if(p.kind==="barber"){
    const title=el("h3","Barber Passport · Portofoliu");box.append(title);
    await loadBarberDetails(id,false,box);
+  }else{
+   box.append(el("h3","Galerie de tunsori · Client"));
+   await loadClientGallery(id,false,box);
   }
   box.scrollIntoView({behavior:"smooth",block:"start"});
  }catch(e){msgErr(e)}
@@ -143,6 +152,123 @@ $("socialChatForm").onsubmit=async e=>{
  catch(e){msgErr(e)}finally{b.disabled=false}
 };
 $("socialChatClose").onclick=()=>{chatWith=null;if(chatTimer)clearInterval(chatTimer);chatTimer=null;$("socialChat").hidden=true};
+function galleryStatusNote(id,message){
+ const node=$(id);
+ if(node)node.textContent=message;
+}
+function clientGalleryError(err){
+ const code=String(err?.message||err||"");
+ const messages={
+  THREE_VERIFIED_VISITS_REQUIRED:"Ai nevoie de cel puțin 3 tunsori confirmate (QR + finalizarea serviciului).",
+  QR_24H_WINDOW_EXPIRED:"Au trecut 24 de ore de la QR sau vizita nu a fost finalizată și confirmată.",
+  PHOTO_ALREADY_POSTED_FOR_VISIT:"Ai publicat deja o fotografie pentru această vizită.",
+  CLIENT_ONLY:"Pentru contul PRO folosește portofoliul profesionistului.",
+  INVALID_IMAGE:"Fotografia nu a fost acceptată. Încearcă un fișier JPG, PNG sau WebP de până la 5 MB."
+ };
+ return messages[code]||code;
+}
+async function refreshGalleryStatus(){
+ if(!user)return;
+ const state=await rpc("bc_social_gallery_status");
+ if(state.kind==="barber"){
+  const used=Number(state.used_today)||0,limit=Number(state.daily_limit)||1;
+  galleryStatusNote("socialProQuota",
+   "Astăzi: "+used+"/"+limit+" fotografii publicate. Limita crește după 1 lună (2/zi), 5 luni (3/zi), 6 luni (4/zi) și 1 an (5/zi). Se resetează la miezul nopții, ora României.");
+  const b=$("socialPortfolioForm")?.querySelector('button[type="submit"]');
+  if(b)b.disabled=used>=limit;
+  return;
+ }
+ const visits=Array.isArray(state.visits)?state.visits:[];
+ const selector=$("socialClientGalleryVisit"),b=$("socialClientGalleryForm").querySelector('button[type="submit"]');
+ selector.replaceChildren();
+ for(const q of visits){
+  const d=new Date(q.checked_at),expiry=new Date(q.expires_at);
+  const value="QR "+d.toLocaleString("ro-RO")+" · până la "+expiry.toLocaleString("ro-RO");
+  selector.append(new Option(value,q.checkin_id));
+ }
+ const visitsDone=Number(state.completed_visits)||0;
+ let message;
+ if(visitsDone<3){
+  message=visitsDone+"/3 tunsori finalizate și confirmate. Mai ai nevoie de "+(3-visitsDone)+" pentru a putea posta.";
+ }else if(!visits.length){
+  message="Ai "+visitsDone+" tunsori confirmate. Nu ai acum o vizită eligibilă: cere verificarea QR la frizer, confirmarea finalizării serviciului și postează în 24 de ore.";
+ }else{
+  message="Ai "+visitsDone+" tunsori confirmate și "+visits.length+" vizită/vizite eligibile. Poți urca o singură fotografie pentru fiecare QR, înainte de expirare.";
+ }
+ galleryStatusNote("socialClientQuota",message);
+ selector.disabled=!visits.length;
+ b.disabled=!visits.length;
+}
+async function loadClientGallery(id,mine,target){
+ const gallery=mine?$("socialClientGalleryPhotos"):el("div",undefined,"socialPortfolio");
+ gallery.replaceChildren();
+ if(!mine)target.append(gallery);
+ const photos=await rpc("bc_social_client_gallery_list",{p_user:id});
+ if(!photos?.length){gallery.append(el("p","Nu există fotografii publicate în această galerie."));return}
+ for(const photo of photos){
+  const card=el("div",undefined,"socialPortfolioItem"),img=el("img");
+  img.loading="lazy";img.alt=photo.caption||"Tunsoare din galeria clientului";
+  img.src=sb.storage.from("bc-client-social-gallery").getPublicUrl(photo.path).data.publicUrl;
+  card.append(img,el("p",photo.caption||"Tunsoare publicată"));
+  if(mine)card.append(btn("Șterge",async()=>{
+   if(!confirm("Ștergi fotografia? Nu vei putea publica din nou pentru același QR."))return;
+   try{
+    const path=await rpc("bc_social_client_gallery_delete",{p_id:photo.id});
+    if(path){
+     const {error:removeErr}=await sb.storage.from("bc-client-social-gallery").remove([path]);
+     if(removeErr)throw removeErr;
+    }
+    await loadClientGallery(user.id,true);
+    await refreshGalleryStatus();
+    galleryStatusNote("socialClientGalleryStatus","Fotografia a fost eliminată. Dreptul de postare pentru acel QR rămâne consumat.");
+   }catch(e){galleryStatusNote("socialClientGalleryStatus","Nu am putut șterge fotografia: "+clientGalleryError(e))}
+  }));
+  gallery.append(card);
+ }
+}
+$("socialClientGalleryForm").onsubmit=async e=>{
+ e.preventDefault();
+ const form=e.currentTarget,button=form.querySelector('button[type="submit"]');
+ const file=form.elements.namedItem("photo")?.files?.[0];
+ const types={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"};
+ if(!file||file.size>5*1024*1024||!types[file.type]){
+  galleryStatusNote("socialClientGalleryStatus","Alege o fotografie JPG, PNG sau WebP de maximum 5 MB.");return;
+ }
+ const checkin=form.elements.namedItem("visit")?.value;
+ if(!checkin){galleryStatusNote("socialClientGalleryStatus","Nu există un QR eligibil pentru publicare.");return}
+ if(!confirm("Fotografia va avea un link public. Ai acordul persoanelor din imagine pentru publicare?"))return;
+ button.disabled=true;
+ const oldLabel=button.textContent;
+ button.textContent="Se publică…";
+ galleryStatusNote("socialClientGalleryStatus","Se încarcă fotografia...");
+ const path=user.id+"/"+crypto.randomUUID()+"."+types[file.type];
+ try{
+  const {error}=await sb.storage.from("bc-client-social-gallery")
+   .upload(path,file,{contentType:file.type,upsert:false});
+  if(error)throw error;
+  try{
+   await rpc("bc_social_client_gallery_add",{
+    p_path:path,p_caption:form.elements.namedItem("caption").value.trim(),p_checkin:checkin});
+  }catch(err){
+   await sb.storage.from("bc-client-social-gallery").remove([path]);
+   throw err;
+  }
+  form.reset();
+  try{
+   await loadClientGallery(user.id,true);
+   await refreshGalleryStatus();
+   galleryStatusNote("socialClientGalleryStatus","Fotografia a fost postată! QR-ul folosit nu mai permite o a doua fotografie.");
+  }catch(refreshErr){
+   galleryStatusNote("socialClientGalleryStatus","Fotografia a fost publicată, dar galeria nu s-a actualizat. Reîncarcă pagina.");
+  }
+ }catch(err){
+  galleryStatusNote("socialClientGalleryStatus","Publicarea a eșuat: "+clientGalleryError(err));
+  await refreshGalleryStatus().catch(()=>{});
+ }finally{
+  button.textContent=oldLabel;
+ }
+};
+
 async function loadBarberDetails(id,mine,target){
  const info=await rpc("bc_social_barber_details",{p_user:id});
  if(!info)return;
@@ -170,6 +296,7 @@ async function loadBarberDetails(id,mine,target){
    try{const path=await rpc("bc_social_barber_portfolio_delete",{p_id:photo.id});
     if(path){const {error:removeError}=await sb.storage.from("bc-barber-portfolio").remove([path]);if(removeError)throw removeError}
     await loadBarberDetails(id,true);
+    await refreshGalleryStatus();
    }catch(e){msgErr(e)}
   }));photos.append(card);
  }
@@ -208,12 +335,16 @@ $("socialPortfolioForm").onsubmit=async e=>{
   f.reset();
   try{
    await loadBarberDetails(user.id,true);
+   await refreshGalleryStatus();
    portfolioNotice("Fotografia a fost încărcată. În comunitate apare după publicarea profilului social; fișierul are un link public.");
   }catch(err){
    portfolioNotice("Fotografia a fost publicată, dar galeria nu s-a reîmprospătat. Reîncarcă pagina.",true);
   }
  }catch(err){
-  portfolioNotice("Nu am putut încărca fotografia: "+(err?.message||String(err)),true);
+  const reason=String(err?.message||err||"");
+  portfolioNotice(reason.includes("DAILY_PORTFOLIO_LIMIT")
+   ?"Ai atins limita de fotografii pentru astăzi. Revino mâine.":"Nu am putut încărca fotografia: "+reason,true);
+  await refreshGalleryStatus().catch(()=>{});
  }finally{b.disabled=false;b.textContent=oldLabel}
 };
 async function loadIdeas(){
