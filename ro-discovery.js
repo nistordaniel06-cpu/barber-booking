@@ -31,7 +31,7 @@ controls.insertAdjacentElement("afterend",drawer);
 const mapCard=document.createElement("section");mapCard.className="bcCountryMap";mapCard.hidden=true;
 mapCard.innerHTML='<div class="bcMapHeader"><button id="bcMapClose" type="button" aria-label="Înapoi la saloane">←</button><div><strong>Toate serviciile</strong><small>În jurul locației tale · 5 km inițial</small></div><button id="bcMapFilters" type="button" aria-label="Filtre hartă">⚙</button></div><div id="bcMapRoot" aria-label="Hartă interactivă cu saloane reale și grupări pe oraș"></div><button id="bcMapLocate" type="button" aria-label="Centrează harta pe poziția ta">⌖</button><div id="bcMapLegend" aria-live="polite"></div>';
 drawer.insertAdjacentElement("afterend",mapCard);
-let map=null,markers=null,locationLayer=null,lastCity=null,pendingCity=null,manualSelection=false;
+let map=null,markers=null,locationLayer=null,lastCity=null,pendingCity=null,manualSelection=false,mapViewed=false;
 const notice=$("bcLocationNotice");
 function refreshSearch(){window.BCRefreshSearch?.();}
 function setAll(){
@@ -161,7 +161,7 @@ async function updatePins(){
 $("bcShowMap").onclick=()=>{
  mapCard.hidden=!mapCard.hidden;$("bcShowMap").setAttribute("aria-pressed",String(!mapCard.hidden));
  if(mapCard.hidden)return;
- window.BCLocationRadius?.setRadius?.(5);
+ if(!mapViewed){window.BCLocationRadius?.setRadius?.(5);mapViewed=true;}
  initMap();
  const gps=window.BCLocationRadius?.position?.();
  if(gps&&map)map.setView([gps.lat,gps.lon],13);
