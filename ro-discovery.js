@@ -98,8 +98,7 @@ async function updatePins(){
   const {data,error}=await client.from("bc_public_salon_catalog").select("id,name,city,visibility,geo_lat,geo_lng").eq("visibility","listed").limit(500);
   if(error)throw error;
   const count={},visible=window.BCVisibleSalons;
-  const published=visible?.length||document.getElementById("search")?.value||window.BCDiscoveryRareServices?.length?
-   (data||[]).filter(s=>(visible||[]).some(v=>v.id===s.id)):(data||[]);
+  const published=Array.isArray(visible)?(data||[]).filter(s=>visible.some(v=>v.id===s.id)):(data||[]);
   for(const row of published){
    const lat=Number(row.geo_lat),lon=Number(row.geo_lng);
    if(row.geo_lat!=null&&row.geo_lng!=null&&Number.isFinite(lat)&&Number.isFinite(lon)){
