@@ -43,6 +43,7 @@ function detail(n){
 }
 function select(n,fly=true){
  detail(n);
+ window.dispatchEvent(new CustomEvent("bc-sector-selected",{detail:{sector:safeSector(n)}}));
  if(map&&fly){
   const layer=features.get(safeSector(n));
   if(layer){map.flyToBounds(layer.getBounds().pad(.08),{maxZoom:12.4,duration:.55})}
@@ -50,7 +51,7 @@ function select(n,fly=true){
  }
 }
 const labels=()=>{
- const nav=$("battleSectorNav");nav.replaceChildren();
+ const nav=$("battleSectorNav");if(!nav)return;nav.replaceChildren();
  for(let n=1;n<=6;n++){
   const b=document.createElement("button");
   b.type="button";b.dataset.battleSector=String(n);b.className="battleSectorChip";
