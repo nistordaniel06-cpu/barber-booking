@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#101116"><title>Territory War — BARBERCRAFT</title>
+<meta name="theme-color" content="#101116"><title>Bătălia Zonelor — BARBERCRAFT</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./auth-config.js"></script><script defer src="./appearance.js"></script><script defer src="./territory-war.js"></script>
 <style>
@@ -28,9 +28,9 @@ button:disabled{opacity:.5}
 @media(prefers-reduced-motion:no-preference){button,.card{transition:transform .17s ease,border-color .17s ease}button:active{transform:scale(.98)}}
 </style></head>
 <body><div class="wrap"><header><a href="./" class="brand">BARBER<b>CRAFT</b></a><div style="display:flex;gap:8px;align-items:center"><button class="secondary" type="button" data-bc-theme-toggle aria-label="Schimbă tema">◐</button><a href="./professionals.html">PRO ↗</a></div></header>
-<div class="hero"><div class="eyebrow">Bătălia pe Sectoare</div><h1>Territory<br>War.</h1><p>Fiecare serviciu finalizat și verificat poate aduce puncte pentru sectorul tău. Competiția va reuni clienți, frizeri și saloane din București.</p><span id="warMode" class="state">Se încarcă regulamentul...</span></div>
-<section><h2>Clasamentul sectoarelor</h2><p id="roundInfo" class="status">Se încarcă ultima rundă încheiată...</p><div class="cards" id="sectorScores"></div></section>
-<section><h2>Profilul tău Territory War</h2><div class="details"><div class="tile"><span class="status">XP acumulat</span><br><b id="myXp">—</b><p>Numai din vizite validate în sistem</p></div><div class="tile"><span class="status">Puncte de fidelitate</span><br><b id="myLoyalty">—</b><p>Convertirea în vouchere va necesita regulament și finanțare</p></div></div><div class="actions" id="sectorActions"></div><p id="userStatus" class="status"></p><div id="myAwards" class="status"></div></section>
+<div class="hero"><div class="eyebrow">BARBERCRAFT · COMPETIȚIE LOCALĂ</div><h1>Bătălia<br>Zonelor.</h1><p>Fiecare serviciu finalizat și verificat poate aduce puncte pentru sectorul tău. Începem cu Bucureștiul, apoi extindem competiția pe cartiere și zone din alte orașe.</p><span id="warMode" class="state">Se încarcă regulamentul...</span></div>
+<section><label for="warCity" style="display:block;font-size:12px;font-weight:800;margin-bottom:8px">Alege orașul</label><select id="warCity" style="width:100%;max-width:340px;background:#1b1c20;color:inherit;border:1px solid #5a513e;border-radius:12px;padding:12px"><option value="București">București · pilot</option><option value="Cluj-Napoca">Cluj-Napoca · în pregătire</option><option value="Iași">Iași · în pregătire</option><option value="Timișoara">Timișoara · în pregătire</option><option value="Constanța">Constanța · în pregătire</option><option value="Brașov">Brașov · în pregătire</option></select><p id="warCityStatus" class="status">Deocamdată există clasament doar pentru sectoarele Bucureștiului.</p><h2>Clasamentul zonelor</h2><p id="roundInfo" class="status">Se încarcă ultima rundă încheiată...</p><div class="cards" id="sectorScores"></div></section>
+<section><h2>Progresul tău în Bătălia Zonelor</h2><div class="details"><div class="tile"><span class="status">XP acumulat</span><br><b id="myXp">—</b><p>Numai din vizite validate în sistem</p></div><div class="tile"><span class="status">Puncte de fidelitate</span><br><b id="myLoyalty">—</b><p>Convertirea în vouchere va necesita regulament și finanțare</p></div></div><div class="actions" id="sectorActions"></div><p id="userStatus" class="status"></p><div id="myAwards" class="status"></div></section>
 <section><h2>Recompense propuse</h2><div class="details"><div class="tile"><b>🏆 MVP / Comandant</b><p>Voucher pentru tuns, kit fizic de grooming, titlu VIP. Premii acordate doar după validare și revendicare.</p></div><div class="tile"><b>⚡ Bonus de sector</b><p>Reducere 10–15%, XP dublu, cashback dublu și upgrade eligibil numai la saloanele partenere înscrise.</p></div><div class="tile"><b>🎯 Raid</b><p>+150 XP pentru sectorul de origine când o vizită eligibilă are loc într-un alt sector.</p></div><div class="tile"><b>🔥 Underdog & Happy Hour</b><p>1,5× pentru ultimul clasat și 3× la vizitele validate marți și miercuri, 11:00–16:00.</p></div></div></section>
 <p class="foot">BARBERCRAFT nu activează automat reduceri sau premii. Sunt necesare verificarea serviciilor efectiv prestate, consimțământul salonului, limite clare și publicarea regulamentului. Sectoarele nu sunt verificate prin localizare ascunsă.</p>
 </div><script>
@@ -38,7 +38,7 @@ button:disabled{opacity:.5}
 const $=id=>document.getElementById(id);
 const sb=window.supabase&&window.BARBERCRAFT_SUPABASE_URL?window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY):null;
 async function loadWar(){
- const score=$("sectorScores");score.replaceChildren();if(!sb){$("roundInfo").textContent="Conexiunea cu Supabase nu este disponibilă.";return;}
+ const score=$("sectorScores");score.replaceChildren();$("sectorActions").replaceChildren();$("myAwards").textContent="";if($("warCity").value!=="București"){const city=$("warCity").value;$("warCityStatus").textContent=city+": sezon în pregătire. Vom afișa aici zonele după verificarea saloanelor participante.";score.textContent="Nu există încă un clasament activ în "+city+".";$("roundInfo").textContent="Fără rezultate publicate.";$("userStatus").textContent="Alegerea unei zone va fi disponibilă după lansarea orașului.";return;}$("warCityStatus").textContent="Pilot București — sectoarele 1–6. Nu se acordă puncte pentru vizite nevalidate.";if(!sb){$("roundInfo").textContent="Conexiunea cu Supabase nu este disponibilă.";return;}
  const {data,error}=await sb.rpc("bc_tw_leaderboard");if(error){$("roundInfo").textContent=error.message;return;}
  $("warMode").textContent=data.enabled?"Competiția este activă":"În pregătire · Fără premii acordate automat";
  const last=data.rounds?.[0];$("roundInfo").textContent=last?"Ultima rundă finalizată: "+last.week_start:"Nu există încă runde cu rezultate publicate.";
@@ -54,5 +54,6 @@ async function loadWar(){
   $("sectorActions").append(btn);}
  if(summary.pending_prizes?.length){$("myAwards").textContent="Recompense în așteptare: "+summary.pending_prizes.map(x=>x.kind+" ("+x.month+")").join(", ");}
 }
+document.getElementById("warCity").addEventListener("change",loadWar);
 loadWar();
 </script></body></html>
