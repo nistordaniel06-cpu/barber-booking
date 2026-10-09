@@ -18,7 +18,9 @@ const sb=window.supabase?.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BA
 let overview=null,active="storefront",catalogItems=[];
 function elt(tag,text,cls){const e=document.createElement(tag);if(text!=null)e.textContent=String(text);if(cls)e.className=cls;return e}
 function show(name){for(const s of ["loading","denied","dashboard"])$(s).hidden=s!==name}
-async function init(){if(!sb){show("denied");$("loginStatus").textContent="Supabase indisponibil.";return;}const {data}=await sb.auth.getUser();if(!data.user){show("denied");return;}const {data:isAdmin,error}=await sb.rpc("bc_is_platform_admin");if(error||isAdmin!==true){show("denied");$("loginStatus").textContent="Acest cont nu are rol de administrator.";return;}show("dashboard");await reload()}
+async function init(){if(!sb){show("denied");$("loginStatus").textContent="Supabase indisponibil.";return;}const {data}=await sb.auth.getUser();if(!data.user){show("denied");return;}const {data:isAdmin,error}=await sb.rpc("bc_is_platform_admin");if(error||isAdmin!==true){show("denied");$("loginStatus").textContent="Acest cont nu are rol de administrator.";return;}const requested=(location.hash||"").match(/^#admin-(storefront|partners|imports|catalog|sales|rewards|zones|moderation|audit)$/);
+ if(requested)active=requested[1];
+ show("dashboard");await reload()}
 async function reload(){
  const btn=$("refresh");if(btn)btn.disabled=true;
  $("actionStatus").textContent="Se actualizează datele...";
@@ -91,5 +93,20 @@ async function act(kind,id,value,reason){
 if(kind==="services"){openServiceEditor(id);return;}if(kind==="link"){await linkCatalogToSalon(id);return;}if(kind==="activate"){if(!confirm("Confirmi activarea salonului pentru proprietarul acestei cereri?"))return;const {data,error}=await sb.rpc("bc_admin_activate_partner",{p_application:id});$("actionStatus").textContent=error?"Eroare: "+error.message:"Salon activat și rol de proprietar acordat.";if(!error)await reload();return;}
 if(kind==="edit"){const salon=catalogItems.find(x=>x.id===id);if(!salon)return;const name=prompt("Nume salon",salon.name);if(name===null)return;const address=prompt("Adresă salon",salon.address||"");if(address===null)return;const city=prompt("Oraș",salon.city||"București");if(city===null)return;const county=prompt("Județ",salon.county||"București");if(county===null)return;const sector=prompt("Sector (dacă există)",salon.sector||"");if(sector===null)return;const {error}=await sb.rpc("bc_admin_catalog_edit",{p_id:id,p_name:name,p_address:address,p_city:city,p_county:county,p_sector:sector});$("actionStatus").textContent=error?"Eroare: "+error.message:"Salon actualizat.";if(!error)await reload();return;}const serious=["approved","rejected","suspension","ban","delete","delist","publish"];if(serious.includes(value)&&!confirm(value==="delete"?"Ștergi salonul din catalogul public? Această operațiune nu afectează rezervările, dar profilul public va dispărea.":"Confirmi acțiunea "+value+"? Va fi înregistrată în audit."))return;$("actionStatus").textContent="Se procesează...";const {error}=kind==="catalog"?await sb.rpc("bc_admin_catalog_action",{p_action:value,p_id:id}):await sb.rpc("bc_admin_action",{p_kind:kind,p_target:id,p_value:value,p_reason:reason});$("actionStatus").textContent=error?"Eroare: "+error.message:"Acțiunea a fost înregistrată.";if(!error)await reload()}
 $("showAdminPassword").onclick=()=>{const i=$("password"),b=$("showAdminPassword"),on=i.type==="password";i.type=on?"text":"password";b.textContent=on?"◎":"◉";b.setAttribute("aria-label",on?"Ascunde parola":"Arată parola");b.setAttribute("aria-pressed",String(on));};
-document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{active=b.dataset.tab;render()});$("refresh").onclick=reload;$("logout").onclick=async()=>{await sb.auth.signOut();show("denied")};$("login").onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("loginStatus").textContent=error?error.message:"Autentificare reușită";if(!error)await init()};init();
+// A single delegated listener supports both top tabs and the quick-action tiles.
+// Scroll to the newly opened editor so buttons never look like they did nothing.
+$("dashboard").addEventListener("click",e=>{
+ const b=e.target.closest("button[data-tab]");
+ if(!b||!$("dashboard").contains(b))return;
+ const target=b.dataset.tab;
+ if(!["storefront","partners","imports","catalog","sales","rewards","zones","moderation","audit"].includes(target))return;
+ active=target;render();
+ document.querySelectorAll("button[data-tab]").forEach(item=>{
+  const selected=item.dataset.tab===active;
+  item.classList.toggle("active",selected);
+  item.setAttribute("aria-pressed",String(selected));
+ });
+ history.replaceState(null,"","#admin-"+target);
+ $("content").scrollIntoView({block:"start",behavior:"smooth"});
+});$("refresh").onclick=reload;$("logout").onclick=async()=>{await sb.auth.signOut();show("denied")};$("login").onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("loginStatus").textContent=error?error.message:"Autentificare reușită";if(!error)await init()};init();
 </script><script defer src="./premium-ui.js"></script><script defer src="./admin-rewards.js"></script><script defer src="./admin-zones.js"></script></body></html>
