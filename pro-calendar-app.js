@@ -35,15 +35,49 @@ function toast(message){
 }
 function gate(message){$("gate").hidden=false;$("gateText").textContent=message}
 function hideGate(){$("gate").hidden=true}
+// Each modal can be opened in its own tab. Only appointment IDs, barber IDs
+// and dates go in the URL: never customer names, private tokens or unsaved notes.
+const popupQueryKeys=["popup","from","to","staff","kind","event"];
+function popupURL(kind){
+ const url=new URL("./pro/calendar/",document.baseURI);
+ url.searchParams.set("popup",kind);
+ if(kind==="quick"&&state.selection){
+  const selected=selectionText(state.selection);
+  url.searchParams.set("from",datetime(selected.from));
+  url.searchParams.set("to",datetime(selected.to));
+  if(state.selection.staff)url.searchParams.set("staff",state.selection.staff);
+ }else if(kind==="edit"){
+  const from=$("startAt").value,to=$("endAt").value,staff=$("eventStaff").value;
+  if(from)url.searchParams.set("from",from);
+  if(to)url.searchParams.set("to",to);
+  if(staff)url.searchParams.set("staff",staff);
+  url.searchParams.set("kind",state.kind);
+  if(state.editId)url.searchParams.set("event",state.editId);
+ }
+ return url.href;
+}
+function updatePopupLinks(){
+ for(const [id,kind] of [["popupNewTabQuick","quick"],["popupNewTabEdit","edit"],["popupNewTabSync","sync"]]){
+  const link=$(id);if(link)link.href=popupURL(kind);
+ }
+}
+function discardPopupQuery(){
+ const url=new URL(window.location.href);
+ if(!url.searchParams.has("popup"))return;
+ for(const key of popupQueryKeys)url.searchParams.delete(key);
+ history.replaceState(null,"",url.pathname+url.search+url.hash);
+}
 function showSheet(name){
  $("sheetBackdrop").hidden=false;
  for(const id of ["quickSheet","editSheet","syncSheet"])$(id).hidden=id!==name;
  document.body.classList.add("modalOpen");
+ updatePopupLinks();
 }
-function closeSheet(){
+function closeSheet(preserveRoute=false){
  $("sheetBackdrop").hidden=true;document.body.classList.remove("modalOpen");
  for(const id of ["quickSheet","editSheet","syncSheet"])$(id).hidden=true;
  state.selection=null;timeline.querySelectorAll(".timeCell.selected").forEach(x=>x.classList.remove("selected"));
+ if(preserveRoute!==true)discardPopupQuery();
 }
 $("closeQuick").onclick=closeSheet;$("closeEdit").onclick=closeSheet;$("closeSync").onclick=closeSheet;
 $("sheetBackdrop").addEventListener("click",e=>{if(e.target===$("sheetBackdrop"))closeSheet()});
@@ -455,7 +489,8 @@ async function selectSalon(){
 }
 function openEditor(kind,event=null){
  state.kind=kind;state.editId=event?.id||null;
- closeSheet();showSheet("editSheet");
+ closeSheet(new URL(window.location.href).searchParams.get("popup")==="edit");
+ showSheet("editSheet");
  $("editTitle").textContent=event?"Modifică intervalul":kind==="busy"?"Blochează timpul":"Programare nouă";
  $("clientField").hidden=kind==="busy";
  $("serviceField").querySelector("input").placeholder=kind==="busy"?"Ex. Pauză, training, concediu":"Ex. Tuns + barbă";
@@ -473,12 +508,14 @@ function openEditor(kind,event=null){
  }
  $("eventStaff").value=initial.staff||state.user.id;
  if(!$("eventStaff").value)$("eventStaff").selectedIndex=0;
+ updatePopupLinks();
 }
 function openFromSelection(kind){
  if(!state.selection)return;
  window.__bcDraftSelection=selectionText(state.selection);
  openEditor(kind,null);
 }
+for(const id of ["startAt","endAt","eventStaff"])$(id).addEventListener("change",updatePopupLinks);
 $("chooseBooking").onclick=()=>openFromSelection("confirmed");
 $("chooseBusy").onclick=()=>openFromSelection("busy");
 $("fastAdd").onclick=()=>{
@@ -544,6 +581,50 @@ $("copyFeed").onclick=async()=>{
  try{await navigator.clipboard.writeText($("feedUrl").value);$("syncNotice").textContent="Link copiat. Adaugă-l în calendarul Google pe web."}
  catch(e){$("feedUrl").focus();$("feedUrl").select();$("syncNotice").textContent="Selectează și copiază linkul din câmp."}
 };
+async function restorePopupFromURL(){
+ const url=new URL(window.location.href),type=url.searchParams.get("popup");
+ if(!["quick","edit","sync"].includes(type))return;
+ if(type==="sync"){showSheet("syncSheet");return}
+ const from=url.searchParams.get("from"),to=url.searchParams.get("to");
+ if(!from||!to||!/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$/.test(from)||!/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$/.test(to)){
+  toast("Linkul nu conține un interval de timp valid.");discardPopupQuery();return;
+ }
+ const start=new Date(from),end=new Date(to);
+ if(!Number.isFinite(start.getTime())||!Number.isFinite(end.getTime())||end<=start||end-start>7*86400000){
+  toast("Intervalul din link nu este valid.");discardPopupQuery();return;
+ }
+ state.day=new Date(start);state.mode="day";state.filter="all";showFilter();
+ document.querySelectorAll("[data-mode]").forEach(button=>button.classList.toggle("active",button.dataset.mode==="day"));
+ await loadEvents(true);
+ if(type==="edit"){
+  const eventId=url.searchParams.get("event");
+  if(eventId){
+   const match=state.events.find(e=>e.id===eventId&&e.source_provider==="manual");
+   if(!match){toast("Programarea nu poate fi deschisă sau modificată.");discardPopupQuery();return}
+   openEditor(match.status==="busy"?"busy":"confirmed",match);
+  }else{
+   const requestedStaff=url.searchParams.get("staff");
+   window.__bcDraftSelection={from:start,to:end,staff:state.staff.some(x=>x.id===requestedStaff)?requestedStaff:state.user.id};
+   openEditor(url.searchParams.get("kind")==="busy"?"busy":"confirmed");
+  }
+  return;
+ }
+ if(end-start>12*3600000||iso(start)!==iso(end)){
+  toast("Intervalul trebuie să fie într-o singură zi.");discardPopupQuery();return;
+ }
+ const requestedStaff=url.searchParams.get("staff");
+ const currentCols=columns();
+ const col=Math.max(0,currentCols.findIndex(c=>c.staff===requestedStaff));
+ const first=start.getHours()*4+start.getMinutes()/15;
+ const last=end.getHours()*4+end.getMinutes()/15;
+ if(!Number.isInteger(first)||!Number.isInteger(last)||last<=first||first<0||last>hourRows){
+  toast("Selectează un interval de 15 minute.");discardPopupQuery();return;
+ }
+ state.selection={date:onScreen(start),staff:currentCols[col].staff,col,from:first,to:last};
+ paintSelection();
+ $("selectionLabel").textContent=selectionText(state.selection).label;
+ showSheet("quickSheet");
+}
 async function begin(){
  if(!sb){gate("Autentificarea PRO este indisponibilă.");return}
  gate("Verificăm contul profesional...");
@@ -553,6 +634,7 @@ async function begin(){
   const permission=await rpc("bc_pro_portal_access");
   if(permission?.allowed!==true){gate("Contul folosit nu are acces PRO. Nu poți folosi calendarul salonului cu un cont Client.");return}
   state.user=data.user;await selectSalon();hideGate();await loadEvents(true);
+  await restorePopupFromURL();
   pollTimer=setInterval(()=>{if(document.visibilityState==="visible"&&$("sheetBackdrop").hidden)void loadEvents()},60000);
   window.addEventListener("focus",()=>{if($("sheetBackdrop").hidden)void loadEvents()});
   document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&$("sheetBackdrop").hidden)void loadEvents()});

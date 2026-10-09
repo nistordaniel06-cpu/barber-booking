@@ -8,7 +8,15 @@ const section=n("section",undefined,"bcSampleArea"),title=n("h3","Saloane de exp
  grid=n("div",undefined,"bcSampleGrid");
 section.append(title,description,grid);$("salongrid")?.insertAdjacentElement("afterend",section);
 const dialog=n("dialog",undefined,"bcSampleDialog");
-dialog.innerHTML='<img class="bcSampleModalCover" src="./assets/salon-placeholder.svg" alt="Copertă salon"><div class="bcSampleBody" id="bcSampleDialogBody"></div>';
+dialog.innerHTML='<div class="bcSamplePopupHeader"><span>Profilul salonului</span><div class="bcSamplePopupActions"><a id="bcSampleNewTab" target="_blank" rel="noopener noreferrer" href="./client/" aria-label="Deschide profilul în tab nou" title="Deschide în tab nou">↗</a><button id="bcSampleClose" type="button" aria-label="Închide" title="Închide">✕</button></div></div><img class="bcSampleModalCover" src="./assets/salon-placeholder.svg" alt="Copertă salon"><div class="bcSampleBody" id="bcSampleDialogBody"></div>';
+dialog.querySelector("#bcSampleClose").onclick=()=>dialog.close();
+dialog.addEventListener("close",()=>{
+ const url=new URL(window.location.href);
+ if(url.searchParams.has("previewSalon")){
+  url.searchParams.delete("previewSalon");
+  history.replaceState(null,"",url.pathname+url.search+url.hash);
+ }
+});
 document.body.append(dialog);
 const norm=v=>String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 const city=$("cityFilter"),county=$("countyFilter"),sector=$("sectorFilter");
@@ -44,6 +52,9 @@ function draw(){
  }
 }
 function detail(s){
+ const url=new URL("./client/",document.baseURI);
+ url.searchParams.set("previewSalon",s.id);
+ dialog.querySelector("#bcSampleNewTab").href=url.href;
  const root=dialog.querySelector("#bcSampleDialogBody");root.replaceChildren();
  const cover=dialog.querySelector(".bcSampleModalCover");cover.src=photo(s,s.cover_path);
  cover.alt=s.photo_permission&&s.cover_path?"Copertă "+s.name:"Ilustrație generică BARBERCRAFT";
@@ -77,6 +88,11 @@ async function load(){
    .limit(150);
   if(error)throw error;if(t!==token)return;
   data=items||[];window.BCDemoCatalog=data;ensureOptions();
+  const wanted=new URL(window.location.href).searchParams.get("previewSalon");
+  if(wanted){
+   const match=data.find(s=>String(s.id)===wanted);
+   if(match)detail(match);
+  }
   for(const sel of [city,county,sector])if(sel)new MutationObserver(ensureOptions).observe(sel,{childList:true});
   title.textContent="Saloane de explorat · "+data.length+" profiluri";
   draw();window.BCLocationMap?.updatePins();
