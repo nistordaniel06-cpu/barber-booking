@@ -45,7 +45,7 @@ for(const token of ["bc_admin_explore_list","bc_admin_explore_save","bc_admin_ex
 }
 const sql=read("supabase/migrations/20261009_explore_admin_editor.sql");
 assert.ok(sql.includes("public.bc_is_platform_admin()"),"Role-gated catalog mutations");
-assert.ok(sql.includes("booking_enabled"),"Legacy demos stay nonbookable");
+assert.ok(read("supabase/migrations/20261009_demo_merosourced_salons.sql").includes("booking_enabled boolean not null default false check(booking_enabled=false)"),"Demo entries remain nonbookable at database level");
 assert.ok(sql.includes("PHOTO_RIGHTS_CONFIRMATION_REQUIRED"),"Photos require proof of rights acknowledgment");
 assert.ok(sql.includes("for media in select path"),"Media paths validated against storage");
 const rights=read("supabase/migrations/20261009_explore_public_column_allowlist.sql");
