@@ -189,7 +189,7 @@ async function renderHoursEditor(body){
 }
 function renderSalonShare(body){
  const salon=$("calSalon").value;if(!salon){body.textContent="Selectează un salon activ în calendar.";return;}
- const link=new URL("./",location.href);link.searchParams.set("salon",salon);
+ const link=new URL("./",location.href);const option=$("calSalon").selectedOptions[0];link.searchParams.set("q",option?.textContent||"salon");
  const inp=document.createElement("input");inp.className="input";inp.readOnly=true;inp.value=link.href;const btn=document.createElement("button");btn.className="primary";btn.textContent="Distribuie linkul";body.append(inp,btn);
  btn.onclick=async()=>{try{if(navigator.share)await navigator.share({title:"BARBERCRAFT",url:link.href});else if(navigator.clipboard){await navigator.clipboard.writeText(link.href);btn.textContent="Link copiat";}else{inp.select();btn.textContent="Copiază linkul selectat";}}catch(e){btn.textContent="Distribuire anulată";}};
 }
