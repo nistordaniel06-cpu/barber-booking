@@ -117,7 +117,27 @@ $("continueBtn").addEventListener("click",()=>{if(!state.time||!slotLookup?.get(
 $("finalBtn").addEventListener("click",()=>{$("bookingStatus").textContent="Disponibilitatea reală nu poate fi verificată încă: API-ul de rezervări nu este conectat. Nu s-a creat nicio programare.";});
 $("infoBtn").onclick=() => alert("BARBERCRAFT · Preview UI. Nu sunt încă activate rezervările reale.");
 
-$("search").addEventListener("input",e=>{$("salongrid").style.display=/4men|frizer|salon|tuns|barb/i.test(e.target.value)||!e.target.value?"grid":"none";});
+const demoSalonCards=$("salongrid").innerHTML;
+let catalogSalons=[];
+function escHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function renderSearch(){
+ const query=$("search").value.toLocaleLowerCase("ro-RO").trim();
+ const demoText="4men lujerului bucurești tuns barbă fade vip";
+ const demo=demoText.includes(query)?demoSalonCards:"";
+ const found=catalogSalons.filter(s=>[s.name,s.address,...(Array.isArray(s.services)?s.services.map(x=>x.name):[])].join(" ").toLocaleLowerCase("ro-RO").includes(query));
+ const cards=found.map(s=>'<button type="button" class="saloncard" data-catalog-id="'+escHtml(s.id)+'"><div class="details" style="min-height:125px"><strong>'+escHtml(s.name)+'</strong><div class="rating">✦ Profil importat MERO</div><div class="tiny">'+escHtml(s.address||"Adresă de confirmat")+'</div><div class="tiny" style="margin-top:9px">'+escHtml((s.services||[]).length)+' servicii · Vezi detalii</div></div></button>').join("");
+ $("salongrid").innerHTML=demo+cards||'<div class="empty">Nu am găsit saloane pentru această căutare.</div>';
+}
+async function loadCatalog(){
+ if(!window.supabase||!window.BARBERCRAFT_SUPABASE_URL)return;
+ try{const api=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);const {data,error}=await api.from("bc_public_salon_catalog").select("id,name,address,services,rating,source_url").eq("visibility","listed").limit(100);if(error)throw error;catalogSalons=data||[];renderSearch();}catch(err){console.warn("Catalog momentan indisponibil",err.message);}
+}
+$("search").addEventListener("input",renderSearch);
+document.addEventListener("click",e=>{const b=e.target.closest("[data-catalog-id]");if(!b)return;const s=catalogSalons.find(x=>x.id===b.dataset.catalogId);if(!s)return;
+ const text=[s.name,s.address||"Adresă neconfirmată","",...(Array.isArray(s.services)?s.services.map(x=>x.name+" — "+(x.price||"preț la salon")+" · "+(x.duration||"durată la salon")):[]),"","Profil informativ importat. Programările pentru acest salon nu sunt încă activate."].join("\n");
+ alert(text);
+});
+loadCatalog();
 renderBarbers();renderServices();renderBooking();
 
 const getTheme=()=>{try{return localStorage.getItem("bc-theme")}catch{return null}};
