@@ -2,7 +2,7 @@
 (async()=>{"use strict";
 const $=id=>document.getElementById(id),el=(tag,txt,cls)=>{const n=document.createElement(tag);if(txt!==undefined)n.textContent=String(txt);if(cls)n.className=cls;return n};
 if(!$("passportCheckin")||!window.supabase)return;
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=await window.BCPassportSession();
 const {data:{user}}=await sb.auth.getUser();if(!user)return;
 const display=$("passportCheckinCode"),log=$("passportCheckins"),status=$("passportCheckinStatus"),button=$("passportIssueQr");
 let expiryTimer=null;
