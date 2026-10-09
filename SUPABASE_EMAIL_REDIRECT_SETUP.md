@@ -29,3 +29,10 @@ Conectorul Supabase disponibil în ChatGPT gestionează SQL, migrații, funcții
 - Nu partaja linkurile brute de confirmare: ele pot conține tokenuri de autentificare.
 - Nu modificăm sau ștergem conturile, verificările ori sesiunile existente.
 - Pentru template-uri de email de marcă BARBERCRAFT, personalizarea se face separat în Supabase → Auth → Email Templates.
+
+## Retrimitere pentru clienții care au primit deja link spre localhost
+- **Client → Cont personal**: introduce e-mailul și apasă **Retrimite e-mailul de confirmare**.
+- **Catalog → Autentificare**: introduce e-mailul și apasă **Retrimite confirmarea**. Linkul nou păstrează identificatorul salonului.
+- **PRO → Autentificare**: introduce e-mailul profesional și apasă **Retrimite confirmarea**. Revine la pagina de autentificare PRO.
+- Toate folosesc `supabase.auth.resend({type:"signup",email,options:{emailRedirectTo:...}})` cu URL de producție. Supabase poate impune limite de frecvență la retrimitere.
+- **Important:** retrimite e-mailul **după** ce Site URL și allowed Redirect URLs sunt salvate în Dashboard; altfel Supabase poate continua să folosească adresa implicită.
