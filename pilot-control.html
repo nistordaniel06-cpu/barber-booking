@@ -1,0 +1,32 @@
+<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d0e12"><title>Pilot clienți · BARBERCRAFT PRO</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="./pilot.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./auth-config.js"></script>
+<script defer src="./passport-session.js"></script><script defer src="./pilot-control.js"></script></head>
+<body><main class="pilotWrap"><header class="pilotHeader"><a href="./professionals.html">‹ Înapoi la PRO</a><strong>BARBER<span>CRAFT</span> <small>PRO</small></strong><a href="./admin.html">Admin</a></header>
+<section class="pilotHero"><span class="pilotEyebrow">PILOT PRIVAT · TEST CU CLIENȚI REALI</span><h1>Începe testarea cu clienții tăi.</h1><p>Configurează serviciile reale, distribuie linkul și vezi programările confirmate în calendarul PRO. Îl poți opri oricând.</p></section>
+<p id="pilotStatus" role="status" class="pilotStatus">Verificăm accesul salonului…</p>
+<section id="pilotOwner" hidden>
+<section class="pilotCard"><h2>1. Salonul tău</h2><label>Locația<select id="pilotSalon"></select></label>
+<div class="pilotToggle"><div><strong>Acceptă programări pilot</strong><p>Inițial dezactivat. Programările create sunt reale și blochează intervalele în calendarul PRO.</p></div><input id="pilotEnabled" type="checkbox" aria-label="Activează rezervările pilot"></div>
+</section>
+<section class="pilotCard"><h2>2. Servicii reale și prețuri</h2><p>Completează numai serviciile și prețurile pe care vrei să le testezi. Nu folosim prețurile preluate din alte platforme.</p>
+<div id="pilotServices"></div><button type="button" id="pilotAddService" class="pilotSecondary">＋ Adaugă serviciu</button>
+<h3>Programul pentru pilot</h3><div class="pilotTwo"><label>De la<input type="time" id="pilotOpens" value="10:00" step="1800"></label><label>Până la<input type="time" id="pilotCloses" value="19:00" step="1800"></label></div>
+<p class="pilotSmall">Sunt afișate intervale la 30 minute, în următoarele 14 zile. Pentru siguranță, pilotul acceptă o singură programare la un moment dat pentru salon.</p>
+<button type="button" id="pilotSave" class="pilotPrimary">Salvează configurarea</button>
+</section>
+<section class="pilotCard"><h2>3. Trimite linkul clienților</h2><p>Distribuie linkul doar clienților invitați. Nu este afișat în căutarea publică, iar închiderea pilotului oprește rezervările noi.</p>
+<div id="pilotShare" hidden><label>Linkul privat<input id="pilotUrl" readonly aria-label="Linkul de rezervare pentru clienți"></label>
+<div class="pilotActions"><button type="button" id="pilotCopy" class="pilotPrimary">Copiază linkul</button>
+<button type="button" id="pilotOpen" class="pilotSecondary">Previzualizează formularul ↗</button></div>
+<button type="button" id="pilotRotate" class="pilotDanger">Generează alt link · invalidează-l pe cel vechi</button></div>
+<p id="pilotNoShare" class="pilotSmall">Salvează serviciile și activează pilotul pentru a genera un link utilizabil.</p></section>
+<section class="pilotCard"><h2>4. Programări primite</h2><p>Programările confirmate apar și în calendarul PRO. Contactează clientul direct dacă este necesară o modificare.</p>
+<div id="pilotBookings"><p class="pilotSmall">Nu sunt încă programări pilot.</p></div>
+<button type="button" id="pilotRefresh" class="pilotSecondary">↻ Reîncarcă programările</button></section>
+<section class="pilotCard"><h2>Checklist înainte să trimiți</h2><div class="pilotCheck">✓ Servicii și prețuri verificate de salon</div>
+<div class="pilotCheck">✓ Ore disponibile în calendarul PRO</div>
+<div class="pilotCheck">✓ Un client testează prima programare și primește codul de confirmare</div>
+<div class="pilotCheck">✓ Verifici că apare aceeași rezervare în PRO</div>
+<div class="pilotCheck">✓ Abia apoi inviți mai mulți clienți</div></section>
+</section></main></body></html>
