@@ -31,5 +31,17 @@
 <div>🗺 <strong>Expediții și explorare</strong><small>Planificat · misiuni strategice</small></div>
 <div>♛ <strong>Asediu și sezon</strong><small>Planificat · lupte cu reguli anti-abuz</small></div>
 <div>🏆 <strong>Clasament între orașe</strong><small>Planificat · scor doar din vizite verificate</small></div></div></section>
+<section class="kingPanel"><h2>🏰 Alianțe de sector</h2>
+<p>Contribuie cu lemn și piatră la fortăreața echipei tale. Sistem colaborativ persistent, fără bani sau puncte transferabile.</p>
+<div id="kingAllianceTeams" class="kingAlliances"></div>
+<div class="kingActions"><button id="kingDonate" type="button">Donează 20 lemn + 20 piatră</button>
+<button id="kingFortify" type="button">Întărește fortăreața alianței</button></div>
+<p id="kingAllianceStatus" class="kingHelp" role="status"></p></section>
+<section class="kingPanel"><h2>🧭 Expediție strategică</h2>
+<p>Trimite o patrulă împotriva unei fortificații NPC. Este o misiune PvE deterministă, nu un atac asupra altor jucători. Ai o singură expediție pe zi.</p>
+<label class="kingFieldSelect">Dificultate / țintă<select id="kingExpeditionTarget">
+<option value="1">Sector 1 · accesibil</option><option value="2">Sector 2 · ușor</option><option value="3">Sector 3 · mediu</option><option value="4">Sector 4 · dificil</option><option value="5">Sector 5 · avansat</option><option value="6">Sector 6 · expert</option>
+</select></label><button id="kingExpeditionGo" type="button">Pornește expediția</button>
+<p id="kingExpeditionStatus" class="kingHelp" role="status">Necesar: infanterie + nivel zid ≥ dificultate + 2; consumă 15 hrană.</p></section>
 <button id="kingRefresh" type="button" class="kingSecondary">Actualizează regatul</button>
-</section></main><script src="./kingdom-strategy.js" defer></script></body></html>
+</section></main><script src="./kingdom-strategy.js" defer></script><script src="./kingdom-alliance.js" defer></script></body></html>
