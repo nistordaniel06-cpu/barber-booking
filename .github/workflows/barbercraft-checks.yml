@@ -57,3 +57,4 @@ jobs:
           node tests/barbercraft-pro-salon-cover-rls-smoke.mjs
           node tests/barbercraft-auth-resend-recovery-smoke.mjs
           node tests/barbercraft-admin-discovery-growth-v2-smoke.mjs
+          node tests/barbercraft-passport-individual-ux-smoke.mjs
