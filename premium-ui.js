@@ -35,7 +35,7 @@ async function roleMenu(){
  const trigger=d.getElementById("infoBtn");
  if(!trigger||!body.classList.contains("bc-client"))return;
  const menu=node("nav",undefined,"bc-role-menu");menu.hidden=true;menu.setAttribute("aria-label","Navigație BARBERCRAFT");
- menu.append(link("⌂ Descoperă saloane","./"),link("♛ Barber Passport","./passport.html"),
+ menu.append(link("⌂ Descoperă saloane","./"),link("♛ Barber Passport","./passport.html"),link("↗ Invită prieteni","./referral.html?type=client"),
   link("▦ Profilul meu","./passport-preview.html"),link("🏆 Bătălia Zonelor","./territory-war.html"),
   link("✂ Portal profesioniști","./professionals.html"));
  const adminLink=link("⚙ Admin BARBERCRAFT","./admin.html");adminLink.hidden=true;menu.append(adminLink);
