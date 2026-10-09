@@ -41,7 +41,7 @@ assert.ok(migrate.includes("bc_pro_calendar_events"),"Bookings use existing PRO 
 assert.ok(migrate.includes("PILOT_CLOSED"),"Closed pilots reject bookings");
 assert.ok(migrate.includes("WEEKLY_BOOKING_LIMIT"),"Phone rate limit");
 assert.ok(migrate.includes("p_consent"),"Consent checked by server");
-assert.ok(read("supabase/migrations/20261009_pilot_pgcrypto_schema_v2.sql").includes("extensions.gen_random_bytes"),"Secure random codes accessible in hardened functions");
+assert.ok(migrate.includes("extensions.gen_random_bytes"),"Canonical fresh database setup works with schema-qualified pgcrypto");
 const imports=read("supabase/migrations/20261009_admin_import_delete.sql");
 assert.ok(imports.includes("public.bc_is_platform_admin()"),"Only admin deletes");
 assert.ok(imports.includes("salon_id is null"),"Only unlinked imported public records removed");
