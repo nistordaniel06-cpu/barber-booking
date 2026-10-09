@@ -72,8 +72,8 @@ async function usePosition(ask){
  },()=>notice.textContent="Locația a fost refuzată sau indisponibilă. Poți naviga pe harta României.",
  {timeout:10000,maximumAge:180000,enableHighAccuracy:false});
 }
-$("bcAllRomania").onclick=setAll;
-$("bcNearMe").onclick=()=>usePosition(true);
+$("bcAllRomania").onclick=()=>{manualSelection=true;setAll()};
+$("bcNearMe").onclick=()=>{manualSelection=false;usePosition(true)};
 function initMap(){
  if(map)return;
  if(!window.L){$("bcMapLegend").textContent="Harta necesită încărcarea bibliotecii cartografice. Filtrele rămân disponibile.";return}
