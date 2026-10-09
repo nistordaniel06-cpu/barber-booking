@@ -28,33 +28,13 @@ function admin(){
  if(!dash||dash.querySelector(".bc-admin-tools"))return;
  const tools=node("nav",undefined,"bc-admin-tools");tools.setAttribute("aria-label","Legături între aplicații");
  tools.append(link("⌂  Aplicația client","./"),link("✂  Portal PRO","./professionals.html"),
-  link("▣  Scanează QR","./reward-redeem.html"),link("♛  Bătălia Zonelor","./territory-war.html"));
+  link("▣  Scanează QR","./reward-redeem.html"),link("♛  Barber Passport","./passport.html"));
  const tabs=dash.querySelector(".tabs");tabs?.before(tools);
 }
-async function roleMenu(){
- const trigger=d.getElementById("infoBtn");
- if(!trigger||!body.classList.contains("bc-client"))return;
- const menu=node("nav",undefined,"bc-role-menu");menu.hidden=true;menu.setAttribute("aria-label","Navigație BARBERCRAFT");
- menu.append(link("⌂ Descoperă saloane","./"),link("♛ Barber Passport","./passport.html"),link("↗ Invită prieteni","./referral.html?type=client"),
-  link("▦ Profilul meu","./passport-preview.html"),link("🏆 Bătălia Zonelor","./territory-war.html"),
-  link("✂ Portal profesioniști","./professionals.html"));
- const adminLink=link("⚙ Admin BARBERCRAFT","./admin.html");adminLink.hidden=true;menu.append(adminLink);
- const proScan=link("▣ Scanează QR · PRO","./reward-redeem.html");proScan.hidden=true;menu.append(proScan);
- trigger.insertAdjacentElement("afterend",menu);
- trigger.setAttribute("aria-expanded","false");
- trigger.setAttribute("aria-controls","bcRoleMenu");menu.id="bcRoleMenu";
- trigger.onclick=()=>{menu.hidden=!menu.hidden;trigger.setAttribute("aria-expanded",String(!menu.hidden))};
- d.addEventListener("click",e=>{if(!trigger.contains(e.target)&&!menu.contains(e.target)){menu.hidden=true;trigger.setAttribute("aria-expanded","false")}});
- d.addEventListener("keydown",e=>{if(e.key==="Escape"){menu.hidden=true;trigger.setAttribute("aria-expanded","false")}});
- if(!window.supabase||!window.BARBERCRAFT_SUPABASE_URL)return;
- try{
-  const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
-  const {data:{user}}=await sb.auth.getUser();if(!user)return;
-  const [adm,pro]=await Promise.all([sb.rpc("bc_is_platform_admin"),sb.rpc("bc_my_professional_access")]);
-  adminLink.hidden=adm.error||adm.data!==true;
-  proScan.hidden=!!pro.error||!(pro.data||[]).length;
- }catch(e){console.warn("Navigarea pe roluri nu poate fi verificată",e)}
-}
+// Navigation of Client is exclusively owned by client-home-v2.js.
+// This legacy menu previously overwrote the new 4-link guest menu with old
+// Client/PRO/territory-war links and exposed extra items before login.
+function roleMenu(){}
 function run(){
  passport();pro();admin();roleMenu();
 }
