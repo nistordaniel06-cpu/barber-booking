@@ -69,3 +69,73 @@ body.bc-social{margin:0;background:#0a0b0f;color:#f7f7f8;font:14px "DM Sans",sys
  .socialTabs{gap:3px}.socialTabs button{font-size:10px;padding:12px 3px}
  .socialGrid{grid-template-columns:1fr}.socialPerson{padding:10px}.socialPortfolio{gap:5px}
  .socialChatComposer{flex-direction:column}}
+
+/* Responsive layout hardening: every nested card/input stays inside a 360px mobile viewport. */
+body.bc-social,body.bc-social * ,body.bc-social *::before,body.bc-social *::after{box-sizing:border-box}
+html:has(body.bc-social){max-width:100%;overflow-x:clip}
+body.bc-social{width:100%;max-width:100%;overflow-x:clip}
+body.bc-social .socialWrap{width:min(100%,920px);min-width:0;margin-inline:auto;padding:16px clamp(12px,3.5vw,25px) 100px}
+body.bc-social .socialWrap>*,body.bc-social .socialPanel,body.bc-social .socialCard,
+body.bc-social .socialField,body.bc-social .socialGrid,body.bc-social .socialGrid>*,
+body.bc-social .socialPortfolio,body.bc-social .socialChatComposer,
+body.bc-social .socialPerson,body.bc-social .socialProfileView,
+body.bc-social .socialSelectedRow,body.bc-social .socialActions{min-width:0;max-width:100%}
+body.bc-social .socialCard{width:100%;overflow-wrap:anywhere}
+body.bc-social .socialField input,body.bc-social .socialField select,
+body.bc-social .socialField textarea,body.bc-social .socialChatComposer input,
+body.bc-social input,body.bc-social textarea{display:block;min-width:0;max-width:100%;box-sizing:border-box}
+body.bc-social .socialField textarea{resize:vertical}
+body.bc-social .socialTop{flex-wrap:nowrap;gap:7px}
+body.bc-social .socialTop>*{min-width:0}
+body.bc-social .socialTop strong{font-size:clamp(10px,2.7vw,14px);white-space:nowrap}
+body.bc-social .socialTop a{font-size:clamp(10px,2.7vw,13px)}
+body.bc-social .socialTabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:hidden;gap:3px}
+body.bc-social .socialTabs button{max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;line-height:1.2;padding:12px 2px;white-space:normal}
+body.bc-social .socialTabs button[hidden]{display:none}
+body.bc-social .socialGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px}
+body.bc-social .socialGrid .socialField{margin-block:9px}
+body.bc-social .socialSelectedRow{flex:1 1 215px;overflow-wrap:anywhere}
+body.bc-social .socialProfileView{flex-wrap:wrap}
+body.bc-social .socialProfileMini{max-width:100%;overflow-wrap:anywhere}
+body.bc-social .socialPeople .socialPerson{flex-wrap:wrap}
+body.bc-social .socialActions{width:100%;justify-content:flex-start}
+body.bc-social .socialAvatar{flex:0 0 54px}
+body.bc-social .socialChatComposer{flex-wrap:wrap}
+body.bc-social #panelProfile h2{font-size:clamp(18px,5vw,22px)}
+body.bc-social .socialPortfolio{grid-template-columns:repeat(3,minmax(0,1fr))}
+body.bc-social .socialPortfolioItem img{max-width:100%}
+body.bc-social .socialButton{max-width:100%;text-align:center;white-space:normal}
+body.bc-social .socialPost{border:1px solid #35343b;border-radius:20px;background:#19191f;overflow:hidden;margin:0 0 13px}
+body.bc-social .socialPostTop{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:17px}
+body.bc-social .socialPostTop>div{display:grid;gap:5px;min-width:0}
+body.bc-social .socialPostAuthor{font-size:14px;color:#ffe09c;text-decoration:none;font-weight:800;overflow-wrap:anywhere}
+body.bc-social .socialPostTop small{font-size:11px;color:#b5afaa;overflow-wrap:anywhere}
+body.bc-social .socialPostTop button{flex:0 0 auto}
+body.bc-social .socialPostBody{margin:0;padding:0 17px 16px;color:#f4f2f1;font-size:14px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+body.bc-social .socialPostImage{display:block;width:100%;max-height:640px;object-fit:cover;background:#101015}
+body.bc-social .socialPostFooter{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:12px 16px;border-top:1px solid #35343b}
+body.bc-social .socialPostFooter small{font-size:11px;color:#aaa5a4}
+body.bc-social .socialFeedHeading{display:flex;align-items:center;justify-content:space-between;gap:13px;margin:19px 0}
+body.bc-social .socialFeedHeading h2{font-size:21px;margin:0 0 4px}
+body.bc-social .socialFeedHeading p{font-size:11px;color:#bbb5ab;line-height:1.5;margin:0}
+body.bc-social .socialFeedHeading button{flex:0 0 auto}
+body.bc-social .socialFeedEmpty{color:#bbb3a6;padding:26px 19px;background:#17181e;border:1px solid #36343a;border-radius:15px;font-size:13px}
+body.bc-social #socialFeedMore{width:100%;margin:0 0 25px}
+@media(max-width:650px){
+ body.bc-social .socialGrid{grid-template-columns:1fr}
+ body.bc-social .socialHero{padding:18px 15px}
+ body.bc-social .socialCard{padding:16px 14px;border-radius:17px}
+ body.bc-social .socialTop{flex-wrap:wrap}
+ body.bc-social .socialTop a{flex-shrink:0}
+ body.bc-social .socialPerson>div{flex:1 1 150px}
+ body.bc-social .socialPostTop{padding:13px;gap:7px}
+ body.bc-social .socialPostTop button{padding:9px 10px;font-size:11px}
+ body.bc-social .socialPostBody{padding:0 13px 14px}
+ body.bc-social .socialPortfolio{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:355px){
+ body.bc-social .socialTabs button{font-size:9px}
+ body.bc-social .socialPostTop{flex-wrap:wrap}
+ body.bc-social .socialPostTop button{margin-left:auto}
+ body.bc-social .socialFeedHeading{flex-wrap:wrap}
+}

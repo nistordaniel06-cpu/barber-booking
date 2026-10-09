@@ -31,7 +31,7 @@ controls.insertAdjacentElement("afterend",drawer);
 const mapCard=document.createElement("section");mapCard.className="bcCountryMap";mapCard.hidden=true;
 mapCard.innerHTML='<div class="bcMapHeader"><div><strong>Explorează saloanele din România</strong><small>Marcaje agregate pe oraș. Nu sunt poziții exacte ale saloanelor.</small></div><button id="bcMapClose" type="button">Închide</button></div><div id="bcMapRoot" aria-label="Harta României cu saloane grupate pe oraș"></div><div id="bcMapLegend"></div>';
 drawer.insertAdjacentElement("afterend",mapCard);
-let map=null,markers=null,lastCity=null,pendingCity=null;
+let map=null,markers=null,lastCity=null,pendingCity=null,manualSelection=false;
 const notice=$("bcLocationNotice");
 function refreshSearch(){window.BCRefreshSearch?.();}
 function setAll(){
@@ -41,7 +41,7 @@ function setAll(){
  notice.textContent="Explorezi toată România. Nu am folosit locația telefonului.";
  refreshSearch();
 }
-function setNearest(name){
+function setNearest(name,source="gps"){
  const options=[...city.options],opt=options.find(x=>norm(x.value)===norm(name));
  if(!opt){
   if(!window.BCDemoCatalog){pendingCity=name;notice.textContent="Se încarcă saloanele pentru "+name+"…";return}
@@ -52,8 +52,9 @@ function setNearest(name){
  // The county option, when available, is re-synchronized after city selection; no arbitrary sector selection.
  sector.value="";
  city.dispatchEvent(new Event("change",{bubbles:true}));
- try{sessionStorage.setItem("bc-location-mode","nearby")}catch{}
- notice.textContent="Saloane din "+name+". Poți reveni oricând la Toată România.";
+ try{sessionStorage.setItem("bc-location-mode",source==="manual"?"manual":"nearby");
+ sessionStorage.setItem("bc-location-city",name)}catch{}
+ notice.textContent="Oraș selectat: "+name+". Poți alege alt oraș sau Toată România.";
  refreshSearch();
 }
 async function usePosition(ask){
@@ -66,12 +67,13 @@ async function usePosition(ask){
  navigator.geolocation.getCurrentPosition(({coords})=>{
   const nearby=locations.map(x=>({name:x[0],d:dist(coords.latitude,coords.longitude,x[1],x[2])})).sort((a,b)=>a.d-b.d)[0];
   if(!nearby||nearby.d>65){setAll();notice.textContent="Nu am identificat un oraș apropiat dintre cele indexate. Rămâne activă toată România.";return}
-  lastCity=nearby.name;setNearest(nearby.name);
+  if(manualSelection)return;
+  lastCity=nearby.name;setNearest(nearby.name,"gps");
  },()=>notice.textContent="Locația a fost refuzată sau indisponibilă. Poți naviga pe harta României.",
  {timeout:10000,maximumAge:180000,enableHighAccuracy:false});
 }
-$("bcAllRomania").onclick=setAll;
-$("bcNearMe").onclick=()=>usePosition(true);
+$("bcAllRomania").onclick=()=>{manualSelection=true;setAll()};
+$("bcNearMe").onclick=()=>{manualSelection=false;usePosition(true)};
 function initMap(){
  if(map)return;
  if(!window.L){$("bcMapLegend").textContent="Harta necesită încărcarea bibliotecii cartografice. Filtrele rămân disponibile.";return}
@@ -109,15 +111,34 @@ $("bcShowMap").onclick=()=>{
  if(!mapCard.hidden){initMap();setTimeout(()=>map?.invalidateSize(),70);updatePins()}
 };
 $("bcMapClose").onclick=()=>{mapCard.hidden=true;$("bcShowMap").setAttribute("aria-pressed","false")};
+// A user-selected city always wins over an automatic GPS result.
+city.addEventListener("change",event=>{
+ if(!event.isTrusted)return;
+ manualSelection=true;
+ try{sessionStorage.setItem("bc-location-mode","manual");
+ sessionStorage.setItem("bc-location-city",city.value)}catch{}
+ notice.textContent=city.value?"Ai selectat manual "+city.value+".":"Sunt afișate toate orașele.";
+});
+for(const control of [county,sector])control?.addEventListener("change",event=>{
+ if(event.isTrusted){manualSelection=true;try{sessionStorage.setItem("bc-location-mode","manual")}catch{}}
+});
 // Asynchronous catalogue load may finish after GPS resolution.
 const retryOnOptions=new MutationObserver(()=>{if(pendingCity&&window.BCDemoCatalog)setNearest(pendingCity)});
 retryOnOptions.observe(city,{childList:true});
+window.addEventListener("bc-demo-catalog-ready",()=>{if(pendingCity)setNearest(pendingCity,manualSelection?"manual":"gps")});
+const retryPending=setInterval(()=>{if(pendingCity&&window.BCDemoCatalog){setNearest(pendingCity,manualSelection?"manual":"gps");clearInterval(retryPending)}},850);
+setTimeout(()=>clearInterval(retryPending),14000);
 const toolbar=$("bcLocationTitle");
 if(toolbar)toolbar.onclick=()=>{drawer.open=true;drawer.scrollIntoView({block:"nearest",behavior:"smooth"})};
 const mode=(()=>{try{return sessionStorage.getItem("bc-location-mode")}catch{return null}})();
-if(mode==="all")setAll();else if(mode==="nearby"&&lastCity)setNearest(lastCity);else {
-  // Only silently use geolocation when user previously granted permission.
-  usePosition(false);
+const remembered=(()=>{try{return sessionStorage.getItem("bc-location-city")}catch{return null}})();
+if(mode==="all"){manualSelection=true;setAll();}
+else if(mode==="manual"&&remembered){manualSelection=true;setNearest(remembered,"manual");}
+else if(mode==="nearby"&&remembered){setNearest(remembered,"gps");}
+else {
+ notice.textContent="Detectăm orașul tău (dacă permiți localizarea)…";
+ // Browser consent is required; failure never blocks the national catalog.
+ usePosition(true);
 }
 window.BCLocationMap={updatePins,showAll:setAll};
 })();

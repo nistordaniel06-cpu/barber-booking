@@ -1,20 +1,29 @@
 <!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0c10">
-<meta name="description" content="Comunitatea BARBERCRAFT: urmărește frizeri, discută în privat, votează tunsori și propune idei salonului tău.">
+<meta name="description" content="Comunitatea BARBERCRAFT: urmărește frizeri, discută în privat, vezi postări recente și urmărește persoane.">
 <title>Comunitate & Barber Passport — BARBERCRAFT</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./auth-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./auth-config.js"></script><script src="./passport-session.js" defer></script>
 <link rel="stylesheet" href="./premium.css"><link rel="stylesheet" href="./social.css">
 </head><body class="bc-premium bc-social"><main class="socialWrap">
 <header class="socialTop"><a href="./">‹ BARBER<span>CRAFT</span></a><strong>COMUNITATE</strong><a href="./passport-preview.html">♛ Pașaport</a></header>
-<section class="socialHero"><div class="socialEyebrow">BARBERCRAFT SOCIAL</div><h1>Stilul se construiește împreună.</h1><p>Urmărește frizeri, descoperă inspirație, votează idei și comunică direct cu oamenii din comunitate.</p><p class="socialInfo">Profilurile sunt publice numai cu acordul titularului. Mesajele necesită urmărire reciprocă; nu dispar automat.</p></section>
+<section class="socialHero"><div class="socialEyebrow">BARBERCRAFT SOCIAL</div><h1>Stilul se construiește împreună.</h1><p>Vezi cele mai recente postări ale clienților și frizerilor, urmărește oameni și vorbește cu ei.</p><p class="socialInfo">Profilurile sunt publice numai cu acordul titularului. Mesajele necesită urmărire reciprocă; nu dispar automat.</p></section>
 <p class="socialNotice" id="socialStatus" role="status">Se verifică sesiunea…</p>
 <nav class="socialTabs" aria-label="Secțiunile comunității">
 <button type="button" class="selected" data-panel="discover">⌕ Descoperă</button>
 <button type="button" data-panel="profile">♛ Profilul meu</button>
 <button type="button" data-panel="messages">✉ Mesaje</button>
-<button type="button" data-panel="ideas">✦ Idei salon</button>
+<button type="button" data-panel="ideas" id="socialClientIdeasTab">✦ Idei salon</button>
 </nav>
 <section class="socialPanel" id="panelDiscover">
+<div class="socialCard socialFeedComposer" id="socialFeedComposer" hidden>
+<h2>Publică o postare</h2><p>Postările sunt publice pentru toată comunitatea, inclusiv pentru persoanele care nu te urmăresc. Nu publica imagini fără acord.</p>
+<form id="socialPostForm"><label class="socialField">Text / descriere<textarea name="body" maxlength="1000" minlength="3" rows="3" required placeholder="Arată-ți tunsoarea, experiența sau o idee…"></textarea></label>
+<label class="socialField">Fotografie (opțională, maximum 5 MB)<input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label>
+<button type="submit" class="socialButton primary">Publică în feed</button></form></div>
+<div class="socialFeedHeading"><div><h2>Ultimele postări</h2><p>De la toată comunitatea · frizeri și clienți · inclusiv persoane pe care nu le urmărești</p></div>
+<button id="socialFeedRefresh" type="button" class="socialButton">↻ Actualizează</button></div>
+<div id="socialFeed" class="socialFeed" aria-live="polite"></div>
+<button id="socialFeedMore" type="button" class="socialButton" hidden>Încarcă mai multe postări</button>
 <div class="socialCard"><h2>Descoperă comunitatea</h2><p>Doar persoane care au ales să-și publice profilul apar aici.</p>
 <label class="socialField">Caută frizeri și membri<input id="socialSearch" placeholder="Nume sau @utilizator" maxlength="60"></label>
 <div id="socialDiscover" class="socialPeople"></div></div>
@@ -43,13 +52,7 @@
 <form id="socialPortfolioForm"><label class="socialField">Fotografie nouă<input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required></label>
 <label class="socialField">Descriere<input name="caption" maxlength="160" placeholder="Fade, clasic, texturat…"></label>
 <button type="submit" class="socialButton">Publică în portofoliu</button></form><div id="socialMyPortfolio" class="socialPortfolio"></div>
-<div class="socialDivider"></div><h3>Propune un vot despre tunsori</h3>
-<form id="socialPollForm"><label class="socialField">Întrebarea ta<input name="title" minlength="10" maxlength="180" required placeholder="Ce stil preferi sezonul acesta?"></label>
-<label class="socialField">Opțiunea 1<input name="a" minlength="2" maxlength="80" required></label>
-<label class="socialField">Opțiunea 2<input name="b" minlength="2" maxlength="80" required></label>
-<label class="socialField">Opțiunea 3 (opțional)<input name="c" maxlength="80"></label>
-<button type="submit" class="socialButton">Publică sondajul (7 zile)</button></form>
-<div id="socialMyPolls"></div></div>
+</div>
 </section>
 <section class="socialPanel" id="panelMessages" hidden><div class="socialCard">
 <h2>Mesaje private</h2><p>Poți discuta cu cineva după ce vă urmăriți reciproc și amândoi permiteți mesaje. Fără mesaje care dispar automat.</p>
@@ -69,4 +72,4 @@
 <div class="socialCard" id="socialProIdeas" hidden><h2>Propunerile primite de salon</h2><p>Sugestiile sunt vizibile doar echipei salonului și persoanei care le-a trimis.</p>
 <label class="socialField">Locația salonului<select id="socialProIdeaSalon"></select></label><div id="socialProIdeasList"></div></div>
 </section>
-</main><script src="./social.js" defer></script></body></html>
+</main><script src="./social.js" defer></script><script src="./social-feed.js" defer></script></body></html>

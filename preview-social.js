@@ -2,7 +2,7 @@
 const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(cls)n.className=cls;return n};
 const box=document.getElementById("previewSocialSummary"),reviews=document.getElementById("profileVerifiedReviews");
 if(!box||!reviews||!window.supabase)return;
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=await window.BCPassportSession();
 const {data:{user}}=await sb.auth.getUser();if(!user)return;
 const [profile,revs]=await Promise.all([
  sb.rpc("bc_social_profile_read",{p_user:user.id}),

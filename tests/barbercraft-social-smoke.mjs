@@ -12,7 +12,7 @@ for(const path of ["social.html","passport.html","passport-preview.html","profes
 assert.match(read("premium.css"),/#passportCheckinCode \.rewardQrSquare:has\(img\) canvas/);
 assert.ok(read("social.html").includes('id="socialProfileForm"'),"Social profile screen");
 assert.ok(read("social.html").includes('id="socialChatForm"'),"Mutual follow messaging");
-assert.ok(read("social.html").includes('id="socialPollForm"'),"Barber polls");
+assert.ok(!read("social.html").includes('id="socialPollForm"'),"PRO voting form removed");
 assert.ok(read("social.html").includes('id="socialIdeaForm"'),"Loyal customer salon suggestions");
 assert.ok(read("social.html").includes('id="socialPortfolioForm"'),"Barber haircut portfolio");
 assert.ok(read("social.js").includes("bc_social_follow_set"),"Follow RPC");
@@ -25,7 +25,7 @@ assert.ok(read("index.html").includes("bc_verified_reviews_list"),"Salon reviews
 assert.ok(!read("index.html").includes('$("catalogMeta").textContent=salon.rating?'),"No unverified external rating masquerade");
 assert.ok(read("reward-redeem.html").includes('id="serviceConfirmList"'),"Service confirmation is separate from QR scan");
 assert.ok(read("pro-verified-visits.js").includes("bc_service_visit_complete"),"Staff checks completed service");
-assert.ok(read("professionals.html").includes("./social.html#profile"),"Professional Passport navigation");
+assert.ok(read("professionals.html").includes("./social.html?from=pro#profile"),"Professional Passport navigation");
 assert.ok(read("passport-preview.html").includes("previewSocialSummary"),"Preview follows count");
 assert.ok(read("admin.html").includes('data-tab="community"'),"Admin social reports access");
 for(const path of ["supabase/migrations/20261009_barbercraft_social_core.sql",
