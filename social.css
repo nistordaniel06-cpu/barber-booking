@@ -224,3 +224,18 @@ body.bc-social #socialProfileForm .socialToggle:focus-within {
   column-gap:9px!important;
  }
 }
+
+/* Upload errors and success messages stay visible beside the barber's gallery. */
+body.bc-social #socialPortfolioStatus.socialPortfolioStatus{
+ color:#ead19e;
+ border-left:3px solid #d5ac5d;
+ background:#26231d;
+ padding:9px 12px;
+ border-radius:8px;
+ margin:12px 0;
+}
+body.bc-social #socialPortfolioStatus[data-error="true"]{
+ color:#ffd0cc;
+ border-left-color:#f28c82;
+ background:#321f21;
+}
