@@ -19,3 +19,16 @@
 :root[data-theme=light] #bcRadiusHelp,:root[data-theme=light] .bcRareServices p{color:#626773}
 :root[data-theme=light] .bcRareButtons button{background:#f1f2f5;color:#252832;border-color:#d7dae1}
 :root[data-theme=light] .bcRareButtons button[aria-pressed=true]{background:#edd07f;border-color:#c69d3c}
+
+.bcServiceSuggestions{display:grid;gap:10px;padding:11px 0 8px}
+.bcServiceSuggestions h3{margin:0;font-size:12px;color:#e8cb84;font-weight:850}
+.bcServiceScroller{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:8px;padding-bottom:4px;scrollbar-width:none}
+.bcServiceScroller::-webkit-scrollbar{display:none}
+.bcServiceScroller button{flex:0 0 auto;scroll-snap-align:start;min-height:43px;border:1px solid #6a5735;border-radius:13px;background:#282a31;color:#f4e2b4;padding:9px 12px;font-size:12px;font-weight:750;white-space:nowrap}
+:root[data-theme=light] .bcServiceSuggestions h3{color:#67460e}
+:root[data-theme=light] .bcServiceScroller button{background:#fff;color:#30333c;border-color:#d5d8df}
+.bcUnverifiedHint{background:#292b32;border:1px dashed #85734e;border-radius:13px;margin:12px 0;padding:11px;display:grid;gap:8px}
+.bcUnverifiedHint strong{color:#efd07f;font-size:12px}.bcUnverifiedHint small{color:#ddd2ba;font-size:11px}
+.bcUnverifiedHint button{justify-self:start;border:1px solid #ab8b48;border-radius:9px;background:#3d382c;padding:9px 11px;color:#f0d588;font-weight:850}
+:root[data-theme=light] .bcUnverifiedHint{background:#fff7e7;color:#2b2930}
+:root[data-theme=light] .bcUnverifiedHint strong,:root[data-theme=light] .bcUnverifiedHint small{color:#52422c}

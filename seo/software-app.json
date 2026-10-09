@@ -1,0 +1,11 @@
+{
+ "@context":"https://schema.org",
+ "@type":"SoftwareApplication",
+ "name":"BARBERCRAFT",
+ "applicationCategory":"BusinessApplication",
+ "operatingSystem":"Web",
+ "url":"https://nistordaniel06-cpu.github.io/barber-booking/client/",
+ "description":"Descoperă saloane de barbering, servicii și specialiști, iar pentru clienți urmărește progresul individual Barber Passport.",
+ "inLanguage":["ro","en"],
+ "isAccessibleForFree":true
+}

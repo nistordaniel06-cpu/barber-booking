@@ -17,7 +17,8 @@ for(const path of ["index.html","admin.html","territory-war.html","passport.html
 }
 assert.match(read("index.html"),/enhancements\.js/);
 assert.match(read("index.html"),/BCRefreshSearch/);
-assert.match(read("index.html"),/Bătălia Zonelor/);
+assert.match(read("index.html"),/Barber Passport/);
+assert.ok(!read("index.html").includes('href="./territory-war.html"'),"No public game link on Client");
 assert.match(read("admin.html"),/data-tab="rewards"/);
 assert.match(read("admin.html"),/BCRewardAdmin/);
 assert.match(read("passport.html"),/passport\.js/);

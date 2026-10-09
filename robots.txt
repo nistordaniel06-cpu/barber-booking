@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /barber-booking/client/
+Allow: /barber-booking/partner.html
+Allow: /barber-booking/tutorial.html
+Disallow: /barber-booking/admin/
+Disallow: /barber-booking/pro/
+Sitemap: https://nistordaniel06-cpu.github.io/barber-booking/sitemap.xml

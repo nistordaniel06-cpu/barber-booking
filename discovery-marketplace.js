@@ -13,15 +13,18 @@ const radius=document.createElement("section");radius.id="bcRadiusPanel";radius.
 radius.innerHTML='<div class="bcRadiusHeader"><strong>📍 Raza de căutare</strong><b id="bcRadiusValue">2 km</b></div><input id="bcRadiusSlider" type="range" min="1" max="30" step="1" aria-label="Raza maximă în kilometri"><div class="bcRadiusHints"><span>1 km</span><span>30 km</span></div><p id="bcRadiusHelp" role="status">Se afișează exclusiv saloanele cu o poziție GPS confirmată în raza aleasă.</p>';
 $("bcNearMe")?.insertAdjacentElement("afterend",radius);
 const slider=$("bcRadiusSlider"),label=$("bcRadiusValue");
-slider.value=String(km);label.textContent=km+" km";
-slider.addEventListener("input",()=>{
- km=Number(slider.value);label.textContent=km+" km";
+function changeRadius(next){
+ km=Math.max(1,Math.min(30,Number(next)||2));
+ slider.value=String(km);label.textContent=km+" km";
  try{localStorage.setItem("bc-client-search-radius-km",String(km))}catch(_){}
- window.BCRefreshSearch?.();
- window.BCLocationMap?.updatePins?.();
-});
+ window.BCRefreshSearch?.();window.BCLocationMap?.updatePins?.();
+}
+slider.value=String(km);label.textContent=km+" km";
+slider.addEventListener("input",()=>changeRadius(slider.value));
 window.BCLocationRadius={
  state:()=>({enabled:active,km}),
+ position:()=>coordinates?{...coordinates}:null,
+ setRadius:changeRadius,
  setPosition:(lat,lon)=>{
   if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
   coordinates={lat,lon};active=true;radius.hidden=false;
@@ -48,8 +51,25 @@ const rare=[
  ["Tratamente scalp","scalp"],["Tuns copii","copii"]
 ];
 window.BCDiscoveryRareServices=[];
+// Accessible service suggestions inspired by the best booking marketplace searches.
+const categories=document.createElement("section");categories.className="bcServiceSuggestions";
+categories.setAttribute("aria-label","Caută rapid după tipul de serviciu");
+const heading=document.createElement("h3");heading.textContent="Ce ai nevoie astăzi?";categories.append(heading);
+const scroller=document.createElement("div");scroller.className="bcServiceScroller";
+for(const [title,term] of [["✂ Frizerie & barber","tuns"],["♙ Aranjat barbă","barbă"],["✨ Fade","fade"],["♛ Experiență VIP","vip"],["♧ Îngrijire scalp","scalp"],["◌ Coafor & styling","coafor"],["☀ Vopsit păr","vopsit"],["✧ Tuns copii","copii"]]){
+ const b=document.createElement("button");b.type="button";b.textContent=title;
+ b.onclick=()=>{
+  const search=$("search");if(!search)return;
+  search.value=term;search.dispatchEvent(new Event("input",{bubbles:true}));
+  search.scrollIntoView({block:"center",behavior:"smooth"});
+ };scroller.append(b);
+}
+categories.append(scroller);
+const searchPanel=home.querySelector(".search");
+searchPanel?.insertAdjacentElement("afterend",categories);
 const details=document.querySelector(".bcAdvancedFilters");
 if(details){
+ details.open=true;
  const section=document.createElement("section");section.className="bcRareServices";
  section.append(document.createElement("h3"));section.querySelector("h3").textContent="Servicii speciale · ce cauți mai rar";
  const info=document.createElement("p");info.textContent="Afișăm doar saloanele care au declarat serviciile respective.";
