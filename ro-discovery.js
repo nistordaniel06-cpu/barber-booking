@@ -125,6 +125,9 @@ for(const control of [county,sector])control?.addEventListener("change",event=>{
 // Asynchronous catalogue load may finish after GPS resolution.
 const retryOnOptions=new MutationObserver(()=>{if(pendingCity&&window.BCDemoCatalog)setNearest(pendingCity)});
 retryOnOptions.observe(city,{childList:true});
+window.addEventListener("bc-demo-catalog-ready",()=>{if(pendingCity)setNearest(pendingCity,manualSelection?"manual":"gps")});
+const retryPending=setInterval(()=>{if(pendingCity&&window.BCDemoCatalog){setNearest(pendingCity,manualSelection?"manual":"gps");clearInterval(retryPending)}},850);
+setTimeout(()=>clearInterval(retryPending),14000);
 const toolbar=$("bcLocationTitle");
 if(toolbar)toolbar.onclick=()=>{drawer.open=true;drawer.scrollIntoView({block:"nearest",behavior:"smooth"})};
 const mode=(()=>{try{return sessionStorage.getItem("bc-location-mode")}catch{return null}})();
