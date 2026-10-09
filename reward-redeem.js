@@ -1,7 +1,7 @@
 (async()=>{"use strict";
 const $=id=>document.getElementById(id),el=(tag,text,cls)=>{const d=document.createElement(tag);if(text!==undefined)d.textContent=String(text);if(cls)d.className=cls;return d};
 if(!window.supabase){$("authStatus").textContent="Autentificarea nu este configurată.";return}
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=window.BCAuthClient("pro",{detectSessionInUrl:false});
 const {data:{user}}=await sb.auth.getUser();
 if(!user){$("authStatus").replaceChildren(el("span","Intră în contul PRO pentru a valida recompense. "),Object.assign(el("a","Autentificare →"),{href:"./professionals.html"}));return}
 const {data:shops,error:shopsError}=await sb.rpc("bc_my_professional_access");
