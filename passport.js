@@ -49,12 +49,74 @@ async function loadPhotos(){
 $("noteForm").onsubmit=async e=>{e.preventDefault();const form=e.currentTarget,b=form.querySelector("button");b.disabled=true;
  const {error}=await sb.from("bc_passport_notes").insert({user_id:user.id,salon_name:form.elements.salon.value.trim(),rating:Number(form.elements.rating.value),note:form.elements.note.value.trim()});b.disabled=false;
  if(error)status.textContent="Notița nu a fost salvată: "+error.message;else{form.reset();status.textContent="Notiță privată salvată.";await loadNotes()}};
-$("photoForm").onsubmit=async e=>{e.preventDefault();const form=e.currentTarget,file=form.elements.photo.files?.[0],b=form.querySelector("button");
- if(!file||file.size>5*1024*1024||!["image/jpeg","image/png","image/webp"].includes(file.type)){status.textContent="Alege JPG, PNG sau WebP de maximum 5 MB.";return}
- b.disabled=true;const ext={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[file.type],path=user.id+"/"+crypto.randomUUID()+"."+ext;
- try{const result=await sb.storage.from("bc-passport").upload(path,file,{contentType:file.type,upsert:false});if(result.error)throw result.error;
- const {error}=await sb.from("bc_passport_photos").insert({user_id:user.id,object_path:path,caption:form.elements.caption.value.trim()});if(error){await sb.storage.from("bc-passport").remove([path]);throw error}
- form.reset();status.textContent="Fotografia a fost salvată privat.";await loadPhotos();
- }catch(err){status.textContent="Încărcarea a eșuat: "+err.message}finally{b.disabled=false}};
+const photoForm=$("photoForm"),photoInput=photoForm.querySelector('input[type="file"]'),
+ photoFeedback=$("photoFeedback"),photoPreview=$("photoPreview");
+const galleryFeedback=(message,error=false)=>{
+ photoFeedback.textContent=message;photoFeedback.dataset.state=error?"error":"info";
+};
+let currentPreview=null;
+photoInput.addEventListener("change",()=>{
+ if(currentPreview){URL.revokeObjectURL(currentPreview);currentPreview=null;}
+ photoPreview.replaceChildren();
+ const file=photoInput.files?.[0];
+ if(!file){galleryFeedback("Selectează o fotografie din telefon.");return;}
+ if(!window.BCPassportImage?.supported(file)){
+  galleryFeedback("Format nerecunoscut. Alege JPG, PNG, WebP sau HEIC.",true);return;
+ }
+ galleryFeedback(file.size>5*1024*1024?
+  "Fotografie selectată: "+file.name+" · o vom optimiza automat înainte de salvare.":
+  "Fotografie selectată: "+file.name+". Apasă «Salvează fotografia».");
+ if(file.type==="image/heic"||file.type==="image/heif"){
+  photoPreview.append(el("span","Fotografie HEIC selectată. Vom încerca să o convertim la salvare.","muted"));return;
+ }
+ currentPreview=URL.createObjectURL(file);
+ const img=el("img");img.src=currentPreview;img.alt="Previzualizarea fotografiei selectate";img.loading="lazy";
+ img.onerror=()=>galleryFeedback("Previzualizarea nu e disponibilă; poți încerca să salvezi fotografia.");
+ photoPreview.append(img);
+});
+photoForm.onsubmit=async e=>{
+ e.preventDefault();
+ const form=e.currentTarget,file=photoInput.files?.[0],b=form.querySelector('button[type="submit"]');
+ if(!file){galleryFeedback("Selectează întâi o fotografie.",true);return;}
+ if(!window.BCPassportImage?.supported(file)){
+  galleryFeedback("Alege JPG, PNG, WebP sau HEIC.",true);return;
+ }
+ b.disabled=true;b.textContent="Se pregătește…";
+ galleryFeedback("Pregătim fotografia pentru încărcare…");
+ let path=null,saved=false;
+ try{
+  const {data:{user:currentUser},error:authError}=await sb.auth.getUser();
+  if(authError||!currentUser||currentUser.id!==user.id)
+   throw new Error("Sesiunea a expirat sau ai schimbat contul. Autentifică-te din nou în portalul corect.");
+  const prepared=await window.BCPassportImage.prepare(file);
+  path=user.id+"/"+crypto.randomUUID()+"."+prepared.ext;
+  b.textContent="Se încarcă…";
+  galleryFeedback("Salvăm fotografia privat în BARBERCRAFT…");
+  const upload=await sb.storage.from("bc-passport").upload(path,prepared.blob,{
+   contentType:prepared.contentType,upsert:false,cacheControl:"3600"
+  });
+  if(upload.error)throw upload.error;
+  const {error}=await sb.from("bc_passport_photos").insert({
+   user_id:user.id,object_path:path,caption:form.elements.caption.value.trim()
+  });
+  if(error)throw error;
+  saved=true;
+  await loadPhotos();
+  form.reset();photoPreview.replaceChildren();
+  if(currentPreview){URL.revokeObjectURL(currentPreview);currentPreview=null;}
+  galleryFeedback(prepared.resized?
+   "Fotografia a fost optimizată și salvată în galeria ta privată.":
+   "Fotografia a fost salvată în galeria ta privată.");
+  status.textContent="Galeria ta a fost actualizată.";
+ }catch(err){
+  if(path&&!saved)await sb.storage.from("bc-passport").remove([path]).catch(()=>{});
+  const message=err?.message||String(err);
+  if(/row-level security|permission|unauthorized|jwt|not authenticated|403/i.test(message))
+   galleryFeedback("Nu ai permisiune de încărcare în sesiunea curentă. Intră din nou în contul Client/PRO și reîncearcă.",true);
+  else if(/payload too large|entity too large|413/i.test(message))
+   galleryFeedback("Fotografia este prea mare. Încearcă o imagine mai mică.",true);
+  else galleryFeedback("Nu am putut salva fotografia: "+message,true);
+ }finally{b.disabled=false;b.textContent="Salvează fotografia";}
+};
 await Promise.all([loadNotes(),loadPhotos()]);
 })();
