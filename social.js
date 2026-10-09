@@ -254,16 +254,18 @@ $("socialClientGalleryForm").onsubmit=async e=>{
    throw err;
   }
   form.reset();
-  await loadClientGallery(user.id,true);
-  await refreshGalleryStatus();
-  galleryStatusNote("socialClientGalleryStatus","Fotografia a fost postată! QR-ul folosit nu mai permite o a doua fotografie.");
+  try{
+   await loadClientGallery(user.id,true);
+   await refreshGalleryStatus();
+   galleryStatusNote("socialClientGalleryStatus","Fotografia a fost postată! QR-ul folosit nu mai permite o a doua fotografie.");
+  }catch(refreshErr){
+   galleryStatusNote("socialClientGalleryStatus","Fotografia a fost publicată, dar galeria nu s-a actualizat. Reîncarcă pagina.");
+  }
  }catch(err){
   galleryStatusNote("socialClientGalleryStatus","Publicarea a eșuat: "+clientGalleryError(err));
   await refreshGalleryStatus().catch(()=>{});
  }finally{
   button.textContent=oldLabel;
-  // Refresh above decides whether another eligible QR is available.
-  if(!button.disabled)button.disabled=false;
  }
 };
 
