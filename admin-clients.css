@@ -1,0 +1,39 @@
+/* Admin client approvals — premium mobile cards */
+.bcClientApprovals{display:grid;gap:16px;max-width:100%;min-width:0}
+.bcClientApprovals *{box-sizing:border-box;min-width:0}
+.bcClientApprovals .bcApprovalKicker{color:#f4c970;letter-spacing:1.5px;font-size:11px;font-weight:900}
+.bcClientApprovals h2{margin:0;font-size:clamp(22px,6vw,32px);color:#fff}
+.bcApprovalIntro,.bcApprovalState{font-size:12px;line-height:1.6;color:#c5beb3;margin:0}
+.bcApprovalSummary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bcApprovalCounter{display:grid;gap:7px;background:#222025;border:1px solid #665038;border-radius:14px;padding:12px}
+.bcApprovalCounter strong{font-size:clamp(18px,5vw,26px);color:#f4c970}
+.bcApprovalCounter small{font-size:11px;color:#bdb3a5}
+.bcApprovalBar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,180px) auto;gap:9px}
+.bcApprovalBar input,.bcApprovalBar select{width:100%;max-width:100%;min-height:46px;
+ color:#fff;background:#131417;border:1px solid #504944;border-radius:11px;padding:10px;font:inherit;font-size:13px}
+.bcApprovalList{display:grid;gap:11px}
+.bcApprovalCard{border:1px solid #514638;background:linear-gradient(130deg,#242126,#17181d);border-radius:16px;
+ padding:clamp(12px,3vw,19px);display:grid;gap:12px;overflow-wrap:anywhere}
+.bcApprovalIdentity{display:flex;gap:13px;align-items:center}
+.bcApprovalAvatar{flex:0 0 46px;width:46px;height:46px;border:1px solid #bc8d48;background:#3a2d1c;
+ border-radius:50%;display:grid;place-items:center;color:#f5d48c;font-size:20px;font-weight:900}
+.bcApprovalIdentity>div{display:grid;gap:5px}
+.bcApprovalIdentity strong{font-size:15px;overflow-wrap:anywhere}
+.bcApprovalIdentity small{font-size:11px;color:#aaa7a4;overflow-wrap:anywhere}
+.bcApprovalBadge{justify-self:start;padding:6px 10px;border:1px solid #766344;border-radius:100px;font-size:11px;color:#f1d195}
+.bcApproval-approved{border-color:#386c52;background:#1a3424;color:#9fe6bb}
+.bcApproval-suspended,.bcApproval-rejected{border-color:#8e4b4c;background:#362124;color:#ffc2bb}
+.bcApprovalActions{display:flex;gap:8px;flex-wrap:wrap}
+.bcApprovalButton{border:1px solid #76624d;background:#28262a;color:#f2d5a5;padding:10px 12px;
+ border-radius:11px;font-size:12px;font-weight:800;min-height:43px;white-space:normal}
+.bcApprovalButton:disabled{opacity:.5}
+.bcApprovalButton.isApprove{background:#f7cb70;border-color:#e4b854;color:#1e170a}
+.bcApprovalButton.isReject{color:#ffc3be;border-color:#895252;background:#342224}
+.bcApprovalReason{color:#d6b2b2;font-size:11px}
+.bcApprovalEmpty{padding:24px;border-radius:12px;text-align:center;background:#201f23;color:#d1c5b3}
+@media(max-width:650px){.bcApprovalBar{grid-template-columns:repeat(2,minmax(0,1fr))}
+.bcApprovalBar input{grid-column:1/-1}
+.bcApprovalBar button{width:100%}}
+@media(max-width:390px){.bcApprovalBar{grid-template-columns:1fr}
+.bcApprovalBar input{grid-column:auto}.bcApprovalActions .bcApprovalButton{flex:1 1 120px}
+.bcApprovalCounter{padding:10px 7px}}
