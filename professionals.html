@@ -7,10 +7,27 @@
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
-const client=window.supabase?.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const client=window.supabase?.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY,{auth:{storageKey:"barbercraft-pro-session",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 let user=null;
 async function refresh(){if(!client)return;const {data,error}=await client.auth.getUser();user=error?null:data.user;if(user?.user_metadata?.barbercraft_account_type==="client"){$("authStatus").textContent="Acest e-mail are deja un cont de client. Pentru un cont profesional separat, folosește altă adresă de e-mail.";user=null;} $("guest").hidden=!!user;$("member").hidden=!user;$("identity").textContent=user?"Autentificat: "+(user.email||""):"";if(user){$("contactEmail").value=user.email||"";await loadApplications();await loadVerifiedAccess();}}
-async function authenticate(type){const existing=await client.auth.getUser();if(existing.data?.user?.user_metadata?.barbercraft_account_type==="client"){$("authStatus").textContent="Ești conectat ca client. Deconectează-te din aplicația clientului, apoi creează contul PRO cu alt e-mail.";return;}const email=$("email").value.trim(),password=$("password").value;if(!email||password.length<8){$("authStatus").textContent="Completează e-mailul și o parolă de minimum 8 caractere.";return;}$("authStatus").textContent="Se procesează...";const {error}=type==="signUp"?await client.auth.signUp({email,password,options:{emailRedirectTo:"https://nistordaniel06-cpu.github.io/barber-booking/professionals.html",data:{barbercraft_account_type:"professional"}}}):await client.auth.signInWithPassword({email,password});$("authStatus").textContent=error?(error.message.includes("already registered")?"Există deja un cont cu acest e-mail. Pentru contul PRO folosește alt e-mail.":error.message):type==="signUp"?"Cont creat. Verifică e-mailul pentru confirmare, dacă este necesară.":"Autentificare reușită.";await refresh();}
+async function authenticate(type){
+const btn=type==="signUp"?$("signUp"):$("signIn");
+const email=$("email").value.trim(),password=$("password").value;
+if(!client){$("authStatus").textContent="Supabase nu s-a încărcat. Reîncarcă pagina.";return;}
+if(!email||password.length<8){$("authStatus").textContent="Completează e-mailul și parola (minimum 8 caractere).";return;}
+btn.disabled=true;$("authStatus").textContent=type==="signUp"?"Se creează contul profesional...":"Se verifică autentificarea...";
+try{
+ const {data,error}=type==="signUp"
+ ?await client.auth.signUp({email,password,options:{emailRedirectTo:"https://nistordaniel06-cpu.github.io/barber-booking/professionals.html",data:{barbercraft_account_type:"professional"}}})
+ :await client.auth.signInWithPassword({email,password});
+ if(error){$("authStatus").textContent="Autentificare eșuată: "+error.message;return;}
+ if(type==="signUp"&&!data.session){$("authStatus").textContent="Verifică e-mailul și confirmă contul, apoi revino pentru autentificare.";return;}
+ if(data.user?.user_metadata?.barbercraft_account_type==="client"){$("authStatus").textContent="Acest e-mail este asociat unui cont de client. Pentru înregistrare PRO separată, folosește alt e-mail.";await client.auth.signOut();return;}
+ $("authStatus").textContent="Autentificare reușită.";
+ await refresh();
+}catch(e){$("authStatus").textContent="Conexiunea a eșuat: "+(e?.message||"Încearcă din nou.");}
+finally{btn.disabled=false;}
+}
 $("signIn").onclick=()=>authenticate("signIn");$("signUp").onclick=()=>authenticate("signUp");$("signOut").onclick=async()=>{await client.auth.signOut();await refresh();};
 async function loadVerifiedAccess(){
 const {data,error}=await client.rpc("bc_my_professional_access");
@@ -27,7 +44,7 @@ $("meroPreviewBtn").onclick=async()=>{
  $("meroPreview").hidden=true;meroCurrent=null;
  const value=$("meroUrl").value.trim();
  let u;try{u=new URL(value)}catch{$("meroStatus").textContent="Introdu un URL MERO valid.";return;}
- if(u.protocol!=="https:"||!["mero.ro","www.mero.ro"].includes(u.hostname)||!/^\\/p\\/[a-z0-9-]{2,90}\\/?$/i.test(u.pathname)){
+ if(u.protocol!=="https:"||!["mero.ro","www.mero.ro"].includes(u.hostname)||!new RegExp("^/p/[a-z0-9-]{2,90}/?$","i").test(u.pathname)){
    $("meroStatus").textContent="Introdu un profil public MERO, de exemplu https://mero.ro/p/4men";return;
  }
  if(!client||!user){$("meroStatus").textContent="Autentifică-te mai întâi.";return;}
