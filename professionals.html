@@ -255,9 +255,9 @@ async function renderHoursEditor(body){
  const items=rows.map(r=>({salon_id:salon,weekday:r.day,opens:r.open.value,closes:r.end.value,is_closed:r.closed.checked}));
  const {error}=await client.from("bc_pro_working_hours").upsert(items,{onConflict:"salon_id,weekday"});status.textContent=error?"Eroare: "+error.message:"Programul a fost salvat. Încă nu activează automat rezervările.";btn.disabled=false};
 }
-function renderSalonShare(body){
+async function renderSalonShare(body){
  const salon=$("calSalon").value;if(!salon){body.textContent="Selectează un salon activ în calendar.";return;}
- const link=new URL("./",location.href);const option=$("calSalon").selectedOptions[0];link.searchParams.set("q",option?.textContent||"salon");
+ const link=new URL("./",location.href);const option=$("calSalon").selectedOptions[0];const {data:profile}=await client.from("bc_public_salon_catalog").select("id").eq("salon_id",salon).eq("visibility","listed").maybeSingle();if(profile?.id)link.searchParams.set("salon",profile.id);else link.searchParams.set("q",option?.textContent||"salon");
  const inp=document.createElement("input");inp.className="input";inp.readOnly=true;inp.value=link.href;const btn=document.createElement("button");btn.className="primary";btn.textContent="Distribuie linkul";body.append(inp,btn);
  btn.onclick=async()=>{try{if(navigator.share)await navigator.share({title:"BARBERCRAFT",url:link.href});else if(navigator.clipboard){await navigator.clipboard.writeText(link.href);btn.textContent="Link copiat";}else{inp.select();btn.textContent="Copiază linkul selectat";}}catch(e){btn.textContent="Distribuire anulată";}};
 }
@@ -341,6 +341,7 @@ async function renderSalonProfileEditor(body){
  const file=document.createElement("input");file.type="file";file.accept="image/jpeg,image/png,image/webp";fileLabel.append(file);
  function field(label,value,multiline=false){const holder=document.createElement("label");holder.textContent=label;const control=document.createElement(multiline?"textarea":"input");control.className="input";control.value=value||"";holder.append(control);form.append(holder);return control;}
  form.append(heading,cover,fileLabel);
+ const name=field("Numele salonului",data?.name);name.maxLength=120;const address=field("Adresa",data?.address);address.maxLength=300;
  const description=field("Descriere salon",data?.description,true);description.maxLength=2000;
  const phone=field("Telefon",data?.phone);phone.maxLength=35;
  const website=field("Website (https://)",data?.website);website.maxLength=300;
@@ -355,7 +356,7 @@ async function renderSalonProfileEditor(body){
    const selected=file.files?.[0];if(selected){if(selected.size>5242880||!["image/jpeg","image/png","image/webp"].includes(selected.type))throw Error("Imagine invalidă.");const ext=selected.type==="image/png"?"png":selected.type==="image/webp"?"webp":"jpg";const path=salon+"/"+crypto.randomUUID()+"."+ext;
     const upload=await client.storage.from("bc-salon-covers").upload(path,selected,{contentType:selected.type,upsert:false});if(upload.error)throw upload.error;
     url=client.storage.from("bc-salon-covers").getPublicUrl(path).data.publicUrl;}
-   const {error}=await client.rpc("bc_pro_save_salon",{p_salon:salon,p_description:description.value,p_phone:phone.value,p_website:website.value,p_cover:url});
+   const {error}=await client.rpc("bc_pro_save_salon",{p_salon:salon,p_name:name.value,p_address:address.value,p_description:description.value,p_phone:phone.value,p_website:website.value,p_cover:url});
    if(error)throw error;status.textContent="Profil salvat. Dacă nu se vede în aplicația clienților, asociază profilul public din Admin → Catalog saloane.";
   }catch(e){status.textContent="Eroare: "+(e.message||"Nu s-a salvat.");}
   finally{save.disabled=false;}
