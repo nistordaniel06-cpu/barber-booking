@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/barbercraft-zones-passport-rewards
+      - feature/barbercraft-reward-redemption-qr-zones
 permissions:
   contents: read
 jobs:
@@ -15,4 +16,6 @@ jobs:
         with:
           node-version: '22'
       - name: Validate JS, HTML and feature wiring
-        run: node tests/barbercraft-smoke.mjs
+        run: |
+          node tests/barbercraft-smoke.mjs
+          node tests/barbercraft-rewards-smoke.mjs
