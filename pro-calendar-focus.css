@@ -1,0 +1,194 @@
+/* Full-screen, thumb-friendly BARBERCRAFT PRO calendar (independent from Client/Admin). */
+body.bcCalendarFocus{overflow:hidden}
+body.bcCalendarFocus .top{display:none!important}
+body.bcCalendarFocus .page{max-width:none!important;padding:0!important;margin:0!important;width:100%!important}
+body.bcCalendarFocus #member{padding:0!important;margin:0!important;width:100%}
+body.bcCalendarFocus #proCalendar.proPanel.active{
+ display:flex!important;flex-direction:column;
+ width:100vw;max-width:none;margin:0!important;padding:0 0 calc(72px + env(safe-area-inset-bottom))!important;
+ min-height:100dvh;height:100dvh;background:#0f1014!important;border:0!important;border-radius:0!important;
+ box-shadow:none!important;color:#f9f8f4;overflow:hidden
+}
+body.bcCalendarFocus #proCalendar .calendarHead{
+ flex:0 0 auto;background:#17181e;padding:12px 16px 8px;align-items:center;gap:8px;
+ border-bottom:1px solid #303238
+}
+body.bcCalendarFocus #proCalendar .calendarHead h2{
+ font-size:17px!important;letter-spacing:-.3px;color:#fff;margin:3px 0!important
+}
+body.bcCalendarFocus #proCalendar .calendarHead .tag{font-size:9px}
+body.bcCalendarFocus #proCalendar .calendarHead .muted{display:none}
+body.bcCalendarFocus #proCalendar .calActions{gap:4px}
+body.bcCalendarFocus #proCalendar .calActions .outline{
+ border:1px solid #3a3d43!important;border-radius:12px!important;color:#f3d075!important;
+ background:#24252a!important;min-height:40px;min-width:38px;padding:8px!important
+}
+body.bcCalendarFocus #proCalendar .calWeekName{margin:0!important;padding:9px 16px;font-size:14px;color:#eaca73}
+body.bcCalendarFocus #proCalendar .calModes{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;
+ margin:0 14px 8px;padding:4px;border-radius:14px;background:#282a31
+}
+body.bcCalendarFocus #proCalendar .calModes button{
+ border:0!important;min-height:39px;border-radius:10px;color:#bbbfc8;background:transparent;font-weight:750
+}
+body.bcCalendarFocus #proCalendar .calModes button.selected{
+ background:#e9bd4b!important;color:#18140c!important
+}
+body.bcCalendarFocus #proCalendar>label.field{
+ margin:0 14px 6px;color:#c0c1c9;font-size:11px
+}
+body.bcCalendarFocus #proCalendar #calSalon{
+ min-height:39px!important;border:1px solid #333741!important;background:#1d2027!important;color:#fff!important
+}
+body.bcCalendarFocus #proCalendar .bcCalendarFilterHeader{
+ display:flex;justify-content:space-between;align-items:center;
+ padding:5px 14px 2px;font-size:13px;gap:10px
+}
+body.bcCalendarFocus #proCalendar .bcCalendarFilterHeader>button{
+ border:1px solid #404148;border-radius:10px;color:#e6c876;
+ background:#272830;padding:7px 12px;font-size:12px;font-weight:800
+}
+body.bcCalendarFocus #proCalendar .bcTeamFilters{
+ display:flex;gap:7px;overflow-x:auto;flex:0 0 auto;padding:8px 14px 10px;
+ overscroll-behavior-x:contain;scrollbar-width:none
+}
+body.bcCalendarFocus #proCalendar .bcTeamFilters button{
+ display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;
+ white-space:nowrap;padding:7px 12px;border:1px solid #45474e;border-radius:100px;
+ background:#25272e;color:#e7e8ed;font-size:12px;font-weight:700
+}
+body.bcCalendarFocus #proCalendar .bcTeamFilters button.active{
+ border-color:#f4d078;background:#40351b;color:#ffdb77
+}
+body.bcCalendarFocus #proCalendar .bcTeamAvatar{
+ display:grid;place-items:center;width:25px;height:25px;border-radius:50%;
+ font-size:12px;color:#2a2417;background:#f2cb71
+}
+body.bcCalendarFocus #proCalendar .bcCalendarGuide{
+ margin:0;padding:2px 14px 8px;color:#a8aab5;font-size:11px;line-height:1.4
+}
+body.bcCalendarFocus #proCalendar .calScroll{
+ flex:1 1 auto;min-height:0;max-height:none!important;margin:0!important;
+ overflow:auto!important;background:#111318!important;border:0!important;border-top:1px solid #33353a;
+ border-radius:0!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch
+}
+body.bcCalendarFocus #proCalendar .calWeek{
+ background:#12141a;position:relative;align-content:start
+}
+body.bcCalendarFocus #proCalendar .calDay{
+ position:sticky;top:0;z-index:9;display:grid;align-content:center;gap:5px;
+ background:#25262e!important;color:#fff!important;border-color:#3b3d47;
+ border-bottom:2px solid #cba650;text-align:left;padding:8px 10px;
+ min-width:0;overflow:hidden
+}
+body.bcCalendarFocus #proCalendar .calDay strong{
+ overflow:hidden;text-overflow:ellipsis;font-size:12px;white-space:nowrap
+}
+body.bcCalendarFocus #proCalendar .calDay small{color:#babcc5;font-size:10px}
+body.bcCalendarFocus #proCalendar .calDay.bcCorner{
+ text-align:center;color:#b6b9c4!important;font-size:11px;place-items:center
+}
+body.bcCalendarFocus #proCalendar .calTime{
+ display:flex;align-items:start;justify-content:flex-end;
+ font-size:10px;color:#b4b7c1;background:#15171e!important;
+ border-top:1px solid #252730;padding:2px 5px 0 0;
+ z-index:3;user-select:none;touch-action:pan-y
+}
+body.bcCalendarFocus #proCalendar .calCell{
+ display:block;width:100%;min-height:52px;border-top:1px solid #282c36;
+ border-left:1px solid #30343e;background:#14161d;cursor:crosshair;
+ touch-action:none;user-select:none;-webkit-user-select:none;position:relative;z-index:1
+}
+body.bcCalendarFocus #proCalendar .calCell:hover{background:#20232c}
+body.bcCalendarFocus #proCalendar .calCell.calSelected{
+ background:#5c471d!important;box-shadow:inset 0 0 0 2px #f3cb68;z-index:2
+}
+body.bcCalendarFocus #proCalendar .calEvent{
+ z-index:4;position:relative;min-width:0;max-width:calc(100% - 6px);
+ border:1px solid #5372a9;border-left:4px solid #5caaff;border-radius:8px;
+ margin:2px 3px;padding:5px;text-align:left;line-height:1.25;
+ background:#223c60;color:#eaf4ff;font-size:11px;overflow:hidden;
+ box-shadow:0 2px 8px #0005;cursor:pointer
+}
+body.bcCalendarFocus #proCalendar .calEvent.confirmed{background:#224b42;border-color:#3c9c7b;border-left-color:#55ce9a;color:#fff}
+body.bcCalendarFocus #proCalendar .calEvent.busy{
+ background:repeating-linear-gradient(-45deg,#45404a,#45404a 7px,#33313a 7px,#33313a 14px);
+ border-color:#5e565e;border-left-color:#d0a7a5;color:#f8f7f6
+}
+body.bcCalendarFocus #proCalendar .calEvent.isOverlapped{
+ background:#57292c;border-color:#d27c78;border-left-color:#ff716f
+}
+body.bcCalendarFocus #proCalendar .calEvent strong{
+ font-size:12px;color:inherit;overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}
+body.bcCalendarFocus #proCalendar .calEvent small{color:inherit;opacity:.85;font-size:10px}
+body.bcCalendarFocus #proCalendar #calendarDragHelp,
+body.bcCalendarFocus #proCalendar #calendarDragToggle{display:none!important}
+body.bcCalendarFocus #proCalendar #calStatus{
+ position:absolute;left:12px;right:12px;bottom:calc(78px + env(safe-area-inset-bottom));
+ background:#222630f0;color:#f1d99d;border-radius:10px;padding:5px 10px;
+ font-size:10px;max-width:min(640px,calc(100% - 24px));margin:0;pointer-events:none;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:7
+}
+body.bcCalendarFocus #proCalendar #bcCalendarAdvanced{
+ position:absolute;z-index:30;left:12px;right:12px;top:210px;max-height:60vh;
+ overflow:auto;background:#242630;padding:12px;border:1px solid #4a4544;border-radius:15px;
+ box-shadow:0 12px 40px #000a
+}
+body.bcCalendarFocus #proCalendar #bcCalendarAdvanced[hidden]{display:none!important}
+body.bcCalendarFocus #proCalendar .calUtility{
+ display:flex;flex-wrap:wrap;gap:7px;margin:0;align-items:center
+}
+body.bcCalendarFocus #proCalendar .calUtility>*{
+ max-width:100%;font-size:12px
+}
+body.bcCalendarFocus #proCalendar .bcCalendarQuick{
+ position:fixed;inset:0;z-index:150;background:#0008;
+ display:grid;place-items:end center;padding:16px 16px calc(90px + env(safe-area-inset-bottom))
+}
+body.bcCalendarFocus #proCalendar .bcCalendarQuick[hidden]{display:none!important}
+body.bcCalendarFocus #proCalendar .bcCalendarQuickCard{
+ display:grid;gap:10px;background:#24262c;color:white;padding:17px;
+ border:1px solid #5a5140;border-radius:22px;width:min(450px,100%);
+ box-shadow:0 15px 40px #000c
+}
+body.bcCalendarFocus #proCalendar .bcQuickTop{
+ display:flex;justify-content:space-between;align-items:center;gap:12px;
+ font-size:12px;color:#e8d3a3;font-weight:750;padding-bottom:8px
+}
+body.bcCalendarFocus #proCalendar .bcQuickTop button{
+ background:transparent;color:#fff;border:0;font-size:22px;padding:3px
+}
+body.bcCalendarFocus #proCalendar .bcCalendarQuickCard>button{
+ border:1px solid #5c5e63;background:#363944;color:#fff;
+ border-radius:14px;padding:17px 14px;font-size:16px;font-weight:850;text-align:center;min-height:55px
+}
+body.bcCalendarFocus #proCalendar .bcCalendarQuickCard>button.bcQuickPrimary{
+ border:0;background:#eec657;color:#191510
+}
+body.bcCalendarFocus #proCalendar .bcGridDragTip{
+ pointer-events:none;position:sticky;left:56px;bottom:0;
+ width:max-content;max-width:70%;padding:4px 9px;border-radius:9px;
+ background:#413319;color:#ffdb72;font-size:11px;z-index:5
+}
+body.bcCalendarFocus #proCalendar #calendarOverlay{position:fixed;inset:0;z-index:160;background:#000b}
+body.bcCalendarFocus #proCalendar #calendarManualForm.calEditorSheet{
+ position:fixed!important;z-index:161;left:50%;bottom:0;top:auto;
+ transform:translateX(-50%);width:min(100%,560px);max-height:90dvh;overflow:auto;
+ border-radius:23px 23px 0 0!important;padding:23px 20px calc(24px + env(safe-area-inset-bottom))!important;
+ background:#22242b!important;color:#fff!important;border:1px solid #575058
+}
+body.bcCalendarFocus #proCalendar #calendarManualForm .input{
+ background:#30323c!important;color:white!important;border:1px solid #545760!important;min-height:47px
+}
+body.bcCalendarFocus #proCalendar #calendarManualForm .primary{
+ background:#eec857!important;color:#17130e!important;min-height:53px;border-radius:14px!important
+}
+body.bcCalendarFocus #proCalendar #calendarManualForm .field{font-size:12px;color:#e8e8ed}
+body.bcCalendarFocus #member .proBottom,body.bcCalendarFocus #member>.proBottom{
+ max-width:none!important;background:#1c1d23!important;border-top:1px solid #44414a!important
+}
+@media(min-width:740px){
+ body.bcCalendarFocus #proCalendar .calWeek{max-width:none}
+ body.bcCalendarFocus #proCalendar .calEvent strong{font-size:13px}
+}

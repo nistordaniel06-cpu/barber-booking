@@ -19,7 +19,7 @@
 <h2>Publică o postare</h2><p>Postările sunt publice pentru toată comunitatea, inclusiv pentru persoanele care nu te urmăresc. Nu publica imagini fără acord.</p>
 <form id="socialPostForm"><label class="socialField">Text / descriere<textarea name="body" maxlength="1000" minlength="3" rows="3" required placeholder="Arată-ți tunsoarea, experiența sau o idee…"></textarea></label>
 <label class="socialField">Fotografie (opțională, maximum 5 MB)<input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label>
-<button type="submit" class="socialButton primary">Publică în feed</button></form></div>
+<button type="submit" class="socialButton primary">Publică în feed</button></form><p id="socialFeedCooldown" class="socialGalleryQuota" role="status" aria-live="polite">Se verifică limita de postări…</p></div>
 <div class="socialFeedHeading"><div><h2>Ultimele postări</h2><p>De la toată comunitatea · frizeri și clienți · inclusiv persoane pe care nu le urmărești</p></div>
 <button id="socialFeedRefresh" type="button" class="socialButton">↻ Actualizează</button></div>
 <div id="socialFeed" class="socialFeed" aria-live="polite"></div>
