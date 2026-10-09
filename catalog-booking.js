@@ -7,7 +7,7 @@ if(!uuid(salon)){
  setStatus("Adresa rezervării este invalidă. Revino în Catalog saloane.");return
 }
 if(!window.supabase){setStatus("Serviciul de rezervări nu este disponibil.");return}
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=window.BCAuthClient("client");
 const rpc=async(fn,args={})=>{const {data,error}=await sb.rpc(fn,args);if(error)throw Error(error.message);return data};
 let config=null,requestId=null,selected=null,busy=false;
 async function checkAccount(){
