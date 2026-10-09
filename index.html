@@ -313,6 +313,10 @@ async function renderCatalogProfile(salon){
   if(!opening.error&&opening.data?.length){hours.replaceChildren();const weekdays=["Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă","Duminică"];for(const d of opening.data){const row=document.createElement("div");row.className="catalogHourRow";const name=document.createElement("span");name.textContent=weekdays[d.weekday-1]||"Zi";const value=document.createElement("strong");value.textContent=d.is_closed?"Închis":String(d.opens||"").slice(0,5)+" – "+String(d.closes||"").slice(0,5);row.append(name,value);hours.append(row)}}
  }catch(err){console.warn("Extra salon information is not yet available",err);}
 }
+window.BCOpenCatalogSalon=id=>{
+ const salon=catalogSalons.find(x=>x.id===id);
+ if(salon)void renderCatalogProfile(salon);
+};
 document.addEventListener("click",e=>{
  const b=e.target.closest("[data-catalog-id]");if(!b)return;
  const salon=catalogSalons.find(x=>x.id===b.dataset.catalogId);if(salon)renderCatalogProfile(salon);
