@@ -321,5 +321,5 @@ $("resendSignupBtn").onclick=async()=>{
    "Dacă adresa poate primi confirmări, vei primi un e-mail nou. Verifică și Spam.";
  }finally{button.disabled=false}
 };
-$("logoutBtn").onclick=async()=>{if(authClient)await authClient.auth.signOut();await refreshAccount();$("authStatus").textContent="Te-ai deconectat.";};
+$("logoutBtn").onclick=async()=>{if(authClient)await authClient.auth.signOut({scope:"local"});await refreshAccount();$("authStatus").textContent="Te-ai deconectat.";};
 </script></body></html>
