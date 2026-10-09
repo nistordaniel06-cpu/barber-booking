@@ -3,8 +3,7 @@
 (async()=>{"use strict";
 const $=id=>document.getElementById(id),root=$("proLifecycle");if(!root)return;
 const node=(tag,txt)=>{const n=document.createElement(tag);if(txt!==undefined)n.textContent=txt;return n};
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY,
- {auth:{storageKey:"barbercraft-pro-session",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const sb=window.BCAuthClient("pro",{detectSessionInUrl:false});
 const select=$("lifecycleSalon"),state=$("lifecycleStatus"),input=$("lifecycleConfirm"),archive=$("lifecycleArchive"),restore=$("lifecycleRestore");
 let map=new Map();
 async function reload(){

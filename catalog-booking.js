@@ -7,7 +7,7 @@ if(!uuid(salon)){
  setStatus("Adresa rezervării este invalidă. Revino în Catalog saloane.");return
 }
 if(!window.supabase){setStatus("Serviciul de rezervări nu este disponibil.");return}
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=window.BCAuthClient("client");
 const rpc=async(fn,args={})=>{const {data,error}=await sb.rpc(fn,args);if(error)throw Error(error.message);return data};
 let config=null,requestId=null,selected=null,busy=false;
 async function checkAccount(){
@@ -28,7 +28,8 @@ async function checkAccount(){
    setStatus("Cont aprobat. Alege serviciul și ora pentru rezervare.");return true;
   }
   $("pilotClientForm").hidden=true;
-  status.textContent=state==="pending"?"Contul tău este în așteptarea aprobării din Admin. Revino aici după aprobare.":
+  status.textContent=state==="wrong_portal"?"Ai intrat cu un cont PRO. Pentru programări ca client, folosește un cont Client separat.":
+   state==="pending"?"Contul tău este în așteptarea aprobării din Admin. Revino aici după aprobare.":
    state==="suspended"?"Contul tău este suspendat. Contactează administratorul.":
    "Contul nu a fost aprobat. Contactează administratorul BARBERCRAFT.";
   return false;
@@ -75,7 +76,7 @@ $("catalogResendConfirmation").onclick=async()=>{
    "Dacă adresa poate primi confirmări, vei primi un nou e-mail. Verifică și Spam.";
  }finally{button.disabled=false}
 };
-$("catalogLogout").onclick=async()=>{await sb.auth.signOut();await checkAccount();};
+$("catalogLogout").onclick=async()=>{await sb.auth.signOut({scope:"local"});await checkAccount();};
 $("catalogRecheck").onclick=checkAccount;
 
 const localDate=(d)=>{

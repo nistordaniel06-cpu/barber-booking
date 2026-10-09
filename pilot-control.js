@@ -3,7 +3,7 @@ const $=id=>document.getElementById(id);
 const node=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=String(text);return e};
 const setStatus=text=>$("pilotStatus").textContent=text;
 try{
- const sb=await window.BCPassportSession();
+ const sb=window.BCAuthClient?.("pro",{detectSessionInUrl:false});
  if(!sb){setStatus("Configurația aplicației nu este disponibilă.");return}
  const {data:{user}}=await sb.auth.getUser();
  if(!user){setStatus("Conectează-te în contul BARBERCRAFT PRO pentru a configura pilotul.");return}

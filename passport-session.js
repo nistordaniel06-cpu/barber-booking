@@ -1,21 +1,29 @@
-/* Shared client/PRO session for BARBERCRAFT Passports and social profiles. */
+/* BARBERCRAFT social/passport session resolver.
+   Never fall back from Client to PRO or from PRO to Client.
+   URLs from PRO explicitly set ?from=pro, otherwise this is a Client page. */
 (()=>{
 "use strict";
-let pending=null;
-async function resolveSession(){
- const api=window.supabase;
- if(!api||!window.BARBERCRAFT_SUPABASE_URL||!window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY)return null;
- const url=window.BARBERCRAFT_SUPABASE_URL,key=window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY;
- const client=api.createClient(url,key);
- const pro=api.createClient(url,key,{auth:{
-  storageKey:"barbercraft-pro-session",persistSession:true,autoRefreshToken:true,detectSessionInUrl:false
- }});
- const preferPro=new URLSearchParams(location.search).get("from")==="pro";
- for(const current of preferPro?[pro,client]:[client,pro]){
-  const {data,error}=await current.auth.getUser();
-  if(!error&&data?.user)return current;
+const pending={};
+const portal=new URLSearchParams(location.search).get("from")==="pro"?"pro":"client";
+window.BCPassportSession=function(){
+ if(!pending[portal]){
+  pending[portal]=Promise.resolve(window.BCAuthClient?.(portal,{detectSessionInUrl:false})||null);
  }
- return preferPro?pro:client;
+ return pending[portal];
+};
+// Keep role context when navigating between passports, gallery previews and social pages.
+if(portal==="pro"){
+ document.addEventListener("DOMContentLoaded",()=>{
+  for(const anchor of document.querySelectorAll('a[href^="./"]')){
+   const u=new URL(anchor.href,location.href);
+   if(/\/(social|passport|passport-preview)\.html$/i.test(u.pathname)){
+    u.searchParams.set("from","pro");
+    anchor.href=u.href;
+   }else if(/\/referral\.html$/i.test(u.pathname)){
+    u.searchParams.set("type","pro");
+    anchor.href=u.href;
+   }
+  }
+ });
 }
-window.BCPassportSession=()=>pending||(pending=resolveSession());
 })();

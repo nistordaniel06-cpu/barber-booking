@@ -16,6 +16,7 @@ on:
       - feature/explore-catalog-real-booking
       - fix/email-confirmation-github-social-checkbox
       - fix/admin-client-approval-nav-referral-client-links
+      - fix/isolated-client-pro-admin-sessions
       - fix/email-confirmation-resend-recovery
 permissions:
   contents: read
@@ -42,4 +43,5 @@ jobs:
           node tests/barbercraft-explore-public-booking-approvals-smoke.mjs
           node tests/barbercraft-auth-email-social-toggle-smoke.mjs
           node tests/barbercraft-client-link-navigation-smoke.mjs
+          node tests/barbercraft-portal-session-isolation-smoke.mjs
           node tests/barbercraft-auth-resend-recovery-smoke.mjs
