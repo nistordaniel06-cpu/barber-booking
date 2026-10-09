@@ -172,6 +172,24 @@ function renderSearch(){
  window.dispatchEvent(new CustomEvent("bc-discovery-results",{detail:{count:found.length}}));
  const cards=found.map(s=>'<button type="button" class="saloncard" data-catalog-id="'+escHtml(s.id)+'">'+(s.cover_image_url?.startsWith("https://")?'<img class="catalogThumb" alt="Coperta '+escHtml(s.name)+'" src="'+escHtml(s.cover_image_url)+'">':"")+'<div class="details" style="min-height:125px"><strong>'+escHtml(s.name)+'</strong><div class="rating">✂ Salon BARBERCRAFT</div><div class="tiny">'+escHtml(String(s.address||"Adresă de confirmat").replace(/<[^>]+>/g," "))+'</div><div class="tiny" style="margin-top:9px">'+escHtml((s.services||[]).length)+' servicii · Vezi detalii</div></div></button>').join("");
  $("salongrid").innerHTML=cards||'<div class="empty">Nu am găsit saloane pentru criteriile alese. Mărește raza sau încearcă alt serviciu.</div>';
+ if(near.enabled){
+  const pending=catalogSalons.filter(s=>s.geo_lat==null||s.geo_lng==null).filter(s=>{
+   const terms=[s.name,s.address,s.city,s.sector,...(s.services||[]).map(v=>v.name)].map(normalize).join(" ");
+   return query.split(/\s+/).filter(Boolean).every(term=>terms.includes(term));
+  }).slice(0,4);
+  if(pending.length){
+   const info=document.createElement("section");info.className="bcUnverifiedHint";
+   const heading=document.createElement("strong");heading.textContent="Saloane cu localizarea încă neconfirmată";
+   const description=document.createElement("small");
+   description.textContent="Nu putem verifica distanța în kilometri până la aceste saloane. Le poți vedea separat, dar nu le afișăm ca fiind în raza ta.";
+   info.append(heading,description);
+   for(const salon of pending){
+    const b=document.createElement("button");b.type="button";b.textContent=salon.name+" · Vezi profil";
+    b.onclick=()=>void renderCatalogProfile(salon);info.append(b);
+   }
+   $("salongrid").append(info);
+  }
+ }
 }
 window.BCRefreshSearch=renderSearch;
 async function loadCatalog(){
