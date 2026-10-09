@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 540" role="img" aria-labelledby="title desc">
+<title id="title">Bătălia Zonelor — oraș cinematografic auriu</title>
+<desc id="desc">Ilustrație nocturnă cu clădiri urbane, cupola unui palat și silueta unui participant Barbercraft.</desc>
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2=".6" y2="1"><stop stop-color="#100e12"/><stop offset=".41" stop-color="#413220"/><stop offset=".75" stop-color="#8f6234"/><stop offset="1" stop-color="#151216"/></linearGradient>
+<radialGradient id="sun"><stop stop-color="#fce5a4" stop-opacity=".9"/><stop offset=".38" stop-color="#f4c678" stop-opacity=".47"/><stop offset="1" stop-color="#d4a05a" stop-opacity="0"/></radialGradient>
+<linearGradient id="wall" x1="0" y1="0" x2="1" y2=".7"><stop stop-color="#4e4034"/><stop offset=".5" stop-color="#1b1716"/><stop offset="1" stop-color="#55402b"/></linearGradient>
+<linearGradient id="fore" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#302b29"/><stop offset="1" stop-color="#070809"/></linearGradient>
+<linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#080808" stop-opacity="0"/><stop offset=".8" stop-color="#080808" stop-opacity=".12"/><stop offset="1" stop-color="#080808" stop-opacity=".98"/></linearGradient>
+<filter id="blur"><feGaussianBlur stdDeviation="19"/></filter><filter id="glow"><feGaussianBlur stdDeviation="4"/></filter>
+<pattern id="windows" width="27" height="31" patternUnits="userSpaceOnUse"><rect x="6" y="6" width="6" height="9" fill="#ffcc77" opacity=".32"/><rect x="17" y="5" width="5" height="12" fill="#f2c383" opacity=".1"/></pattern>
+</defs>
+<path fill="url(#sky)" d="M0 0h760v540H0z"/>
+<circle cx="460" cy="205" r="280" fill="url(#sun)"/>
+<path fill="#b88a57" opacity=".1" d="M0 245Q162 205 306 250T760 212v330H0z"/>
+<g opacity=".47" fill="#211b1b"><path d="M0 197h64v230H0zM52 145h45v302H52zM103 207h56v260h-56zM153 172h50v267h-50zM208 236h53v201h-53zM501 150h64v286h-64zM571 202h84v230h-84zM663 166h56v280h-56zM721 224h39v242h-39z"/></g>
+<g fill="url(#windows)" opacity=".52"><path d="M0 198h269v260H0zM501 150h259v322H501z"/></g>
+<g transform="translate(235 103)">
+<path fill="#372b27" d="M13 281h285v163H13z"/>
+<path fill="#6c5440" d="M35 248h240v36H35z"/>
+<path fill="#463932" d="M55 218h200v31H55z"/>
+<path fill="#554234" d="M94 180h124v41H94z"/>
+<path d="M106 180Q109 111 155 106Q204 116 205 180Z" fill="#574331"/>
+<path d="M115 179Q120 124 155 119Q192 126 196 179Z" fill="#8f6e48"/>
+<path d="M124 177Q136 138 155 132Q180 143 186 177Z" fill="#392c24"/>
+<path d="M151 97v-24m-8 23h17" stroke="#d2a16a" stroke-width="4" stroke-linecap="round"/>
+<path d="M0 280h306v19H0z" fill="#8e6b46"/>
+<path d="M23 303h260" stroke="#b28a5e" opacity=".65"/>
+<g fill="#bda07b" opacity=".65"><rect x="47" y="308" width="22" height="94" rx="10"/><rect x="94" y="308" width="22" height="94" rx="10"/><rect x="140" y="308" width="22" height="94" rx="10"/><rect x="186" y="308" width="22" height="94" rx="10"/><rect x="232" y="308" width="22" height="94" rx="10"/></g>
+<path fill="#322a23" d="M0 401h310v45H0z"/>
+</g>
+<path fill="#2a2422" d="M0 345h115v195H0zM75 296h63v244H75zM135 346h84v194h-84zM596 302h70v238h-70zM655 254h105v286H655z"/>
+<path fill="url(#windows)" d="M0 345h220v195H0zM596 302h164v238H596z" opacity=".7"/>
+<path fill="#181616" d="M0 448h760v92H0z"/>
+<path stroke="#facb72" opacity=".25" d="M0 448h760"/>
+<g transform="translate(590 310)">
+<ellipse cx="32" cy="188" rx="94" ry="14" fill="#050505" opacity=".6" filter="url(#blur)"/>
+<path d="M-44 186Q-58 100-12 89L14 77Q51 91 61 82Q109 112 103 186Z" fill="url(#fore)"/>
+<path d="M3 101l31 30 26-31 12 10-29 72-27-43-11 44z" fill="#29221d"/>
+<path d="M-1 42Q-8 0 31-3Q73-5 73 41l-4 44Q57 114 29 111Q7 108 2 83Z" fill="#151313"/>
+<path d="M-5 42Q-12-10 29-14Q69-17 77 36L62 29 47 1 24 23 6 15Z" fill="#080809"/>
+<path d="M4 65l13 4 17-3 17 5 18-4" stroke="#5c4735" stroke-width="3" opacity=".66"/>
+<path d="M20 95q11 7 22 0" stroke="#8d6c49" opacity=".3"/>
+<path d="M12 128q17-13 38 2" fill="none" stroke="#b88538" stroke-width="3"/>
+<path d="M30 157l-2 9m20-7 2 9" stroke="#d7aa5a" opacity=".8"/>
+</g>
+<g transform="translate(622 415) scale(.6)" fill="none" stroke="#ecc277" stroke-width="5" stroke-linejoin="round"><path d="M4 29 14 12 26 27 42 3 60 26 73 12 85 29 79 52H11Z"/><path d="M13 60h68"/></g>
+<circle cx="620" cy="59" r="3" fill="#ebcb8f"/><circle cx="85" cy="76" r="2" fill="#ebcb8f" opacity=".65"/>
+<path fill="url(#fade)" d="M0 0h760v540H0z"/>
+</svg>

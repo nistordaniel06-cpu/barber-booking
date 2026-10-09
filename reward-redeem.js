@@ -55,24 +55,60 @@ $("redeemBtn").onclick=async()=>{
   await loadHistory();
  }catch(err){$("redeemStatus").textContent="Cod respins: "+err.message}finally{button.disabled=false}
 };
-let stream=null,raf=0,detector=null,stopped=true;
-function stop(){stopped=true;if(raf)cancelAnimationFrame(raf);raf=0;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$("scanVideo").hidden=true;$("stopBtn").hidden=true;$("scanBtn").hidden=false}
+let stream=null,raf=0,detector=null,stopped=true,fallback=null;
+const video=$("scanVideo"),scanner=$("qrCamera");
+async function stop(){
+ stopped=true;
+ if(raf)cancelAnimationFrame(raf);raf=0;
+ if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+ video.pause();video.srcObject=null;video.hidden=true;
+ if(fallback){try{await fallback.stop();await fallback.clear()}catch(e){console.warn("Camera stop",e)}fallback=null}
+ if(scanner){scanner.hidden=true;scanner.replaceChildren()}
+ $("stopBtn").hidden=true;$("scanBtn").hidden=false;
+}
 $("stopBtn").onclick=stop;
+function onFound(payload){
+ if(!payload.startsWith("BC1|")&&!payload.startsWith("BCP1|"))return false;
+ $("claimCode").value=payload;
+ $("redeemStatus").textContent="✓ Cod citit. Verifică salonul, apoi confirmă manual identitatea sau recompensa.";
+ stop();
+ $("redeemBtn").focus();return true;
+}
 $("scanBtn").onclick=async()=>{
- if(!navigator.mediaDevices?.getUserMedia||typeof BarcodeDetector==="undefined"){$("redeemStatus").textContent="Scanarea QR nu este compatibilă cu acest browser. Copiază codul din Barber Passport.";return}
+ if(!navigator.mediaDevices?.getUserMedia){
+  $("redeemStatus").textContent="Camera nu este disponibilă în acest browser. Poți lipi codul în câmp.";return
+ }
+ $("scanBtn").disabled=true;$("redeemStatus").textContent="Se solicită permisiunea camerei…";
  try{
-  detector=new BarcodeDetector({formats:["qr_code"]});
-  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false});
-  const video=$("scanVideo");video.srcObject=stream;await video.play();video.hidden=false;
-  $("stopBtn").hidden=false;$("scanBtn").hidden=true;stopped=false;
-  const frame=async()=>{
-   if(stopped)return;
-   try{const hits=await detector.detect(video);const found=hits.find(h=>(h.rawValue?.startsWith("BC1|")||h.rawValue?.startsWith("BCP1|")));if(found){$("claimCode").value=found.rawValue;$("redeemStatus").textContent="Cod citit. Verifică și confirmă manual utilizarea.";stop();return}}
-   catch{}
-   if(!stopped)raf=requestAnimationFrame(frame);
-  };raf=requestAnimationFrame(frame);
- }catch(e){stop();$("redeemStatus").textContent="Camera nu poate fi deschisă: "+e.message}
+  let nativeReady=false;
+  if(typeof BarcodeDetector!=="undefined"){
+   try{
+    const supported=typeof BarcodeDetector.getSupportedFormats==="function"?await BarcodeDetector.getSupportedFormats():["qr_code"];
+    if(supported.includes("qr_code")){detector=new BarcodeDetector({formats:["qr_code"]});nativeReady=true}
+   }catch(e){console.warn("Scanner nativ indisponibil",e)}
+  }
+  if(nativeReady){
+   stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false});
+   video.srcObject=stream;await video.play();video.hidden=false;stopped=false;
+   $("stopBtn").hidden=false;$("scanBtn").hidden=true;
+   const frame=async()=>{
+    if(stopped)return;
+    try{const values=await detector.detect(video);for(const item of values){if(onFound(item.rawValue||""))return}}catch(e){}
+    if(!stopped)raf=requestAnimationFrame(frame);
+   };raf=requestAnimationFrame(frame);
+  }else if(typeof Html5Qrcode!=="undefined"){
+   scanner.hidden=false;stopped=false;fallback=new Html5Qrcode("qrCamera");
+   $("stopBtn").hidden=false;$("scanBtn").hidden=true;
+   await fallback.start({facingMode:"environment"},{fps:10,qrbox:{width:220,height:220}},txt=>onFound(txt),()=>{});
+  }else{
+   throw Error("Scannerul automat nu este suportat. Deschide această pagină în Chrome actualizat sau lipește codul.");
+  }
+  $("redeemStatus").textContent="Încadrează codul QR în chenar. Scanarea nu finalizează automat o vizită.";
+ }catch(e){
+  await stop();
+  $("redeemStatus").textContent="Scanarea nu a pornit: "+(e.message||String(e))+" Poți folosi codul copiat.";
+ }finally{$("scanBtn").disabled=false}
 };
-window.addEventListener("pagehide",stop);select.addEventListener("change",()=>{stop();$("claimCode").value="";loadOffers();loadHistory()});
+window.addEventListener("pagehide",()=>{void stop()});select.addEventListener("change",()=>{stop();$("claimCode").value="";loadOffers();loadHistory()});
 await Promise.all([loadOffers(),loadHistory()]);
 })();
