@@ -9,5 +9,11 @@
 <section class="panel"><div class="scanHero"><div class="scanHero-icon">▣</div><h2>Scanner BARBERCRAFT</h2><p class="sub">Orice membru autentificat al echipei unui salon poate valida un pașaport QR sau o recompensă.</p></div><h2>Scanează codul BARBERCRAFT</h2><p class="sub">Acceptă fie codul unei recompense, fie pașaportul QR pentru check-in. Acestea sunt operații diferite: check-in-ul nu confirmă automat un serviciu prestat și nu oferă XP.</p>
 <label class="field">Cod QR BARBERCRAFT — recompensă sau pașaport<input id="claimCode" autocomplete="off" spellcheck="false" placeholder="BC1|... sau BCP1|..." maxlength="200"></label>
 <div class="actions"><button id="redeemBtn" class="btn gold" type="button">Verifică și confirmă</button><button id="scanBtn" class="btn" type="button">Deschide camera QR</button><button id="stopBtn" class="btn" type="button" hidden>Oprește camera</button></div><div class="bc-scanner-stage"><video class="scanner" playsinline muted id="scanVideo" hidden></video><div id="qrCamera" class="scanner" hidden aria-label="Scanner cameră QR"></div></div><p id="redeemStatus" class="status" role="status"></p></section>
+<section class="panel" id="serviceConfirmPanel">
+<h2>Vizite finalizate & recenzii reale</h2>
+<p class="sub">Fiecare confirmare necesită check-in-ul QR al clientului și verificarea personalului după încheierea serviciului. Nu acordă puncte automate.</p>
+<button type="button" class="btn" id="serviceConfirmReload">↻ Actualizează check-in-uri</button>
+<p class="status" id="serviceConfirmStatus" role="status"></p><div id="serviceConfirmList"></div>
+</section>
 <section class="panel"><h2>Ofertele salonului</h2><p class="sub">Participarea este voluntară și poate fi modificată de proprietar sau manager. Activarea nu obligă la acordarea unui serviciu fără confirmarea reală a codului.</p><div id="offerList"></div><p id="offerStatus" class="status"></p></section>
 <section class="panel"><h2>Istoric recompense</h2><p class="sub">Cererile și utilizările din această locație, fără date personale despre clienți.</p><div id="rewardHistory"></div></section></div></main><script defer src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script><script defer src="./reward-redeem.js"></script></body></html>
