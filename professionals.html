@@ -282,6 +282,22 @@ async function renderStaffEditor(body){
  const btn=document.createElement("button");btn.className="primary";btn.type="button";btn.textContent="Trimite invitație prin e-mail";
  const status=document.createElement("p");status.className="status";status.setAttribute("role","status");
  body.append(info,email,role,btn,status);
+ const teamTitle=document.createElement("h3");teamTitle.textContent="Echipa salonului";body.append(teamTitle);
+ const teamBox=document.createElement("div");body.append(teamBox);
+ const {data:team,error:teamError}=await client.rpc("bc_pro_team_list",{p_salon:salon});
+ if(teamError){teamBox.textContent="Nu am putut încărca echipa: "+teamError.message;}
+ else for(const member of team||[]){
+  const item=document.createElement("div");item.className="pane profileForm";
+  const caption=document.createElement("strong");caption.textContent=member.email+" · "+(member.member_role==="owner"?"Admin":member.member_role);
+  const name=document.createElement("input");name.className="input";name.placeholder="Nume afișat public";name.value=member.display_name||"";
+  const specialty=document.createElement("input");specialty.className="input";specialty.placeholder="Ex.: Barber & Image Consultant";specialty.value=member.specialty||"";
+  const visibility=document.createElement("label");const check=document.createElement("input");check.type="checkbox";check.checked=!!member.visible;visibility.append(check,document.createTextNode(" Afișează în pagina publică"));
+  const save=document.createElement("button");save.type="button";save.className="outline";save.textContent="Salvează specialistul";
+  const message=document.createElement("p");message.className="status";
+  save.onclick=async()=>{save.disabled=true;const {error}=await client.rpc("bc_pro_team_profile_save",{p_salon:salon,p_user:member.user_id,p_name:name.value.trim(),p_specialty:specialty.value.trim(),p_visible:check.checked});message.textContent=error?"Eroare: "+error.message:"Profil specialist salvat.";save.disabled=false;};
+  item.append(caption,name,specialty,visibility,save,message);teamBox.append(item);
+ }
+
  btn.onclick=async()=>{
   if(!/^[^ @]+@[^ @]+\.[^ @]+$/.test(email.value.trim())){status.textContent="Introdu o adresă de e-mail validă.";return;}
   btn.disabled=true;status.textContent="Se creează invitația...";
