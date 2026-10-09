@@ -1,0 +1,159 @@
+<!doctype html><html lang="ro"><head><base href="../"><meta name="barbercraft-portal" content="admin"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0a0a0c"><title>BARBERCRAFT ADMIN</title><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script>if(location.pathname.endsWith("/barber-booking/admin.html"))location.replace("./admin/"+location.search+location.hash);</script><script src="./auth-config.js"></script><script defer src="./appearance.js"></script><style>
+:root{font-family:"DM Sans",system-ui,sans-serif;background:#09090c;color:#f7f7f9}*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}[hidden]{display:none!important}.shell{max-width:1280px;margin:auto;padding:20px}.header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0 25px;border-bottom:1px solid #27272d}.brand{font-weight:800;font-size:18px;letter-spacing:-.7px}.brand b{color:#ffca35}.brand small{display:inline-block;margin-left:6px;padding:4px 7px;background:#3c3216;color:#ffdb6f;border-radius:6px;font-size:10px}.link{color:#e4b845;font-size:12px;text-decoration:none}.title{margin:30px 0 6px;font-size:30px;letter-spacing:-1px}.sub{color:#9b9fa9;font-size:13px;line-height:1.5}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:23px 0}.stat{border:1px solid #303037;background:#18181e;border-radius:18px;padding:18px}.stat b{display:block;font-size:28px;margin-top:6px}.stat small{color:#afb1b9}.tabs{display:flex;gap:9px;overflow-x:auto;margin:22px 0 14px;padding-bottom:7px}.tab{border:1px solid #323239;background:#1d1e24;color:#d5d6db;border-radius:13px;padding:11px 13px;white-space:nowrap;font-weight:800;font-size:12px}.tab.active{background:#ffcd38;color:#181400;border-color:#ffcd38}.panel{border:1px solid #303037;background:#18181e;border-radius:18px;padding:17px;margin:12px 0}.panel h2{margin:0 0 10px;font-size:17px}.item{padding:13px 0;border-top:1px solid #32323b;display:grid;gap:7px}.item strong{font-size:13px}.item small{color:#b4b6c0;overflow-wrap:anywhere}.actions{display:flex;gap:7px;flex-wrap:wrap}.btn{background:#292b32;border:1px solid #454650;color:white;padding:9px 11px;border-radius:9px;font-size:12px;font-weight:700}.btn.gold{background:#ffcd38;color:#161208;border-color:#ffcd38}.btn.danger{color:#ffc0bf;border-color:#784247}.field{display:grid;gap:5px;margin:10px 0;font-size:12px;font-weight:700}.input{width:100%;background:#101116;border:1px solid #454751;border-radius:10px;padding:13px;color:#f8f8fa}.status{color:#ffdb78;font-size:12px;line-height:1.5;min-height:16px}.warn{background:#2a2416;border:1px solid #5d4920;padding:12px;border-radius:10px;color:#ffda78;font-size:12px;line-height:1.5}.hidden{display:none}@media(min-width:800px){.grid{grid-template-columns:repeat(5,1fr)}.shell{padding:28px}.title{font-size:38px}.item{grid-template-columns:minmax(0,1fr) auto;align-items:center}}
+.passwordWrap{position:relative;display:block}.passwordWrap .input{padding-right:54px}.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:42px;height:38px;border:0;border-radius:10px;background:#292a30;color:white}:root[data-theme="light"]{background:#f7f7f9;color:#1b1c21;color-scheme:light}:root[data-theme="light"] body{background:#f7f7f9;color:#1b1c21}:root[data-theme="light"] .panel,:root[data-theme="light"] .stat{background:#fff;border-color:#e0e2e6}:root[data-theme="light"] .item{border-color:#e9ebef}:root[data-theme="light"] .btn,:root[data-theme="light"] .tab{background:#f0f0f3;color:#24262b;border-color:#d9dbe2}:root[data-theme="light"] .tab.active,:root[data-theme="light"] .btn.gold{background:var(--bc-accent,#ffcd38);color:#17140b}:root[data-theme="light"] .input{background:white;border-color:#d2d4db;color:#1c1e23}:root[data-theme="light"] .sub,:root[data-theme="light"] .stat small{color:#656b74}:root[data-theme="light"] .warn{background:#fff5de;color:#775200}.serviceRow{background:#21232a;border:1px solid #45464d;border-radius:12px;padding:12px;margin:11px 0;display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:10px;align-items:end}:root[data-theme="light"] .serviceRow{background:#f8f8fa;border-color:#e0e2e7}@media(max-width:680px){.serviceRow{grid-template-columns:1fr 1fr}.serviceRow .field:first-child{grid-column:1/-1}}.adminSalesGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}.adminSalesTile{padding:17px;background:#21232b;border:1px solid #3a3d46;border-radius:16px;display:grid;gap:9px;min-width:0}.adminSalesTile small{color:#aaadb9;font-size:12px}.adminSalesTile strong{font-size:22px;overflow-wrap:anywhere}:root[data-theme="light"] .adminSalesTile{background:#f8f8fa;border-color:#e0e2e7}:root[data-theme="light"] .adminSalesTile small{color:#666a71}@media(max-width:460px){.adminSalesGrid{grid-template-columns:1fr}.tab{white-space:nowrap}}@media(prefers-reduced-motion:no-preference){.tab,.btn,.item{transition:transform .17s ease,background .17s ease}.btn:active{transform:scale(.985)}}</style><link rel="stylesheet" href="./premium.css"><link rel="stylesheet" href="./admin-mobile.css"><link rel="stylesheet" href="./admin-explore-luxury.css"><link rel="stylesheet" href="./admin-clients.css"></head><body class="bc-premium bc-admin"><main class="shell"><header class="header"><div class="brand">BARBER<b>CRAFT</b><small>ADMIN</small></div><div style="display:flex;align-items:center;gap:10px"><button type="button" data-bc-theme-toggle class="btn" aria-label="Schimbă tema">☾</button></div></header><section id="loading"><h1 class="title">Verificare acces…</h1><p class="sub" id="loadingText">Confirmăm sesiunea și rolul de administrator.</p></section><section id="denied" hidden><h1 class="title">Acces restricționat</h1><p class="sub">Această pagină este disponibilă exclusiv administratorilor BARBERCRAFT. Autentifică-te cu contul de administrator.</p><label class="field">E-mail<input class="input" id="email" type="email" autocomplete="email"></label><label class="field">Parolă<span class="passwordWrap"><input class="input" id="password" type="password" autocomplete="current-password"><button type="button" class="eye" id="showAdminPassword" aria-label="Arată parola" aria-pressed="false">◉</button></span></label><button class="btn gold" id="login">Autentificare</button><p class="status" id="loginStatus"></p></section><section id="dashboard" hidden><h1 class="title">Administrare BARBERCRAFT</h1><p class="sub">Saloane, clienți, echipă, recompense și Bătălia Zonelor — date reale, permisiuni verificate.</p><div class="grid" id="stats"></div>
+<h2 class="bc-admin-hub-title">Operațiuni rapide</h2>
+<div class="bc-admin-hub">
+ <a href="./pilot-control.html" class="bc-admin-hub-tile"><span>✦</span><strong>Testează cu clienții 4MEN</strong><small>Servicii, link privat și programări pilot</small></a>
+ 
+ 
+ 
+ <button type="button" data-tab="clients" class="tab bc-admin-hub-tile"><span>♙</span><strong>Clienți de aprobat</strong><small>Conturi noi, aprobări și suspendări</small></button>
+ <button type="button" data-tab="partners" class="tab bc-admin-hub-tile"><span>♧</span><strong>Saloane & specialiști</strong><small>Înscrieri și verificare</small></button>
+ <button type="button" data-tab="catalog" class="tab bc-admin-hub-tile"><span>✂</span><strong>Servicii & prețuri</strong><small>Catalogul partenerilor</small></button>
+ <button type="button" data-tab="sales" class="tab bc-admin-hub-tile"><span>◷</span><strong>Activitate & fidelizare</strong><small>Tranzacții și progres</small></button>
+ <button type="button" data-tab="rewards" class="tab bc-admin-hub-tile"><span>♛</span><strong>Recompense</strong><small>Puncte și beneficii</small></button>
+ <button type="button" data-tab="explore" class="tab bc-admin-hub-tile"><span>▧</span><strong>Saloane de explorat</strong><small>Editează, ascunde, poze & galerii</small></button><button type="button" data-tab="referrals" class="tab bc-admin-hub-tile"><span>↗</span><strong>Invită & promoții</strong><small>Recomandări pentru clienți și PRO</small></button><button type="button" data-tab="community" class="tab bc-admin-hub-tile"><span>♡</span><strong>Comunitate</strong><small>Raportări și siguranță</small></button><button type="button" data-tab="zones" class="tab bc-admin-hub-tile"><span>⌖</span><strong>Bătălia Zonelor</strong><small>Orașe, cartiere și ligi</small></button>
+ <a href="./reward-redeem.html" class="bc-admin-hub-tile"><span>▣</span><strong>Scanare QR</strong><small>Validarea clienților</small></a>
+ <button type="button" data-tab="storefront" class="tab bc-admin-hub-tile"><span>✦</span><strong>Design aplicație</strong><small>Identitate și prezentare</small></button>
+</div><div class="tabs"><button class="tab" data-tab="storefront">✦ Design aplicație</button><button class="tab active" data-tab="partners">Saloane</button><button class="tab" data-tab="imports">Importuri externe</button><button class="tab" data-tab="explore">▧ Saloane de explorat</button><button class="tab" data-tab="catalog">Catalog saloane</button><button class="tab" data-tab="sales">Activitate & fidelizare</button><button class="tab" data-tab="rewards">🎁 Recompense</button><button class="tab" data-tab="zones">🗺 Orașe & zone</button><button class="tab" data-tab="referrals">↗ Referral</button><button class="tab" data-tab="community">♡ Comunitate</button><button class="tab" data-tab="clients">Clienți</button><button class="tab" data-tab="moderation">Moderare</button><button class="tab" data-tab="audit">Audit</button></div><section class="panel" id="content"></section><div class="panel"><h2>Actualizări și sesiune</h2><button class="btn" id="refresh" type="button">↻ Reîncarcă datele</button> <button class="btn" id="logout">Deconectare</button><p class="status" id="actionStatus"></p></div><p class="warn">Restricțiile sunt înregistrate în sistem, dar aplicarea efectivă a unui ban în toate fluxurile de autentificare, rezervare și comunicare necesită integrare suplimentară. Nu reprezintă încă o blocare globală.</p></section></main><script>
+"use strict";
+const $=id=>document.getElementById(id);
+const sb=window.BCAuthClient?.("admin",{detectSessionInUrl:false});
+let overview=null,active="storefront",catalogItems=[];
+function elt(tag,text,cls){const e=document.createElement(tag);if(text!=null)e.textContent=String(text);if(cls)e.className=cls;return e}
+function show(name){for(const s of ["loading","denied","dashboard"])$(s).hidden=s!==name}
+async function init(){if(!sb){show("denied");$("loginStatus").textContent="Supabase indisponibil.";return;}const {data}=await sb.auth.getUser();if(!data.user){show("denied");return;}const {data:isAdmin,error}=await sb.rpc("bc_is_platform_admin");if(error||isAdmin!==true){await sb.auth.signOut({scope:"local"});show("denied");$("loginStatus").textContent="Acest cont nu aparține portalului Admin. Accesul nu a fost acordat.";return;}const requested=(location.hash||"").match(/^#admin-(storefront|partners|imports|catalog|sales|rewards|zones|explore|referrals|community|clients|moderation|audit)$/);
+ if(requested)active=requested[1];
+ show("dashboard");await reload()}
+async function reload(){
+ const btn=$("refresh");if(btn)btn.disabled=true;
+ $("actionStatus").textContent="Se actualizează datele...";
+ try{
+  const {data,error}=await sb.rpc("bc_admin_overview");
+  if(error)throw error;
+  const catalog=await sb.rpc("bc_admin_catalog_list");const activation=await sb.rpc("bc_admin_partner_status");
+  if(catalog.error)throw catalog.error;
+  const flags=new Map((activation.data||[]).map(x=>[x.application_id,!!x.activated]));overview={...data,recent_partners:(data.recent_partners||[]).map(x=>({...x,activated:flags.get(x.id)||false}))};catalogItems=catalog.data||[];render();
+  $("actionStatus").textContent="Date actualizate: "+new Date().toLocaleTimeString("ro-RO");
+ }catch(e){$("actionStatus").textContent="Actualizarea a eșuat: "+(e.message||"Eroare necunoscută");}
+ finally{if(btn)btn.disabled=false;}
+}
+function metric(label,n){const d=elt("div",null,"stat");d.append(elt("small",label),elt("b",n));return d}
+function item(title,detail,buttons){const el=elt("div",null,"item");const info=elt("div");info.append(elt("strong",title),document.createElement("br"),elt("small",detail));el.append(info);const actions=elt("div",null,"actions");buttons.forEach(({label,value,kind,id,reason})=>{const b=elt("button",label,"btn "+(value==="approved"?"gold":value==="rejected"?"danger":""));b.onclick=async()=>{b.disabled=true;try{await act(kind,id,value,reason||"")}finally{b.disabled=false}};actions.append(b)});el.append(actions);return el}
+function render(){if(!overview)return;const stats=$("stats");stats.replaceChildren();[["Utilizatori",overview.users],["Saloane în așteptare",overview.pending_partners],["Importuri de verificat",overview.pending_imports],["Suspendați",overview.suspended_users],["Banuri înregistrate",overview.banned_users]].forEach(([l,n])=>stats.append(metric(l,n)));document.querySelectorAll("[data-tab]").forEach(t=>t.classList.toggle("active",t.dataset.tab===active));const c=$("content");c.replaceChildren();if(active==="storefront"){c.append(elt("h2","Editor BARBERCRAFT — aspectul aplicațiilor"));const wrap=elt("div");wrap.innerHTML='<p class="sub">Controlează brandingul, culoarea și secțiunile publice fără modificări în cod. Schimbările sunt aplicate în Client și PRO după reîncărcare.</p><label class="field">Nume brand<input class="input" id="siteBrand" maxlength="40"></label><label class="field">Culoarea principală<input class="input" id="siteAccent" type="color" style="height:52px;padding:5px"></label><label class="field">Titlu homepage<input class="input" id="siteHeadline" maxlength="160"></label><label class="field">Tema implicită<select class="input" id="siteTheme"><option value="system">Automată (telefon)</option><option value="light">Light</option><option value="dark">Dark</option></select></label><label class="field"><span><input id="siteHero" type="checkbox"> Afișează bannerul principal</span></label><label class="field"><span><input id="siteRecommended" type="checkbox"> Afișează secțiunea recomandată</span></label><button class="btn gold" type="button" id="saveSite">Salvează și publică setările</button><p class="status" id="siteStatus"></p>';c.append(wrap);sb.from("bc_site_settings").select("*").eq("id",1).single().then(({data,error})=>{if(error||!data){$("siteStatus").textContent="Setările nu au putut fi încărcate.";return;}$("siteBrand").value=data.brand_name;$("siteAccent").value=data.accent_color;$("siteHeadline").value=data.headline;$("siteTheme").value=data.default_theme;$("siteHero").checked=data.show_hero;$("siteRecommended").checked=data.show_recommended;});wrap.querySelector("#saveSite").onclick=async()=>{const button=$("saveSite");button.disabled=true;$("siteStatus").textContent="Se publică...";try{const {error}=await sb.rpc("bc_admin_save_site_settings",{p_brand:$("siteBrand").value,p_color:$("siteAccent").value,p_headline:$("siteHeadline").value,p_hero:$("siteHero").checked,p_recommended:$("siteRecommended").checked,p_theme:$("siteTheme").value});if(error)throw error;$("siteStatus").textContent="Setări publicate. Reîncarcă aplicația clientului sau PRO pentru a vedea modificările.";if(window.BarbercraftAppearance)window.BarbercraftAppearance.load();}catch(e){$("siteStatus").textContent="Eroare: "+e.message}finally{button.disabled=false}};}if(active==="partners"){c.append(elt("h2","Cereri de înscriere saloane și specialiști"));const uniqueApplications=new Set();for(const x of [...(overview.recent_partners||[])].sort((a,b)=>Number(b.activated)-Number(a.activated))){const signature=[x.public_name,x.entity_type,x.city].map(v=>String(v||"").toLowerCase().trim()).join("|");if(uniqueApplications.has(signature))continue;uniqueApplications.add(signature);c.append(item(x.public_name,x.entity_type+" · "+x.city+" · "+(x.activated?"ACTIVAT · Admin":x.status),x.activated||x.status==="rejected"?[]:[{label:"Activează salonul & proprietarul",kind:"activate",id:x.id,value:"activate"} ,...(x.status==="approved"?[]:[{label:"În verificare",kind:"partner",id:x.id,value:"under_review"},{label:"Aprobă cererea",kind:"partner",id:x.id,value:"approved"},{label:"Respinge",kind:"partner",id:x.id,value:"rejected"}])]));} }if(active==="imports"){
+ c.append(elt("h2","Importuri saloane · MERO"));
+ c.append(elt("p","Gestionează doar importurile. Ștergerea elimină draftul și copia externă neasociată unui salon PRO, fără a șterge saloane sau rezervări reale.","sub"));
+ const box=elt("div");c.append(box);
+ sb.rpc("bc_admin_import_list").then(({data,error})=>{
+  if(active!=="imports")return;
+  box.replaceChildren();
+  if(error){box.append(elt("p","Nu s-au putut încărca importurile: "+error.message,"status"));return}
+  if(!data?.length){box.append(elt("p","Nu există importuri de saloane.","sub"));return}
+  for(const x of data){
+   const actions=[];
+   if(x.status==="approved")actions.push({label:x.published?"Republică în aplicație":"Publică în aplicație",kind:"catalog",id:x.id,value:"publish"});
+   else if(x.status!=="rejected")actions.push({label:"Aprobă draftul",kind:"import",id:x.id,value:"approved"},{label:"Respinge",kind:"import",id:x.id,value:"rejected"});
+   actions.push({label:"Șterge importul",kind:"import_delete",id:x.id,value:"delete"});
+   box.append(item(x.name,(x.status||"")+(x.published?" · Publicat": " · Nepublicat")+(x.linked_pro?" · Asociat PRO":""),
+    actions));
+  }
+ });
+}if(active==="catalog"){c.append(elt("h2","Saloane publicate și delistate"));c.append(elt("p","Delistarea ascunde salonul din aplicația clientului. Ștergerea elimină doar copia din catalogul public, nu programările.","sub"));for(const x of catalogItems)c.append(item(x.name,(x.city||"Fără oraș")+" · "+(x.county||"Fără județ")+" · "+(x.sector||"Fără sector")+" · "+x.visibility,[{label:"Date salon",kind:"edit",id:x.id,value:"edit"},{label:"Servicii & prețuri",kind:"services",id:x.id,value:"services"},{label:x.salon_id?"Schimbă asocierea PRO":"Asociază profilul PRO",kind:"link",id:x.id,value:"link"},{label:x.visibility==="listed"?"Delistează":"Republică",kind:"catalog",id:x.id,value:x.visibility==="listed"?"delist":"relist"},{label:"Șterge din catalog",kind:"catalog",id:x.id,value:"delete"}]));}if(active==="sales"){c.append(elt("h2","Activitate salon & Bătălia Zonelor"));c.append(elt("p","Date reale din plăți verificate și competiția pe sectoare. Beneficiile rămân blocate până la validarea fluxului de rezervări și a bugetelor.","sub"));const wrapper=elt("div",null,"adminSalesGrid");const state=elt("p","Se încarcă datele financiare...","status");c.append(wrapper,state);
+Promise.all([sb.rpc("bc_admin_sales_summary"),sb.rpc("bc_tw_leaderboard")]).then(([sales,war])=>{
+ if(active!=="sales")return;wrapper.replaceChildren();
+ if(sales.error){state.textContent="Eroare la datele de vânzări: "+sales.error.message;return;}
+ const money=x=>new Intl.NumberFormat("ro-RO",{style:"currency",currency:"RON"}).format((Number(x)||0)/100);
+ const s=sales.data||{};for(const [name,value] of [["Tranzacții verificate",s.verified_transactions||0],["Încasări nete",money(s.net_minor)],["Reduceri acordate",money(s.discount_minor)],["Premii în așteptare",s.pending_awards||0],["Saloane înscrise",s.active_optins||0]]){
+ const tile=elt("div",null,"adminSalesTile");tile.append(elt("small",name),elt("strong",value));wrapper.append(tile);}
+ state.textContent="Bătălia Zonelor: "+(s.enabled?"ACTIV":"PREGĂTIRE — dezactivat")+(war.error?" · Clasamentul nu a fost încărcat.":" · Runde încheiate: "+(war.data?.rounds?.length||0));
+ const link=elt("a","Vezi clasamentul public →","btn");link.href="./territory-war.html";link.target="_blank";link.rel="noopener";c.append(link);
+}).catch(err=>{state.textContent="Eroare: "+err.message;});}if(active==="zones"){if(window.BCZonesAdmin)window.BCZonesAdmin.render(sb,c);else c.append(elt("p","Editorul de zone nu a fost încărcat."));}if(active==="rewards"){if(window.BCRewardAdmin)window.BCRewardAdmin.render(sb,c);else c.append(elt("p","Editorul de recompense nu a fost încărcat."));}if(active==="explore"){if(window.BCExploreAdmin)window.BCExploreAdmin.render(sb,c);else c.append(elt("p","Editorul de explorare nu este disponibil."));}if(active==="referrals"){if(window.BCReferralAdmin)window.BCReferralAdmin.render(sb,c);else c.append(elt("p","Campaniile nu sunt disponibile."));}if(active==="community"){if(window.BCAdminCommunity)window.BCAdminCommunity.render(sb,c);else c.append(elt("p","Modulul comunității nu este disponibil."));}if(active==="clients"){
+ if(window.BCAdminClients){
+  Promise.resolve(window.BCAdminClients.render(sb,c)).catch(error=>{
+   c.replaceChildren(elt("h2","Clienți de aprobat"),
+    elt("p","Nu am putut încărca clienții: "+(error.message||"Eroare temporară"),"status"));
+  });
+ }else c.append(elt("p","Modulul de aprobare nu s-a încărcat. Reîncarcă pagina.","status"));
+}if(active==="moderation"){c.append(elt("h2","Moderare clienți și utilizatori"));c.append(elt("p","Folosește UUID-ul utilizatorului din Supabase Auth. Nu sunt disponibile căutări publice după date private.","sub"));const form=elt("div");form.innerHTML='<label class="field">ID utilizator (UUID)<input class="input" id="target" placeholder="UUID utilizator"></label><label class="field">Acțiune<select class="input" id="mode"><option value="flag">Flag</option><option value="warning">Warning</option><option value="suspension">Suspendare</option><option value="ban">Ban</option><option value="unban">Anulare restricție</option><option value="note">Notă internă</option></select></label><label class="field">Motiv (minimum 5 caractere)<textarea class="input" id="reason" rows="3" maxlength="1000"></textarea></label><button class="btn gold" id="applyModeration">Înregistrează acțiunea</button>';form.querySelector("#applyModeration").onclick=()=>{const id=$("target").value.trim(),mode=$("mode").value,reason=$("reason").value.trim();if(!/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(id)||reason.length<5){$("actionStatus").textContent="Introdu un UUID valid și un motiv clar de minimum 5 caractere.";return;}act("moderation",id,mode,reason)};c.append(form,elt("h2","Istoric moderare"));for(const x of overview.recent_cases||[])c.append(item(x.case_type,x.target_user_id+" · "+x.reason,[]));}if(active==="audit"){c.append(elt("h2","Jurnalul acțiunilor administrative"));for(const x of overview.audit||[])c.append(item(x.action,x.target_type+" · "+x.target_id+" · "+new Date(x.created_at).toLocaleString("ro-RO"),[]));}}
+
+function openServiceEditor(id){
+ const salon=catalogItems.find(s=>s.id===id);if(!salon)return;
+ const panel=$("content");panel.replaceChildren();
+ const back=elt("button","‹ Înapoi la catalog","btn");back.onclick=()=>render();panel.append(back,elt("h2","Servicii și prețuri · "+salon.name));
+ const help=elt("p","Modificările se publică în profilul salonului după salvare. Prețul și durata sunt câmpuri de prezentare; rezervările nu se activează automat.","sub");panel.append(help);
+ const rows=elt("div");rows.id="serviceEditorRows";panel.append(rows);
+ const source=Array.isArray(salon.services)?salon.services:[];
+ function newRow(data={}){
+ const row=elt("div",null,"serviceRow");
+ for(const [key,label,max] of [["name","Serviciu",100],["duration","Durată",60],["price","Preț",60]]){
+ const field=elt("label",label,"field");const input=elt("input",null,"input");input.dataset.field=key;input.maxLength=max;input.value=data[key]||"";field.append(input);row.append(field);
+ }
+ const remove=elt("button","Șterge serviciul","btn danger");remove.type="button";remove.onclick=()=>row.remove();row.append(remove);rows.append(row);
+ }
+ source.forEach(newRow);
+ const controls=elt("div",null,"actions");
+ const add=elt("button","+ Adaugă serviciu","btn");add.onclick=()=>newRow();
+ const save=elt("button","Salvează serviciile","btn gold");
+ const feedback=elt("p","","status");
+ save.onclick=async()=>{
+ const values=[...rows.querySelectorAll(".serviceRow")].map(row=>{const data={};row.querySelectorAll("input").forEach(input=>data[input.dataset.field]=input.value.trim());return data;});
+ if(values.length>80||values.some(v=>v.name.length<2)){feedback.textContent="Maximum 80 de servicii; fiecare trebuie să aibă un nume de minimum 2 caractere.";return;}
+ save.disabled=true;feedback.textContent="Se salvează...";
+ try{const {error}=await sb.rpc("bc_admin_catalog_services",{p_id:id,p_services:values});if(error)throw error;salon.services=values;feedback.textContent="Serviciile au fost publicate. Reîncarcă aplicația clientului pentru actualizare.";}
+ catch(e){feedback.textContent="Eroare: "+e.message}finally{save.disabled=false}
+ };
+ controls.append(add,save);panel.append(controls,feedback);
+}
+async function linkCatalogToSalon(catalogId){
+ const catalog=catalogItems.find(x=>x.id===catalogId);if(!catalog)return;
+ const area=$("content");area.replaceChildren();
+ const back=elt("button","‹ Înapoi la catalog","btn");back.onclick=render;area.append(back,elt("h2","Asociază profilul public cu salonul PRO"));
+ const message=elt("p","Această asociere permite proprietarului salonului să publice descrierea, coperta și echipa. Verifică numele și proprietarul înainte de confirmare.","sub");area.append(message);
+ const {data,error}=await sb.rpc("bc_admin_salon_options");
+ const status=elt("p",null,"status");if(error){status.textContent="Eroare: "+error.message;area.append(status);return;}
+ const pick=elt("select",null,"input");const salons=data||[];
+ for(const salon of salons)pick.add(new Option((salon.name||"Salon")+" — "+(salon.address||"adresa nespecificată"),salon.id));
+ if(catalog.salon_id)pick.value=catalog.salon_id;
+ const commit=elt("button","Asociază profilul","btn gold");commit.type="button";
+ commit.onclick=async()=>{if(!pick.value)return;if(!confirm("Asociezi profilul "+catalog.name+" cu salonul PRO selectat?"))return;commit.disabled=true;const {error}=await sb.rpc("bc_admin_catalog_link",{p_catalog:catalogId,p_salon:pick.value});status.textContent=error?"Eroare: "+error.message:"Profil asociat. Actualizează BARBERCRAFT PRO și editează coperta.";if(!error)await reload();commit.disabled=false;};
+ area.append(pick,commit,status);
+}
+async function act(kind,id,value,reason){
+if(kind==="import_delete"){
+ const row=(overview?.recent_imports||[]).find(x=>x.id===id);
+ const name=row?.salon_name||"acest salon";
+ if(!confirm("Ștergi importul «"+name+"» și copia externă asociată (dacă există)? Un salon PRO real și programările lui rămân neafectate."))return;
+ $("actionStatus").textContent="Ștergem importul…";
+ const {data,error}=await sb.rpc("bc_admin_import_delete",{p_import:id});
+ $("actionStatus").textContent=error?"Ștergere refuzată: "+error.message:
+  "Import șters. Copii externe eliminate: "+(data?.removed_copies||0)+". Saloanele PRO au fost păstrate.";
+ if(!error)await reload();
+ return;
+}
+if(kind==="services"){openServiceEditor(id);return;}if(kind==="link"){await linkCatalogToSalon(id);return;}if(kind==="activate"){if(!confirm("Confirmi activarea salonului pentru proprietarul acestei cereri?"))return;const {data,error}=await sb.rpc("bc_admin_activate_partner",{p_application:id});$("actionStatus").textContent=error?"Eroare: "+error.message:"Salon activat și rol de proprietar acordat.";if(!error)await reload();return;}
+if(kind==="edit"){const salon=catalogItems.find(x=>x.id===id);if(!salon)return;const name=prompt("Nume salon",salon.name);if(name===null)return;const address=prompt("Adresă salon",salon.address||"");if(address===null)return;const city=prompt("Oraș",salon.city||"București");if(city===null)return;const county=prompt("Județ",salon.county||"București");if(county===null)return;const sector=prompt("Sector (dacă există)",salon.sector||"");if(sector===null)return;const {error}=await sb.rpc("bc_admin_catalog_edit",{p_id:id,p_name:name,p_address:address,p_city:city,p_county:county,p_sector:sector});$("actionStatus").textContent=error?"Eroare: "+error.message:"Salon actualizat.";if(!error)await reload();return;}const serious=["approved","rejected","suspension","ban","delete","delist","publish"];if(serious.includes(value)&&!confirm(value==="delete"?"Ștergi salonul din catalogul public? Această operațiune nu afectează rezervările, dar profilul public va dispărea.":"Confirmi acțiunea "+value+"? Va fi înregistrată în audit."))return;$("actionStatus").textContent="Se procesează...";const {error}=kind==="catalog"?await sb.rpc("bc_admin_catalog_action",{p_action:value,p_id:id}):await sb.rpc("bc_admin_action",{p_kind:kind,p_target:id,p_value:value,p_reason:reason});$("actionStatus").textContent=error?"Eroare: "+error.message:"Acțiunea a fost înregistrată.";if(!error)await reload()}
+$("showAdminPassword").onclick=()=>{const i=$("password"),b=$("showAdminPassword"),on=i.type==="password";i.type=on?"text":"password";b.textContent=on?"◎":"◉";b.setAttribute("aria-label",on?"Ascunde parola":"Arată parola");b.setAttribute("aria-pressed",String(on));};
+// A single delegated listener supports both top tabs and the quick-action tiles.
+// Scroll to the newly opened editor so buttons never look like they did nothing.
+$("dashboard").addEventListener("click",e=>{
+ const b=e.target.closest("button[data-tab]");
+ if(!b||!$("dashboard").contains(b))return;
+ const target=b.dataset.tab;
+ if(!["storefront","partners","imports","catalog","sales","rewards","zones","explore","referrals","community","clients","moderation","audit"].includes(target))return;
+ active=target;render();
+ document.querySelectorAll("button[data-tab]").forEach(item=>{
+  const selected=item.dataset.tab===active;
+  item.classList.toggle("active",selected);
+  item.setAttribute("aria-pressed",String(selected));
+ });
+ history.replaceState(null,"","#admin-"+target);
+ $("content").scrollIntoView({block:"start",behavior:"smooth"});
+});window.addEventListener("hashchange",()=>{
+ const target=(location.hash||"").match(/^#admin-(storefront|partners|imports|catalog|sales|rewards|zones|explore|referrals|community|clients|moderation|audit)$/)?.[1];
+ if(target&&active!==target&&!$("dashboard").hidden){
+  active=target;render();
+  $("content").scrollIntoView({block:"start",behavior:"smooth"});
+ }
+});
+$("refresh").onclick=reload;$("logout").onclick=async()=>{await sb.auth.signOut({scope:"local"});show("denied")};$("login").onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("loginStatus").textContent=error?error.message:"Autentificare Admin reușită";if(!error){window.BCCommitPortalLogin?.("admin");await init()}};init();
+</script><script defer src="./premium-ui.js"></script><script defer src="./admin-rewards.js"></script><script defer src="./admin-zones.js"></script><script defer src="./admin-community.js"></script><script defer src="./admin-referrals.js"></script><script defer src="./admin-explore.js"></script><script defer src="./admin-clients.js"></script></body></html>
