@@ -188,7 +188,7 @@ async function authenticate(type){
  }catch(e){status.textContent="Eroare de conectare: "+(e?.message||"necunoscută");}
  finally{$("signIn").disabled=false;$("signUp").disabled=false;}
 }
-$("signIn").onclick=()=>authenticate("signIn");$("signUp").onclick=()=>authenticate("signUp");$("signOut").onclick=async()=>{await client.auth.signOut();await refresh();};
+$("signIn").onclick=()=>authenticate("signIn");$("signUp").onclick=()=>authenticate("signUp");$("signOut").onclick=async()=>{await client.auth.signOut({scope:"local"});await refresh();};
 async function loadVerifiedAccess(){
 const {data,error}=await client.rpc("bc_my_professional_access");
 const el=$("verifiedAccess");el.replaceChildren();
