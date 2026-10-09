@@ -1,0 +1,22 @@
+.bcAssistant{position:fixed;right:14px;bottom:calc(91px + env(safe-area-inset-bottom));z-index:9991;display:block;max-width:calc(100vw - 24px);font-family:"DM Sans",system-ui,sans-serif}
+.bcAssistantOrb{display:grid;place-items:center;width:54px;height:54px;border:1px solid #9a7937;border-radius:50%;background:linear-gradient(135deg,#f5d277,#cb923c);color:#17130a;font-size:24px;font-weight:900;box-shadow:0 9px 27px #0007;touch-action:none;user-select:none;cursor:grab}
+.bcAssistantOrb:active{cursor:grabbing}
+.bcAssistantTip{position:absolute;bottom:68px;right:0;width:min(295px,calc(100vw - 29px));background:#292b34;border:1px solid #d3aa53;border-radius:14px;padding:12px 30px 12px 12px;color:#f5f4f2;font-size:12px;line-height:1.5;box-shadow:0 8px 20px #0008}
+.bcAssistantTip[hidden],.bcAssistantChat[hidden]{display:none!important}
+.bcAssistantTipClose{position:absolute;top:4px;right:6px;color:#fff;background:transparent;border:0;font-size:22px}
+.bcAssistantChat{position:absolute;bottom:67px;right:0;width:min(350px,calc(100vw - 29px));max-height:min(68dvh,550px);display:grid;grid-template-rows:auto minmax(75px,1fr) auto auto auto;gap:10px;background:#20232a;border:1px solid #aa8748;border-radius:18px;padding:13px;color:#f5f5f5;box-shadow:0 20px 65px #0009}
+.bcAssistantTop{display:flex;justify-content:space-between;align-items:center;gap:8px}.bcAssistantTop strong{font-size:13px}
+.bcAssistantTools{display:flex;gap:7px}.bcAssistantTools>a,.bcAssistantTools>button{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;border:1px solid #65606a;background:#343640;color:#f1ce72;text-decoration:none}
+.bcAssistantMessages{display:grid;align-content:start;gap:7px;overflow:auto;padding:2px;min-height:80px}
+.bcAssistantMessage{padding:10px 12px;border-radius:12px;background:#30343c;font-size:12px;line-height:1.55;color:#f6f5f2}
+.bcAssistantMessage.isUser{background:#735c31;color:#fff}
+.bcAssistantSuggestions{display:flex;flex-wrap:wrap;gap:7px}
+.bcAssistantSuggestions button{border:1px solid #a88446;background:#343039;color:#f7d37d;border-radius:20px;padding:7px 10px;font-size:11px;font-weight:800}
+.bcAssistantForm{display:flex;gap:6px}.bcAssistantForm input{flex:1;min-width:0;border:1px solid #676773;background:#2c303b;border-radius:9px;padding:10px;color:#fff;font-size:12px}.bcAssistantForm button{border:0;border-radius:9px;padding:10px;background:#f6d078;color:#241a0a;font-weight:900;font-size:11px}
+.bcAssistantChat>small{color:#adb0bb;font-size:10px;line-height:1.3}
+:root[data-theme=light] .bcAssistantChat,:root[data-theme=light] .bcAssistantTip{background:#fff;color:#242830;border-color:#c7a04c}
+:root[data-theme=light] .bcAssistantMessage{background:#f0f2f6;color:#252933}
+:root[data-theme=light] .bcAssistantMessage.isUser{background:#f9df9c;color:#342509}
+:root[data-theme=light] .bcAssistantForm input{background:#fff;color:#272932}
+@media(max-width:400px){.bcAssistantChat{width:min(330px,calc(100vw - 25px))}}
+@media(prefers-reduced-motion:reduce){.bcAssistantOrb{animation:none}}
