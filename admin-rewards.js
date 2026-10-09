@@ -10,6 +10,7 @@ async function render(sb,root){
  form.innerHTML='<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:9px 0"><label class="field">Nume<input class="input" name="title" required minlength="3" maxlength="90"></label><label class="field">Puncte necesare<input class="input" type="number" min="0" max="100000" name="points" required value="250"></label><label class="field">Categorie<select class="input" name="category"><option>beneficiu</option><option>reducere</option><option>serviciu</option><option>produs</option><option>vip</option></select></label><label class="field">Stoc (gol = nelimitat)<input class="input" type="number" min="0" max="100000" name="stock"></label></div><label class="field">Descriere și condiții<textarea class="input" name="description" maxlength="600" rows="3"></textarea></label><label class="field" style="display:flex;align-items:center;gap:8px"><input type="checkbox" name="active"> Afișează drept recompensă disponibilă (fără acordare automată)</label><div class="actions"><button class="btn gold" type="submit">Salvează recompensa</button><button class="btn" type="reset">Recompensă nouă</button></div>';
  root.append(form,message);
  const list=create("div");root.append(list);
+ const audit=create("section",undefined,"panel");root.append(audit);
  let editing=null;let items=[];
  form.addEventListener("reset",()=>{editing=null;message.textContent="Completează o recompensă nouă."});
  const paint=()=>{
@@ -48,6 +49,15 @@ async function render(sb,root){
   catch(e){message.textContent="Eroare: "+e.message}finally{b.disabled=false}
  };
  await load();
+ audit.append(create("h2","Istoric revendicări (fără date personale)"));
+ const history=create("div");audit.append(history);
+ const {data:rows,error:err}=await sb.rpc("bc_admin_reward_history");
+ if(err)history.append(create("p","Istoricul nu este disponibil: "+err.message,"status"));
+ else if(!rows?.length)history.append(create("p","Nu există revendicări înregistrate.","sub"));
+ else for(const c of rows){const row=create("div",undefined,"item"),info=create("div");
+  info.append(create("strong",c.title+" · "+c.salon),create("small",c.status+" · "+c.cost+" puncte · "+new Date(c.created_at).toLocaleString("ro-RO")));
+  row.append(info);history.append(row);
+ }
 }
 window.BCRewardAdmin={render};
 })();
