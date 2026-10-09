@@ -37,7 +37,10 @@ async function loadMyProfile(){
  }
  const pro=await rpc("bc_social_is_barber",{p_user:user.id});
  barber.hidden=!pro;
- if(pro){await loadBarberDetails(user.id,true);await loadPolls(user.id,$("socialMyPolls"))}
+ const ideasTab=$("socialClientIdeasTab");if(ideasTab)ideasTab.hidden=!!pro;
+ if(pro){await loadBarberDetails(user.id,true);
+  if(location.hash==="#ideas")openTab("profile");
+ }
 }
 profileForm.onsubmit=async e=>{
  e.preventDefault();const b=profileForm.querySelector("button");b.disabled=true;
@@ -94,7 +97,7 @@ async function showPerson(id){
   box.append(actions);
   if(p.kind==="barber"){
    const title=el("h3","Barber Passport · Portofoliu");box.append(title);
-   await loadBarberDetails(id,false,box);await loadPolls(id,box);
+   await loadBarberDetails(id,false,box);
   }
   box.scrollIntoView({behavior:"smooth",block:"start"});
  }catch(e){msgErr(e)}
@@ -193,35 +196,6 @@ $("socialPortfolioForm").onsubmit=async e=>{
   f.reset();await loadBarberDetails(user.id,true);line("Tunsoarea a fost adăugată public în portofoliul tău.");
  }catch(e){msgErr(e)}finally{b.disabled=false}
 };
-async function loadPolls(id,root){
- const data=await rpc("bc_barber_polls_list",{p_user:id});
- if(root===$("socialMyPolls"))root.replaceChildren();
- else root.append(el("h3","Sondaje despre tunsori"));
- if(!data.length){root.append(el("p","Nu există sondaje publicate."));return}
- for(const poll of data){
-  const card=el("article",undefined,"socialPoll");
-  card.append(el("strong",poll.title),el("p","Se încheie la "+new Date(poll.closes_at).toLocaleDateString("ro-RO")));
-  for(let i=0;i<poll.options.length;i++){
-   const option=btn(poll.options[i]+" · "+(poll.votes?.[i]||0)+" voturi",async()=>{
-    if(!user){line("Autentifică-te pentru a vota.");return}
-    try{await rpc("bc_barber_poll_vote",{p_poll:poll.id,p_option:i});
-     line("Votul tău a fost înregistrat.");if(root===$("socialMyPolls"))await loadPolls(id,root);else await showPerson(id)}
-    catch(e){msgErr(e)}
-   });
-   option.disabled=poll.my_vote!==null&&poll.my_vote!==undefined||new Date(poll.closes_at)<new Date();
-   card.append(option);
-  }
-  if(poll.my_vote!==null&&poll.my_vote!==undefined)card.append(el("p","✓ Ai votat deja."));
-  root.append(card);
- }
-}
-$("socialPollForm").onsubmit=async e=>{
- e.preventDefault();const f=e.currentTarget,b=f.querySelector("button");b.disabled=true;
- try{const opt=[f.elements.a.value.trim(),f.elements.b.value.trim(),f.elements.c.value.trim()].filter(Boolean);
- await rpc("bc_barber_poll_create",{p_title:f.elements.title.value.trim(),p_options:opt,p_days:7});
- f.reset();await loadPolls(user.id,$("socialMyPolls"));line("Sondajul a fost publicat pentru 7 zile.")}
- catch(e){msgErr(e)}finally{b.disabled=false}
-};
 async function loadIdeas(){
  if(!user)return;
  try{
@@ -274,7 +248,7 @@ $("socialIdeaForm").onsubmit=async e=>{
 window.addEventListener("pagehide",()=>{if(chatTimer)clearInterval(chatTimer)});
 async function init(){
  if(!user){
-  line("Poți descoperi profilurile publice. Pentru follow, mesaje și sondaje este necesar un cont.");
+  line("Poți descoperi profilurile publice. Pentru follow, mesaje și postări este necesar un cont.");
   $("socialProfileForm").hidden=true;openTab("discover");await discover();return;
  }
  me=user.id;
@@ -286,7 +260,7 @@ async function init(){
   const search=new URLSearchParams(location.search),id=search.get("u");
   if(uuid(id))await showPerson(id);
   const dest=(location.hash||"").replace("#","");
-  if(["profile","messages","ideas","discover"].includes(dest))openTab(dest);
+  if(["profile","messages","ideas","discover"].includes(dest))openTab(dest==="ideas"&&barber.hidden===false?"profile":dest);
   line("Comunitatea este disponibilă. Datele tale private rămân separate de profilul social.");
  }catch(e){msgErr(e)}
 }
