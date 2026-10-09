@@ -1,0 +1,44 @@
+<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090a0e">
+<meta name="description" content="Profilul tău privat BARBERCRAFT: fotografii, vizite verificate, XP, recenzii și progres.">
+<title>Profilul meu — Barber Passport</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./auth-config.js"></script>
+<link rel="stylesheet" href="./premium.css">
+<style>
+body{margin:0;font-family:"DM Sans",system-ui,sans-serif}*{box-sizing:border-box}
+.bc-ig-top{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #292931;padding-bottom:15px}
+.bc-ig-top a{color:#f7ce76;text-decoration:none;font-weight:800;font-size:12px}
+.bc-ig-top strong{font-size:18px;color:#fff}
+.bc-ig-top strong b{color:#f8c962}
+.bc-ig-bio{color:#c4c3c8;font-size:13px;line-height:1.6;margin:9px 0 14px}
+.bc-ig-actions{display:flex;gap:8px;flex-wrap:wrap;margin:17px 0}
+.bc-ig-actions a{flex:1;min-width:135px;text-align:center;text-decoration:none;color:#17110b;background:#f3c763;border-radius:12px;padding:13px;font-size:12px;font-weight:800}
+.bc-ig-actions a.secondary{background:#222329;color:#f4f4f8;border:1px solid #48454a}
+.bc-ig-tabs{display:flex;gap:8px;border-bottom:1px solid #35343c;margin-top:25px;padding-bottom:12px}
+.bc-ig-tabs a{text-decoration:none;color:#d2be93;font-weight:750;flex:1;text-align:center;font-size:12px}
+#profileStatus{margin:14px 0;color:#e3c887;font-size:12px;line-height:1.6}
+.bc-ig-lightbox{position:fixed;inset:0;background:#08090bf0;z-index:200;display:grid;place-items:center;padding:20px}
+.bc-ig-lightbox[hidden]{display:none!important}
+.bc-ig-lightbox img{max-width:min(90vw,700px);max-height:75vh;object-fit:contain;border-radius:12px}
+.bc-ig-lightbox button{position:absolute;top:25px;right:20px;background:#272730;border:1px solid #555;color:#fff;border-radius:10px;padding:8px 15px}
+.bc-ig-lightbox p{max-width:85vw;color:#e2cfa7;font-size:12px}
+.bc-ig-photo-shell{display:grid;gap:10px;justify-items:center}
+.bc-ig-photonote{font-size:10px;color:#aaa;display:block;text-align:center;padding:9px}
+</style></head><body class="bc-premium bc-preview"><main class="wrap">
+<header class="bc-ig-top"><a href="./passport.html">‹ Pașaport</a><strong>BARBER<b>CRAFT</b></strong><a href="./">Acasă ↗</a></header>
+<div class="bc-profile-notice" style="margin:17px 0">Vizualizare privată · Doar tu poți vedea acest profil. Fotografiile și notițele nu se publică automat.</div>
+<section aria-label="Profilul tău">
+<div class="bc-preview-header"><div class="bc-preview-avatar" id="profileAvatar">B</div>
+<div><div class="bc-preview-name" id="profileName">Profilul meu</div><p class="bc-preview-username" id="profileHandle">@barbercraft</p><div class="bc-preview-rank" id="profileRank">♛ Membru BARBERCRAFT</div></div></div>
+<p class="bc-ig-bio">✂ Stilul meu, povestea mea. Vizitele confirmate, inspirația și experiențele din saloane — într-un singur pașaport.</p>
+<div class="bc-preview-stats"><div><strong id="profileXp">—</strong><span>XP verificați</span></div><div><strong id="profileVisits">—</strong><span>Vizite confirmate</span></div><div><strong id="profilePoints">—</strong><span>Puncte disponibile</span></div></div>
+<div class="bc-ig-actions"><a href="./passport.html#passportCheckin">▣ Arată codul QR</a><a href="./passport.html#photoForm" class="secondary">＋ Adaugă o poză</a></div>
+<nav class="bc-ig-tabs"><a href="#profileGallery">▦ Galerie</a><a href="#profileReviews">☆ Jurnal</a><a href="#profileVisitsList">◷ Vizite</a></nav></section>
+<p id="profileStatus" role="status">Se încarcă pașaportul privat…</p>
+<section id="profileGallery" aria-label="Galeria mea"><h2 class="bc-preview-grid-label">Momente din călătoria mea</h2>
+<div class="bc-gallery" id="profilePhotos"></div></section>
+<section id="profileReviews" aria-label="Notițele mele"><h2 class="bc-preview-grid-label">Jurnalul meu de frizerie</h2><div id="profileNotes" class="panel"></div></section>
+<section id="profileVisitsList" aria-label="Istoricul vizitelor"><h2 class="bc-preview-grid-label">Vizite confirmate</h2><div id="profileHistory" class="panel"></div>
+<p class="bc-profile-notice">Check-in-ul prin QR este separat de o vizită efectiv finalizată. XP-ul și punctele provin numai din activități validate de sistem.</p></section>
+</main><div class="bc-ig-lightbox" id="profileLightbox" hidden role="dialog" aria-modal="true" aria-label="Fotografie mărită"><button id="lightboxClose" type="button">Închide ✕</button><div class="bc-ig-photo-shell"><img id="lightboxImage" alt=""><p id="lightboxText"></p></div></div>
+<script src="./passport-preview.js" defer></script></body></html>
