@@ -670,6 +670,7 @@ $("calendarFeedButton").onclick=async()=>{
 
 const proPanelIds={overview:"proOverviewPanel",calendar:"proCalendar",clients:"proClientsPanel",sales:"proSalesPanel",notifications:"proNotificationsPanel",lifecycle:"proLifecyclePanel",settings:"proSettingsPanel",detail:"proDetailPanel"};
 function proNavigate(route){
+ if(route==="calendar"){window.location.assign(new URL("./pro/calendar/",document.baseURI).href);return;}
  Object.values(proPanelIds).forEach(id=>{const el=document.getElementById(id);if(el){el.classList.add("proPanel");el.classList.toggle("active",id===proPanelIds[route]);}});
  document.querySelectorAll("[data-pro-route]").forEach(el=>el.classList.toggle("active",el.dataset.proRoute===route));
  window.scrollTo({top:0,behavior:"smooth"});
