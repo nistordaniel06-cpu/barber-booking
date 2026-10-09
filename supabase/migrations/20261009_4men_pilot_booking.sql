@@ -3,7 +3,7 @@
 create table if not exists public.bc_pilot_config(
  salon_id uuid primary key references public.bc_salons(id) on delete cascade,
  enabled boolean not null default false,
- invite_code text not null default encode(gen_random_bytes(12),'hex'),
+ invite_code text not null default encode(extensions.gen_random_bytes(12),'hex'),
  services jsonb not null default '[]'::jsonb,
  opens time not null default time '10:00',
  closes time not null default time '19:00',
@@ -82,10 +82,10 @@ begin
   or coalesce(service->>'price','') !~ '^[0-9]+$'
   or (service->>'price')::integer not between 1 and 1000 then raise exception 'INVALID_SERVICE';end if;
  end loop;
- if (select count(distinct lower(trim(service->>'name'))) from jsonb_array_elements(p_services)service)
+ if (select count(distinct lower(trim(it.value->>'name'))) from jsonb_array_elements(p_services) as it(value))
  <>jsonb_array_length(p_services) then raise exception 'DUPLICATE_SERVICE';end if;
  select invite_code into new_code from public.bc_pilot_config where salon_id=p_salon for update;
- if p_regenerate_code or new_code is null then new_code:=encode(gen_random_bytes(12),'hex');end if;
+ if p_regenerate_code or new_code is null then new_code:=encode(extensions.gen_random_bytes(12),'hex');end if;
  insert into public.bc_pilot_config(salon_id,enabled,invite_code,services,opens,closes,updated_at,updated_by)
  values(p_salon,coalesce(p_enabled,false),new_code,p_services,p_opens,p_closes,now(),(select auth.uid()))
  on conflict(salon_id) do update set enabled=excluded.enabled,invite_code=excluded.invite_code,
@@ -157,7 +157,7 @@ declare conf public.bc_pilot_config%rowtype;salon public.bc_salons%rowtype;
 begin
  if p_request is null or p_consent is distinct from true
  or length(trim(coalesce(p_name,''))) not between 2 and 120
- or p_phone !~ '^\\+[1-9][0-9]{7,14}$'
+ or p_phone is null or left(p_phone,1)<>'+' or substring(p_phone from 2) !~ '^[1-9][0-9]{7,14}$'
  then raise exception 'INVALID_REQUEST';end if;
  perform pg_advisory_xact_lock(hashtext(p_salon::text));
  select * into existing from public.bc_pilot_bookings where id=p_request and salon_id=p_salon;
@@ -193,7 +193,7 @@ begin
  service_label,status,source_provider)
  values(p_salon,start_utc,end_utc,trim(p_name),'[BARBERCRAFT] '||p_service,'confirmed','barbercraft_pilot')
  returning id into event_id;
- booking_code:='BC-'||upper(encode(gen_random_bytes(5),'hex'));
+ booking_code:='BC-'||upper(encode(extensions.gen_random_bytes(5),'hex'));
  insert into public.bc_pilot_bookings(id,salon_id,calendar_event_id,client_name,client_phone,
  service_label,price_ron,starts_at,ends_at,booking_code)
  values(p_request,p_salon,event_id,trim(p_name),p_phone,p_service,(service->>'price')::integer,
