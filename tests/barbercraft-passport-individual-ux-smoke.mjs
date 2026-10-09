@@ -25,7 +25,7 @@ assert.ok(!read("premium-ui.js").includes('Bătălia Zonelor'),"Legacy role menu
 assert.ok(menu.includes('Portal client')&&menu.includes('Portal profesioniști'),"Four clean guest links");
 assert.ok(!menu.includes("if(window.BCClientUser)"),"Guest never sees extra links");
 assert.ok(client.includes('textContent="C."')||client.includes('document.createTextNode("C.")'),"Guest avatar initial");
-assert.ok(client.includes(".bcFavoriteHeart"),"Red favorite icon");
+assert.ok(client.includes("bcFavoriteHeart")&&read("client-home-v2.css").includes(".bcFavoriteHeart"),"Red favorite icon");
 assert.ok(client.includes('id="bcNearMe"')||read("ro-discovery.js").includes("📍 Locația ta"),"Location label clear");
 assert.ok(read("ro-discovery.js").includes("mapViewed"),"Remember custom radius after first map opening");
 assert.ok(read("ro-discovery.js").includes("Raza activă:"),"Map shows chosen radius");
