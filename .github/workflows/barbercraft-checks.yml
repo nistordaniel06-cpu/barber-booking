@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/barbercraft-zones-passport-rewards
+      - feature/barbercraft-reward-redemption-qr-zones
 permissions:
   contents: read
 jobs:
