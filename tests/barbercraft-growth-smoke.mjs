@@ -17,8 +17,8 @@ assert.ok(read("ro-discovery.js").includes("getCurrentPosition"),"Permission-awa
 assert.ok(read("ro-discovery.js").includes("bcAllRomania"),"User can disable location filtering");
 assert.ok(read("ro-discovery.js").includes("OpenStreetMap"),"Romania map");
 assert.ok(!read("enhancements.js").includes("bcInitialCity"),"No implicit forced Bucharest");
-assert.ok(read("demo-salons.js").includes("source_url"),"Original source links included");
-assert.ok(read("demo-salons.js").includes("nu este înscris ca partener"),"Clearly not bookable real partner");
+assert.ok(!read("demo-salons.js").includes("source_url"),"External-source URLs absent from public display");
+assert.ok(read("demo-salons.js").includes("nu poți face rezervări"),"External samples cannot take in-app reservations");
 assert.ok(read("assets/salon-placeholder.svg").includes("Ilustrație generică"),"No fake real photos");
 assert.ok(pro.includes('data-pro-route="lifecycle"'),"PRO archive navigation");
 assert.ok(pro.includes('lifecycle:"proLifecyclePanel"'),"Actual lifecycle panel routing");
