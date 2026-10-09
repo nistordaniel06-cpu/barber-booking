@@ -155,5 +155,5 @@ $("dashboard").addEventListener("click",e=>{
   $("content").scrollIntoView({block:"start",behavior:"smooth"});
  }
 });
-$("refresh").onclick=reload;$("logout").onclick=async()=>{await sb.auth.signOut();show("denied")};$("login").onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("loginStatus").textContent=error?error.message:"Autentificare reușită";if(!error)await init()};init();
+$("refresh").onclick=reload;$("logout").onclick=async()=>{await sb.auth.signOut({scope:"local"});show("denied")};$("login").onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("loginStatus").textContent=error?error.message:"Autentificare reușită";if(!error)await init()};init();
 </script><script defer src="./premium-ui.js"></script><script defer src="./admin-rewards.js"></script><script defer src="./admin-zones.js"></script><script defer src="./admin-community.js"></script><script defer src="./admin-referrals.js"></script><script defer src="./admin-explore.js"></script><script defer src="./admin-clients.js"></script></body></html>
