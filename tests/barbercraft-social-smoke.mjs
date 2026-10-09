@@ -15,6 +15,11 @@ assert.ok(read("social.html").includes('id="socialChatForm"'),"Mutual follow mes
 assert.ok(!read("social.html").includes('id="socialPollForm"'),"PRO voting form removed");
 assert.ok(read("social.html").includes('id="socialIdeaForm"'),"Loyal customer salon suggestions");
 assert.ok(read("social.html").includes('id="socialPortfolioForm"'),"Barber haircut portfolio");
+assert.ok(read("social.html").includes('id="socialPortfolioStatus"'),"Portfolio upload feedback beside photo field");
+assert.ok(read("social.js").includes("portfolioNotice"),"Photo upload errors are visible inline");
+const portfolioFix=read("supabase/migrations/20261009195800_barber_portfolio_storage_and_owner_preview.sql");
+assert.ok(portfolioFix.includes("bc_barber_portfolio_owner_select"),"Owner Storage SELECT policy included");
+assert.ok(portfolioFix.includes("u is distinct from p_user"),"Private photos accessible only to owner when social profile is not public");
 assert.ok(read("social.js").includes("bc_social_follow_set"),"Follow RPC");
 assert.ok(read("social.js").includes("bc_social_message_send"),"Messages RPC");
 assert.ok(read("passport.html").includes("bc-premium bc-passport"),"Passport styling intact");
