@@ -252,7 +252,7 @@ async function loadCalendar(){
  try{
   const days=calendarDates();const from=new Date(days[0]);from.setHours(0,0,0,0);
   const until=new Date(days.at(-1));until.setDate(until.getDate()+1);until.setHours(0,0,0,0);
-  const {data,error}=await client.from("bc_pro_calendar_events").select("id,starts_at,ends_at,client_display_name,service_label,status,source_provider").eq("salon_id",salonId).gte("starts_at",from.toISOString()).lt("starts_at",until.toISOString()).order("starts_at").limit(400);
+  const {data,error}=await client.from("bc_pro_calendar_events").select("id,starts_at,ends_at,client_display_name,service_label,status,source_provider").eq("salon_id",salonId).neq("status","cancelled").gte("starts_at",from.toISOString()).lt("starts_at",until.toISOString()).order("starts_at").limit(400);
   if(error)throw error;
   renderCalendar(data||[]);
   $("calStatus").textContent=data?.length?"Intervale găsite: "+data.length:"Nu există intervale salvate. Apasă pe o oră din grilă pentru a adăuga un blocaj.";
