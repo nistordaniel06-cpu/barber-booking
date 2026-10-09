@@ -1,0 +1,4 @@
+.kingTeaser{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+ border:1px solid #987742;border-radius:19px;background:linear-gradient(115deg,#45331f,#172520);padding:24px;margin:24px 0}
+.kingTeaser h2{margin:7px 0 8px;font-size:27px;color:#f9dd9c}.kingTeaser p{max-width:560px;color:#e2dacb;font-size:12px;line-height:1.7}
+.kingTeaser .button{display:inline-flex;text-decoration:none;background:#f4c76b;color:#191208;border-radius:12px;padding:13px 18px;font-weight:900;font-size:12px}
