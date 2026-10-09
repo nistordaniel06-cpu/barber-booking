@@ -32,6 +32,16 @@ async function loadOffers(){
   row.append(info,label);box.append(row);
  }
 }
+async function loadHistory(){
+ const root=$("rewardHistory");root.replaceChildren();
+ const {data,error}=await sb.rpc("bc_reward_partner_history",{p_salon:select.value});
+ if(error){root.append(el("p","Istoricul nu poate fi încărcat: "+error.message,"sub"));return}
+ if(!data?.length){root.append(el("p","Nu există cereri pentru această locație.","sub"));return}
+ for(const row of data){const line=el("div",undefined,"item"),info=el("div");
+  info.append(el("strong",row.title),el("p",row.status+" · "+row.cost+" puncte · "+new Date(row.created_at).toLocaleString("ro-RO"),"sub"));
+  line.append(info);root.append(line);
+ }
+}
 $("redeemBtn").onclick=async()=>{
  const input=$("claimCode"),payload=input.value.trim(),s=current(),button=$("redeemBtn");
  if((!payload.startsWith("BC1|")&&!payload.startsWith("BCP1|"))||payload.length>200){$("redeemStatus").textContent="Introdu un cod BARBERCRAFT valid.";return}
@@ -42,6 +52,7 @@ $("redeemBtn").onclick=async()=>{
   if(error)throw error;
   $("redeemStatus").textContent=identity?"✓ Check-in verificat: "+data.display_name+(data.new_checkin?" · înregistrat":" · deja înregistrat recent")+". Nu s-au acordat XP.":"✓ Recompensă validată: "+data.reward+" · "+data.points_used+" puncte consumate.";
   input.value="";
+  await loadHistory();
  }catch(err){$("redeemStatus").textContent="Cod respins: "+err.message}finally{button.disabled=false}
 };
 let stream=null,raf=0,detector=null,stopped=true;
@@ -62,6 +73,6 @@ $("scanBtn").onclick=async()=>{
   };raf=requestAnimationFrame(frame);
  }catch(e){stop();$("redeemStatus").textContent="Camera nu poate fi deschisă: "+e.message}
 };
-window.addEventListener("pagehide",stop);select.addEventListener("change",()=>{stop();$("claimCode").value="";loadOffers()});
-await loadOffers();
+window.addEventListener("pagehide",stop);select.addEventListener("change",()=>{stop();$("claimCode").value="";loadOffers();loadHistory()});
+await Promise.all([loadOffers(),loadHistory()]);
 })();
