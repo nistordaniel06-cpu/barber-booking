@@ -1,0 +1,937 @@
+<!doctype html><html lang="ro"><head><base href="../"><meta name="barbercraft-portal" content="pro"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0c0f"><title>BARBERCRAFT PRO — Portal profesioniști</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script>if(location.pathname.endsWith("/barber-booking/professionals.html"))location.replace("./pro/"+location.search+location.hash);</script><script src="./auth-config.js"></script><script defer src="./appearance.js"></script><style>
+:root{font-family:"DM Sans",system-ui,sans-serif;background:#0b0c0f;color:#f5f5f5}*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at 50% -20%,#483a13 0,transparent 45%),#0b0c0f}button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}[hidden]{display:none!important}.page{max-width:580px;margin:0 auto;padding:20px 20px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:19px;font-weight:800;letter-spacing:-.8px}.brand b{color:#ffcb35}.back{font-size:12px;color:#ffcb35;text-decoration:none}.eyebrow{letter-spacing:2px;color:#ffd24d;font-size:11px;font-weight:800;margin:65px 0 8px}.heading{font-size:34px;line-height:1.07;letter-spacing:-1.3px;margin:0 0 14px}.sub{color:#acb0ba;font-size:14px;line-height:1.65;margin-bottom:23px}.pane{padding:19px;border:1px solid #292c35;background:#191b22;border-radius:22px;margin:18px 0}.pane h2{font-size:17px;margin:0 0 15px}.field{display:grid;gap:6px;margin:12px 0;color:#e2e3e7;font-size:12px;font-weight:700}.input{width:100%;padding:13px 14px;border:1px solid #393d47;border-radius:12px;background:#111318;color:#fff;font-size:14px}.primary{border:0;background:#ffd03d;color:#1a1608;font-weight:800;border-radius:13px;padding:14px 17px;width:100%;margin-top:10px}.outline{border:1px solid #52515a;background:#282b33;color:#fff;font-weight:700;border-radius:13px;padding:13px;width:100%;margin-top:9px}.notice{padding:12px;border-radius:12px;background:#262922;color:#dbdfd3;font-size:12px;line-height:1.55;margin:14px 0}.status{font-size:12px;line-height:1.5;color:#ffdb72;margin:10px 0;overflow-wrap:anywhere}.tag{display:inline-flex;border-radius:20px;padding:5px 10px;background:#403512;color:#ffe38b;font-size:10px;font-weight:800}.muted{font-size:12px;color:#b8bdc6}.list{display:grid;gap:8px}.item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:#242831;font-size:12px;gap:10px}.item small{color:#ffcf51;text-transform:uppercase;font-weight:800}.divider{border-top:1px solid #353943;margin:15px 0}
+.passwordWrap{display:block;position:relative}.passwordWrap .input{padding-right:54px}.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:#282a33;border-radius:10px;color:#f8f8fa;width:42px;height:38px;font-size:17px}.calendarHead{display:flex;justify-content:space-between;align-items:start;gap:10px;flex-wrap:wrap}.calActions{display:flex;gap:5px}.calActions .outline{width:auto;padding:9px 12px;margin:0}.calWeekName{color:#ffdb78;font-weight:800;font-size:14px;margin:16px 0}.calScroll{overflow:auto;border-radius:14px;border:1px solid #333842;background:#14161c;max-height:650px}.calWeek{min-width:640px;display:grid;grid-template-columns:55px repeat(7,minmax(83px,1fr));grid-template-rows:48px repeat(32,44px);position:relative}.calDay{position:sticky;top:0;z-index:5;background:#20232b;text-align:center;padding:8px 3px;border-left:1px solid #353943;font-size:12px;font-weight:700}.calTime{grid-column:1;color:#a1a7b2;text-align:right;padding:3px 8px 0 0;font-size:11px}.calCell{border-left:1px solid #343742;border-top:1px solid #30323a;min-height:44px}.calEvent{border-radius:7px;padding:5px;background:#b8debf;color:#142318;overflow:hidden;font-size:11px;z-index:2;margin:2px;box-shadow:0 2px 4px #0003}.calEvent strong{display:block;font-size:11px}.calEvent.cancelled{background:#5c626b;color:white}.calEvent.pending{background:#f7d9b5;color:#392317}.calEvent small{display:block;font-size:10px}.calToday{background:#efd264!important;color:#1b1607}.weekEmpty{padding:10px;color:#afb1b9;font-size:12px}.calScroll::-webkit-scrollbar{height:7px;width:7px}.calScroll::-webkit-scrollbar-thumb{background:#494e5a;border-radius:10px}
+/* BARBERCRAFT PRO: accessible, app-style salon management */
+:root{color-scheme:light;background:#f6f6f8;color:#17181d}
+body{background:#f6f6f8;color:#17181d}
+.page{max-width:1050px;padding:0 16px 110px}
+.top{position:sticky;top:0;z-index:20;background:#fff;margin:0 -16px;padding:15px 17px;box-shadow:0 1px 0 #e9e9ec}
+.brand{font-size:17px}.brand b{color:#bd8b07}.back{color:#97710b}
+.eyebrow{margin:32px 0 8px;color:#aa8513}
+.sub,.muted{color:#747987}
+.pane{background:#fff;border:1px solid #e9e9ed;border-radius:17px;padding:19px;margin:14px 0;box-shadow:0 7px 25px #10132306}
+.pane h2{color:#21232a}
+.field{color:#42454d}
+.input{background:#fff;border:1px solid #dadde4;color:#17181d}
+.primary{background:#ffd03d;color:#16130c}
+.outline{background:#f7f7f8;border:1px solid #e2e4e8;color:#252932}
+.notice{background:#fff8e7;border:1px solid #f1e5c0;color:#71551a}
+.status{color:#92701b}
+.tag{background:#fff2c1;color:#795b00}
+.calScroll{background:#fff;border-color:#e3e6e9}
+.calDay{background:#f4f5f7;color:#2c3038;border-color:#dee1e5}
+.calCell{border-color:#e8e9ec}.calTime{color:#868d98}.calWeekName{color:#33363b}
+.calToday{background:#ffcf3c!important;color:#1d1a10}
+#guest{max-width:520px;margin:35px auto}
+#member .proBottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:1050px;display:grid;grid-template-columns:repeat(5,1fr);z-index:40;padding:9px 6px calc(9px + env(safe-area-inset-bottom));background:#fffffff0;backdrop-filter:blur(14px);border-top:1px solid #e9e9ed}
+.proBottom button{display:grid;justify-items:center;gap:3px;background:transparent;border:0;color:#707581;font-size:10px;font-weight:700;padding:4px;min-width:0}
+.proBottom button .navicon{font-size:21px;line-height:24px}
+.proBottom button.active{color:#b58200}
+.proBottom button.active .navicon{background:#ffe4a0;padding:1px 8px;border-radius:10px;color:#17120b}
+.proPanel{display:none!important}.proPanel.active{display:block!important}
+.proDashboardTop{padding:22px 2px 3px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.proDashboardTop h1{margin:0;font-size:27px;letter-spacing:-1px}
+.proDashboardTop p{margin:4px 0;color:#8b909a;font-size:12px}
+.proQuickGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:17px 0}
+.proQuick{border:1px solid #e7e8eb;background:#fff;border-radius:15px;text-align:left;padding:16px;display:grid;gap:8px;color:#292c34}
+.proQuick .qi{font-size:23px}.proQuick strong{font-size:13px}.proQuick small{font-size:11px;color:#858997}
+.proHeading{font-weight:800;font-size:12px;color:#818594;letter-spacing:1px;margin:25px 0 11px}
+.proSettings{background:#fff;border-radius:17px;border:1px solid #ebecf0;overflow:hidden}
+.proSetting{width:100%;border:0;border-bottom:1px solid #eff0f2;background:#fff;color:#242731;display:flex;align-items:center;gap:13px;padding:17px;text-align:left;min-height:76px}
+.proSetting:last-child{border-bottom:0}
+.proSetting .si{font-size:24px;min-width:35px;text-align:center}
+.proSetting .sm{flex:1;display:grid;gap:5px}.proSetting strong{font-size:14px}.proSetting small{color:#8a8f9b;font-size:11px;line-height:1.4}.proSetting .chevron{color:#b18b18;font-size:23px}
+.proPlaceholder{text-align:center;padding:35px 16px;color:#7e8490;font-size:13px}
+#member>.pane{display:none}#member>.pane.proPanel.active{display:block}#proDetailBody>.pane{display:block;margin:8px 0}
+#proCalendar .calendarHead h2{font-size:21px}
+@media(min-width:780px){.proQuickGrid{grid-template-columns:repeat(4,1fr)}.page{padding:0 32px 120px}.top{margin:0 -32px}}
+:root[data-theme="dark"]{background:#090a0e;color:#f6f7f8;color-scheme:dark}:root[data-theme="dark"] body{background:#090a0e;color:#f6f7f8}:root[data-theme="dark"] .top,:root[data-theme="dark"] #member .proBottom{background:#15161aeF;border-color:#303039}:root[data-theme="dark"] .pane,:root[data-theme="dark"] .proQuick,:root[data-theme="dark"] .proSettings,:root[data-theme="dark"] .proSetting{background:#191a20;border-color:#33353c;color:#f5f5f7}:root[data-theme="dark"] .pane h2,:root[data-theme="dark"] .proSetting strong,:root[data-theme="dark"] .proDashboardTop h1{color:#f7f7f9}:root[data-theme="dark"] .input,:root[data-theme="dark"] .outline{background:#252630;border-color:#42434d;color:#fff}:root[data-theme="dark"] .calScroll{background:#15161a}:root[data-theme="dark"] .calDay{background:#272933;color:#fff;border-color:#3b3c43}:root[data-theme="dark"] .calCell{border-color:#35363d}:root[data-theme="dark"] .notice{background:#302713;color:#ffdf9b;border-color:#69531e}.themeToggle{border:1px solid #dadce3;border-radius:12px;background:transparent;color:inherit;font-size:20px;width:40px;height:40px;cursor:pointer}:root[data-theme="dark"] .themeToggle{border-color:#40414b}:root[data-theme="dark"] .proBottom button{color:#afb0ba}:root[data-theme="dark"] .proBottom button.active{color:#ffd04a}.hoursLine{display:flex;align-items:center;gap:9px;flex-wrap:wrap;border-bottom:1px solid #ddd;padding:12px 0}.hoursLine strong{min-width:75px}.hoursLine input[type=time]{width:105px;padding:9px;border:1px solid #bbb;border-radius:10px;background:var(--surface,#fff);color:inherit}.top{flex-wrap:wrap;height:auto;min-height:70px}.themeToggle{flex-shrink:0}#proDetailPanel{padding-top:18px}@media(max-width:450px){.top .brand{font-size:15px}.top .back{font-size:11px}.page{overflow-x:clip}}:root[data-theme="dark"] .top{background:#121318!important;backdrop-filter:none!important;border-bottom:1px solid #313139}:root[data-theme="light"] .top{background:#fff!important;backdrop-filter:none!important}.proSignedIn #proPublicIntro{display:none!important}#guest[hidden],#member[hidden]{display:none!important}.inviteItem{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0}.inviteItem .outline{width:auto;margin:0;padding:10px}.profileForm{display:grid;gap:12px}.profileForm label{font-size:13px;font-weight:700;display:grid;gap:6px}.profileForm textarea{min-height:105px;resize:vertical}.profileCoverPreview{width:100%;max-height:250px;object-fit:cover;border-radius:14px}.calUtility{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.calUtility button{width:auto;padding:10px 13px}.calUtility input[type=file]{max-width:100%;font-size:12px}.calEvent.busy{background:#dce2e9;color:#343a40}:root[data-theme="dark"] .calEvent.busy{background:#414650;color:#f4f5f8}
+/* BARBERCRAFT V12 — responsive iOS-style PRO controls */
+#proDetailPanel,#proDetailBody,#proDetailBody>.pane,.profileForm{min-width:0;max-width:100%;box-sizing:border-box}
+#proDetailBody .input,#proDetailBody textarea,#proDetailBody input[type="time"],#proDetailBody input[type="text"]{min-width:0;max-width:100%;box-sizing:border-box}
+.profileForm,.profileForm label{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.profileForm input,.profileForm textarea{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+.hoursCard{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;padding:15px 0;border-bottom:1px solid #383940;min-width:0}
+.hoursDay{grid-column:1/-1;font-size:14px}
+.hoursTime{display:grid;gap:6px;font-size:11px;color:#a8a9b2}
+.hoursTime input{width:100%;height:45px;padding:8px;border-radius:12px;border:1px solid #42444e;background:#25262f;color:#fafafa;color-scheme:dark;font-size:15px;box-sizing:border-box}
+.hoursTime input:disabled{opacity:.43}
+.hoursSwitchLabel{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:12px;color:inherit;font-size:13px;font-weight:650}
+.hoursSwitch{appearance:none;width:45px;height:27px;border-radius:20px;background:#5d6067;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
+.hoursSwitch:after{content:"";position:absolute;width:21px;height:21px;top:3px;left:3px;border-radius:50%;background:white;transition:transform .2s}
+.hoursSwitch:checked{background:#d9a90e}.hoursSwitch:checked:after{transform:translateX(18px)}
+.proServiceRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;background:var(--surface,#1a1b20);border:1px solid #34363f;border-radius:15px;padding:13px;margin:10px 0;min-width:0}
+.proServiceField{display:grid;gap:6px;font-size:11px;color:#a5a6b0;min-width:0}
+.proServiceField:first-child{grid-column:1/-1}
+.proServiceRow button{grid-column:1/-1;justify-self:start;width:auto;margin:0}
+.calModes{display:inline-flex;background:#24252b;padding:4px;border-radius:13px;margin:0 0 15px;gap:3px}
+.calModes button{background:transparent;border:0;padding:9px 15px;border-radius:10px;color:#afb0ba;font-weight:700}
+.calModes button.selected{background:#ffcf45;color:#17140e}
+.calScroll{width:100%;max-width:100%;overflow:auto;touch-action:pan-x pan-y;scrollbar-width:thin}
+.calWeek{min-width:0}
+.calDay{top:0;z-index:8}
+.calCell{display:block;width:100%;min-width:0;height:auto;padding:0;border-radius:0;background:transparent;color:inherit;cursor:pointer}
+.calCell:active,.calCell:focus-visible{background:#9c84364a;outline:2px solid #ebbf47}
+.calEvent{border:0;text-align:left;cursor:pointer;min-width:0;position:relative;overflow:hidden}
+.calEvent.confirmed{background:#d1e7b8;color:#1c351e}
+.calEvent.busy{background:#d5d8e0;color:#303741}
+#calendarOverlay:not([hidden]){position:fixed;inset:0;z-index:89;background:#0009;backdrop-filter:blur(3px)}
+.calEditorSheet:not([hidden]){display:block;position:fixed;bottom:calc(72px + env(safe-area-inset-bottom));left:12px;right:12px;z-index:90;margin:0 auto;max-width:560px;max-height:calc(90vh - 80px);overflow:auto;padding:18px;background:#1d1e25;border:1px solid #484951;box-shadow:0 15px 60px #0007;border-radius:23px}
+.calSheetTitle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.calSheetTitle h3{margin:0}.calSheetTitle button{background:#33353d;border:0;border-radius:50%;color:#fff;width:36px;height:36px;font-size:17px}
+.calSheetActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.calSheetActions button{flex:1;min-width:120px}
+#calendarManualForm .field{display:grid;gap:5px;margin:10px 0}
+#calendarManualForm .input{height:47px;box-sizing:border-box;width:100%;color:#f3f3f6;background:#292b33;color-scheme:dark}
+:root[data-theme="light"] .hoursTime input{background:#fff;color:#25282d;color-scheme:light;border-color:#dadddf}
+:root[data-theme="light"] .hoursCard{border-color:#e7e7e9}
+:root[data-theme="light"] .proServiceRow{background:#f8f8fa;border-color:#e4e5e9}
+:root[data-theme="light"] .proServiceField,:root[data-theme="light"] .hoursTime{color:#686c74}
+:root[data-theme="light"] .calModes{background:#eff0f2}
+:root[data-theme="light"] .calModes button{color:#45484d}
+:root[data-theme="light"] .calModes button.selected{color:#221b08}
+:root[data-theme="light"] .calEditorSheet:not([hidden]){background:#fff;color:#25272d;border-color:#e3e4e8}
+:root[data-theme="light"] #calendarManualForm .input{background:#fff;color:#222;color-scheme:light;border-color:#dadddf}
+:root[data-theme="light"] .calSheetTitle button{background:#efeff1;color:#222}
+[data-pro-target="packages"],[data-pro-target="products"],[data-pro-target="messages"],[data-pro-target="reviews"]{display:none!important}
+@media(max-width:490px){.calUtility{gap:7px}.calUtility button{font-size:12px;padding:9px 11px}.calWeekName{font-size:13px}.calEditorSheet:not([hidden]){left:8px;right:8px;bottom:calc(66px + env(safe-area-inset-bottom));padding:16px}}
+
+.staffEditorCard{border:1px solid #40424c;border-radius:17px;padding:13px;margin:12px 0;background:#25262e}
+.staffEditorCard summary{font-weight:750;cursor:pointer;padding:6px}
+.staffEditorFields{display:grid;gap:6px;margin:12px 0}
+.staffDayRow{display:grid;grid-template-columns:55px minmax(0,1fr) minmax(0,1fr) 63px;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid #454650;font-size:12px}
+.staffDayRow input[type=time]{width:100%;min-width:0;padding:9px 3px;border:1px solid #53545c;border-radius:9px;background:#1b1d23;color:#f2f2f4;color-scheme:dark;font-size:12px}
+.staffDayRow label{display:flex;gap:4px;align-items:center;font-size:11px}
+.staffPrices{display:grid;gap:7px}.staffPrices label{display:grid;grid-template-columns:minmax(0,1fr) 100px;align-items:center;gap:8px;font-size:12px}
+.staffPrices input{width:100%;padding:8px;border-radius:9px;border:1px solid #53545c;background:#1b1d23;color:#f2f2f4}
+.staffInviteSection{padding-top:14px;border-top:1px solid #50505a}.staffInviteSection>*{margin:9px 0}
+.proSalesMetrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+.proMetric{display:grid;gap:5px;border-radius:16px;padding:15px;background:#282932;border:1px solid #41434b}.proMetric span{font-size:12px;color:#afb0b6}.proMetric strong{font-size:20px}
+.proWarField{display:grid;gap:7px;font-size:12px;font-weight:700;margin:12px 0}.twConsent{display:flex;gap:10px;align-items:center;font-size:12px;margin:12px 0}
+:root[data-theme="light"] .staffEditorCard,:root[data-theme="light"] .proMetric{background:#f6f7f9;border-color:#e2e4e7}
+:root[data-theme="light"] .staffDayRow{border-color:#e1e2e5}
+:root[data-theme="light"] .staffDayRow input[type=time],:root[data-theme="light"] .staffPrices input{background:#fff;color:#202127;color-scheme:light;border-color:#d2d4d8}
+:root[data-theme="light"] .proMetric span{color:#646974}
+@media(max-width:390px){.staffDayRow{grid-template-columns:48px minmax(0,1fr) minmax(0,1fr);gap:5px}.staffDayRow label{grid-column:1/-1}}
+@media(prefers-reduced-motion:no-preference){.proSetting,.proQuick,.primary,.outline,.proMetric{transition:transform .18s ease,background .18s ease}.proSetting:active,.proQuick:active,.primary:active,.outline:active{transform:scale(.985)}}
+.calFeedBox{margin:13px 0;background:#272830;padding:16px;border-radius:17px;border:1px solid #53545d;overflow-wrap:anywhere}.calFeedBox p{font-size:12px;line-height:1.6}.calFeedBox .calUtility>*{width:auto;padding:10px 12px;font-size:12px}:root[data-theme="light"] .calFeedBox{background:#f5f6f9;border-color:#dadee5}
+/* Calendar iOS segmented view: 1 day / 3 days / 7 days */
+.calModes{display:flex;width:100%;max-width:100%;padding:4px;gap:3px;box-sizing:border-box}
+.calModes button{flex:1;min-width:0;padding:11px 5px;text-align:center;font-size:12px;white-space:nowrap}
+.calModes button:focus-visible{outline:2px solid #ffcf45;outline-offset:2px}
+.calWeek{width:100%;box-sizing:border-box}
+.calWeek .calDay{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calWeek .calCell{min-width:0}
+.calWeek .calEvent{min-width:0;overflow:hidden}
+@media(max-width:390px){.calModes button{font-size:11px;padding-inline:4px}.calWeek .calDay{font-size:11px}}
+
+/* Precision drag and multi-day blocking */
+.calBulkPanel{min-width:0;max-width:100%;padding:17px;margin:12px 0;border:1px solid #41434d;border-radius:18px;background:#24262e}
+.calBulkPanel h3{font-size:16px;margin:0 0 12px}
+.calBulkPanel .field{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.calBulkPanel .input{min-width:0;max-width:100%;box-sizing:border-box}
+.calDragActive .calCell{touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair}
+.calCell.calSelected{background:rgba(250,201,66,.38)!important;outline:1px solid rgba(255,208,69,.45)}
+.calEvent.calBulkEvent{background:#848b9e;color:#fff;outline:1px dashed #e9d49a;font-weight:700}
+.calBulkBanner{background:#8c739f!important;color:#fff!important;min-width:0;border:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;position:relative;z-index:4;padding:7px;font-size:11px;font-weight:800;border-radius:8px;margin:4px;cursor:pointer}
+.calModes button,.calUtility button{transition:transform .16s ease,background .16s ease}
+#calendarDragToggle[aria-pressed="true"]{background:#ffcf45;color:#221b08;border-color:#e4b639}
+:root[data-theme="light"] .calBulkPanel{background:#f8f9fb;border-color:#dedfe4}
+:root[data-theme="light"] .calCell.calSelected{background:rgba(214,165,35,.20)!important}
+@media(max-width:470px){.calBulkPanel{padding:13px}.calUtility #calendarBulkToggle,.calUtility #calendarDragToggle{font-size:12px}}
+.calBulkShade{background:rgba(108,99,137,.22);border-left:2px solid rgba(199,176,236,.64);pointer-events:none;z-index:1}.calConflictHint{white-space:pre-line;border:1px solid #ce9a32;background:#40311b;color:#ffe6af;border-radius:12px;padding:12px;line-height:1.5;font-size:13px;margin:10px 0}:root[data-theme="light"] .calConflictHint{background:#fff4d4;color:#6b4308;border-color:#e4bc5d}.calEvent.isOverlapped{outline:2px solid #ffbb44;outline-offset:-2px;background:#ffda8d!important;color:#2c2109!important}.calEvent.isOverlapped strong{font-size:10px}</style><link rel="stylesheet" href="./premium.css"></head><body class="bc-premium bc-pro"><div class="page"><header class="top"><div class="brand">BARBER<b>CRAFT</b> <span class="tag">PRO</span></div><div style="display:flex;gap:8px;align-items:center"><button type="button" class="themeToggle" data-bc-theme-toggle aria-label="Schimbă tema">☾</button><a class="back" href="./reward-redeem.html" style="color:#f9ce72;text-decoration:none;font-weight:800">▣ Scanează QR</a><span class="tag">Doar PRO</span></div></header><div id="proPublicIntro"><div class="eyebrow">BARBERCRAFT · PARTENERI</div><h1 class="heading">Spațiul tău profesional.</h1><p class="sub">Acesta este exclusiv portalul PRO pentru frizeri și saloane. Conturile Client și Admin sunt separate.</p></div>
+<section id="guest" class="pane"><h2>Autentificare profesioniști</h2><label class="field">E-mail<input class="input" id="email" type="email" autocomplete="email" placeholder="contact@salon.ro"></label><label class="field">Parolă<span class="passwordWrap"><input class="input" id="password" type="password" minlength="8" autocomplete="current-password" placeholder="Minimum 8 caractere"><button type="button" class="eye" data-toggle-password="password" aria-label="Arată parola" aria-pressed="false">◉</button></span></label><button class="primary" id="signIn">Intră în cont</button><button class="outline" id="signUp">Creează cont profesional</button><button class="outline" id="proResendConfirmation" type="button">↻ Retrimite confirmarea</button><p class="status" id="authStatus" role="status"></p></section>
+<section id="member" hidden><div class="proDashboardTop"><div><h1>Salonul meu</h1><p>Programări, echipă, clienți și fidelizare — într-un singur loc.</p></div><span class="tag">BARBERCRAFT PRO</span></div>
+<section id="proOverviewPanel" class="proPanel active"><div class="proQuickGrid"><a href="./pilot-control.html?from=pro" class="proQuick bcSocialProTile" style="text-decoration:none"><span class="qi">✦</span><strong>Testează cu clienții</strong><small>Link privat, servicii și rezervări reale</small></a>
+<a href="./social.html?from=pro#profile" class="proQuick bcSocialProTile" style="text-decoration:none"><span class="qi">✂</span><strong>Barber Passport</strong><small>Portofoliu, experiență și urmăritori</small></a>
+<a href="./referral.html?type=pro" class="proQuick bcSocialProTile" style="text-decoration:none"><span class="qi">↗</span><strong>Invită saloane</strong><small>Link PRO și recomandări verificate</small></a>
+<a href="./passport.html?from=pro#passportCheckin" class="proQuick bcSocialProTile" style="text-decoration:none"><span class="qi">▣</span><strong>Pașaport QR personal</strong><small>Arată codul tău de membru</small></a>
+<button type="button" class="proQuick" data-pro-route="calendar"><span class="qi">▦</span><strong>Calendar</strong><small>Programări și disponibilitate</small></button><button type="button" class="proQuick" data-pro-route="clients"><span class="qi">♙</span><strong>Clienți</strong><small>Istoric și preferințe</small></button><button type="button" class="proQuick" data-pro-route="sales"><span class="qi">▤</span><strong>Activitate salon</strong><small>Tranzacții verificate și beneficii</small></button><button type="button" class="proQuick" data-pro-route="settings"><span class="qi">⚙</span><strong>Setări salon</strong><small>Echipă, servicii, profil și eliminare</small></button></div><div class="pane"><h2>Salonul tău</h2><div id="proHomeAccess" class="notice">Se verifică drepturile de acces.</div><div id="proPendingInvitations"></div><p class="muted">Pentru programările clienților este necesar un salon aprobat și un calendar configurat. Nu afișăm rezervări demonstrative drept reale.</p></div></section>
+<section id="proClientsPanel" class="proPanel"><div class="pane"><h2>Clienți</h2><div class="proPlaceholder">Clienții introduși sau importați în salon apar în agenda privată. Istoricul rezervărilor va fi disponibil după activarea calendarului.</div></div></section>
+<section id="proSalesPanel" class="proPanel"><div class="pane"><h2>Activitate & fidelizare</h2><p class="muted">Evidență doar din tranzacții confirmate. Bătălia Zonelor este în pregătire.</p><div id="proSalesMetrics" class="proSalesMetrics"></div><a class="outline" href="./territory-war.html" style="display:inline-flex;width:auto;text-decoration:none">🏆 Clasamentul Bătălia Zonelor ↗</a><div id="proWarOptin"></div><p id="proSalesStatus" class="status" role="status"></p></div></section>
+<section id="proLifecyclePanel" class="proPanel"><div class="pane" id="proLifecycle">
+<h2>Eliminarea salonului din BARBERCRAFT</h2><p class="muted">Doar proprietarul poate elimina salonul. Această operațiune dezactivează afișarea și rezervările, dar păstrează istoricul, documentele și obligațiile existente. Nu este ștergere ireversibilă.</p>
+<label class="field">Salonul meu<select id="lifecycleSalon" class="input"></select></label>
+<label class="field">Confirmă prin numele exact al salonului<input id="lifecycleConfirm" class="input" placeholder="Numele salonului"></label>
+<button id="lifecycleArchive" class="outline" type="button">Elimină salonul din BARBERCRAFT</button>
+<button id="lifecycleRestore" class="outline" type="button" hidden>Restaurează salonul</button>
+<button id="proLifecycleRefresh" type="button" class="outline">Actualizează</button>
+<p id="lifecycleStatus" role="status" class="status">Se verifică drepturile...</p></div></section>
+<section id="proNotificationsPanel" class="proPanel"><div class="pane"><h2>Notificări</h2><div class="proPlaceholder">Aici vor apărea confirmările, anulările și notificările WhatsApp după conectarea completă a canalului salonului.</div></div></section>
+<section id="proSettingsPanel" class="proPanel"><div class="proHeading">SETĂRI GENERALE</div><div class="proSettings"><button class="proSetting" data-pro-target="services"><span class="si">☷</span><span class="sm"><strong>Servicii</strong><small>Proceduri, durate și prețuri</small></span><span class="chevron">›</span></button><button class="proSetting" data-pro-target="team"><span class="si">♧</span><span class="sm"><strong>Echipă</strong><small>Program, roluri, specialiști</small></span><span class="chevron">›</span></button><button class="proSetting" data-pro-target="hours"><span class="si">◷</span><span class="sm"><strong>Program de lucru</strong><small>Zile și ore de funcționare</small></span><span class="chevron">›</span></button><button class="proSetting" data-pro-target="packages"><span class="si">▣</span><span class="sm"><strong>Abonamente și pachete</strong><small>Beneficii și fidelizare</small></span><span class="chevron">›</span></button><button class="proSetting" data-pro-target="products"><span class="si">⬡</span><span class="sm"><strong>Produse și gestiune</strong><small>Stocuri și produse</small></span><span class="chevron">›</span></button></div><div class="proHeading">MARKETING ȘI COMUNICARE</div><div class="proSettings"><button class="proSetting" data-pro-target="profile"><span class="si">▤</span><span class="sm"><strong>Profil online salon</strong><small>Înscriere, import și identitate</small></span><span class="chevron">›</span></button><button class="proSetting" data-pro-target="share"><span class="si">↗</span><span class="sm"><strong>Distribuie salonul</strong><small>Link către profilul public</small></span><span class="chevron">›</span></button><button class="proSetting" data-pro-target="messages"><span class="si">✉</span><span class="sm"><strong>Mesaje programări</strong><small>WhatsApp și remindere</small></span><span class="chevron">›</span></button><button class="proSetting" data-pro-target="reviews"><span class="si">☆</span><span class="sm"><strong>Recenzii și vizibilitate</strong><small>Feedback și profil public</small></span><span class="chevron">›</span></button></div><div class="proHeading">CONT & ADMINISTRARE</div><div class="proSettings"><button class="proSetting" data-pro-target="applications"><span class="si">✓</span><span class="sm"><strong>Verificare și cereri</strong><small>Statusul contului profesional</small></span><span class="chevron">›</span></button><button class="proSetting" type="button" data-pro-route="lifecycle"><span class="si">♧</span><span class="sm"><strong>Șterge salonul meu</strong><small>Elimină din listări, cu păstrarea istoricului</small></span><span class="chevron">›</span></button><button class="proSetting" id="logoutSetting"><span class="si">↪</span><span class="sm"><strong>Deconectare</strong><small>Ieși în siguranță din BARBERCRAFT PRO</small></span><span class="chevron">›</span></button></div></section>
+<section id="proDetailPanel" class="proPanel"><button type="button" class="outline" id="proSettingsBack">‹ Înapoi la setări</button><h2 id="proDetailTitle">Setări</h2><div id="proDetailBody" class="pane"></div></section>
+<nav class="proBottom" aria-label="Meniu BARBERCRAFT PRO"><button type="button" data-pro-route="overview" class="active"><span class="navicon">⌂</span>Acasă</button><button type="button" data-pro-route="calendar"><span class="navicon">▦</span>Programări</button><button type="button" data-pro-route="clients"><span class="navicon">♙</span>Clienți</button><button type="button" data-pro-route="sales"><span class="navicon">◷</span>Activitate</button><button type="button" data-pro-route="settings"><span class="navicon">⚙</span>Salon</button></nav><div class="pane"><h2>Cont conectat</h2><p class="muted" id="identity"></p><button class="outline" id="signOut">Deconectare</button></div><section class="pane proPanel" id="proCalendar"><div class="calendarHead"><div><span class="tag">BARBERCRAFT PRO</span><h2 style="margin:10px 0 5px">Calendar specialiști</h2><p class="muted">Atinge o oră liberă pentru a bloca sau programa un interval.</p></div><div class="calActions"><button type="button" class="outline" id="prevWeek" aria-label="Săptămâna anterioară">‹</button><button type="button" class="outline" id="todayWeek">Azi</button><button type="button" class="outline" id="nextWeek" aria-label="Săptămâna următoare">›</button></div></div><div class="calWeekName" id="calWeekName"></div><div class="calModes" role="group" aria-label="Perioada calendarului"><button type="button" id="calViewDay" data-calendar-mode="day" aria-pressed="false">1 zi</button><button type="button" id="calViewThree" data-calendar-mode="three" aria-pressed="true" class="selected">3 zile</button><button type="button" id="calViewWeek" data-calendar-mode="week" aria-pressed="false">Săptămână</button></div><label class="field">Salon<select class="input" id="calSalon"><option value="">Selectează salonul aprobat</option></select></label><div class="calUtility"><button type="button" class="outline" id="calendarDragToggle" aria-pressed="false">↕ Glisează pentru blocaj · OFF</button><button type="button" class="outline" id="calendarManualAdd">+ Programare / blocaj</button><button type="button" class="outline" id="calendarBulkToggle">▣ Blochează zi / săptămână / lună</button><label class="outline" style="display:inline-block;width:auto;cursor:pointer">Importă Google / Apple / MERO (.ics)<input type="file" id="calendarICSFile" accept=".ics,text/calendar" style="display:block;max-width:200px;font-size:11px;margin-top:6px"></label><button type="button" class="outline" id="calendarSharePhone">↗ Calendar telefon</button><button type="button" class="outline" id="calendarFeedButton">↻ Abonare calendar</button><button type="button" class="outline" id="calendarExportICS">Exportă .ics</button></div><div id="calendarBulkPanel" class="calBulkPanel" hidden><h3>Blochează o perioadă întreagă</h3><label class="field">Perioada<select id="calendarBulkScope" class="input"><option value="day">Zi întreagă</option><option value="week">Săptămână (luni–duminică)</option><option value="month">Lună întreagă</option></select></label><label class="field">Data de referință<input id="calendarBulkDate" class="input" type="date"></label><p id="calendarBulkSummary" class="muted" role="status"></p><button type="button" class="primary" id="calendarBulkSave">Confirmă blocarea</button><p id="calendarBulkStatus" class="status" role="status"></p><p class="muted">Blocajul nu anulează programările deja salvate. Dacă perioada se suprapune cu ele, operațiunea este refuzată.</p></div><div id="calendarFeedDetails" class="calFeedBox" hidden></div><div id="calendarOverlay" hidden></div><div class="pane calEditorSheet" id="calendarManualForm" hidden><div class="calSheetTitle"><h3 id="calendarManualTitle">Interval nou</h3><button type="button" id="calendarCloseEditor" aria-label="Închide editorul">✕</button></div><label class="field">Tip interval<select class="input" id="calEventKind"><option value="busy">Blocaj / pauză</option><option value="confirmed">Programare</option></select></label><label class="field">Calendarul frizerului<select class="input" id="calManualSpecialist"><option value="">Se încarcă echipa...</option></select></label><p id="calConflictHint" class="calConflictHint" hidden role="alert"></p><label class="field">De la<input class="input" id="calManualStart" type="datetime-local"></label><label class="field">Până la<input class="input" id="calManualEnd" type="datetime-local"></label><label class="field">Client / blocaj<input class="input" id="calManualClient" placeholder="Client sau Pauză"></label><label class="field">Serviciu / motiv<input class="input" id="calManualService" placeholder="Tuns / Concediu"></label><div class="calSheetActions"><button class="outline" type="button" id="calendarCancelEvent" hidden>Anulează intervalul</button><button class="primary" type="button" id="calendarManualSave">Salvează intervalul</button></div><p class="status" id="calendarManualStatus" role="status"></p></div><p id="calendarDragHelp" class="muted" style="font-size:12px">Activează „Glisează” pentru selecție de 15 minute. Dezactivează pentru derulare normală a calendarului.</p><div class="calScroll"><div class="calWeek" id="calWeek"></div></div><p id="calStatus" class="status" role="status">Selectează un salon pentru a încărca programările.</p><p class="muted" style="font-size:12px">Programările se salvează în BARBERCRAFT. Importul .ics nu reprezintă sincronizare Google sau Apple în timp real.</p></section><div class="pane"><h2>Înscrie activitatea ta</h2><form id="apply"><label class="field">Tipul activității<select class="input" id="entity" required><option value="srl">Salon / SRL</option><option value="pfa">PFA</option><option value="independent">Specialist independent</option></select></label><label class="field">Numele salonului sau numele profesional<input class="input" id="name" maxlength="120" required></label><label class="field">Oraș<input class="input" id="city" maxlength="100" required></label><label class="field">E-mail de contact<input class="input" id="contactEmail" type="email" maxlength="180" required></label><label class="field">Telefon<input class="input" id="phone" type="tel" maxlength="40" required></label><div class="notice">Înscrierile rămân în așteptare până la verificarea documentelor. Categoria „independent” nu implică exceptarea de obligațiile fiscale.</div><button class="primary" type="submit">Trimite cererea spre verificare</button><p class="status" id="applyStatus" role="status"></p></form></div><div class="pane" id="meroImport"><h2>Importă salon <span class="tag">BETA</span></h2><p class="muted">Alege sursa: Google Maps (previzualizare asistată) sau MERO (profil public).</p><div class="actions"><button type="button" class="outline" id="googleImport" style="width:auto">Google Maps</button><button type="button" class="outline" id="meroImportChoice" style="width:auto">MERO</button></div><div id="googleImportPanel" hidden><label class="field">Linkul salonului din Google Maps<input class="input" id="googleMapsUrl" type="url" placeholder="https://maps.app.goo.gl/..."></label><button type="button" class="outline" id="googleOpen">Deschide pentru verificare</button><p class="muted">Importul automat al datelor Google necesită Places API și respectarea regulilor de atribuire. Completează detaliile manual în Admin până la conectarea API.</p></div><p class="muted">Previzualizează informațiile publice ale unui salon MERO. Verifică rezultatul înainte de salvare.</p><label class="field">Link profil MERO<input class="input" id="meroUrl" type="url" value="https://mero.ro/p/4men" placeholder="https://mero.ro/p/nume-salon"></label><button type="button" id="meroPreviewBtn" class="outline">Previzualizează informațiile publice</button><div id="meroPreview" hidden><label class="field">Nume salon<input class="input" id="meroName" maxlength="150"></label><label class="field">Adresă<input class="input" id="meroAddress" maxlength="250"></label><div class="notice" id="meroRating"></div><p class="muted">Alege ce dorești să incluzi în cererea de import:</p><label class="field"><span><input type="checkbox" id="meroSelectDetails" checked> Nume, adresă și rating</span></label><label class="field"><span><input type="checkbox" id="meroSelectServices" checked> Servicii, durate și prețuri publice</span></label><div id="meroServices" class="list"></div><div class="notice">Prețurile variabile sunt afișate ca intervale, nu transformate automat în prețuri fixe. Nu se importă clienți, programări, recenzii individuale sau orare private. Confirmarea proprietății salonului este necesară înainte de publicare.</div><button type="button" class="primary" id="meroSubmitBtn">Salvează cererea de import pentru verificare</button></div><p class="status" role="status" id="meroStatus"></p></div><div class="pane"><h2>Acces profesional verificat</h2><div id="verifiedAccess" class="notice">Se verifică accesul...</div></div><div class="pane"><h2>Cererile mele</h2><div class="list" id="applications"></div></div></section>
+</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const client=window.supabase&&window.BARBERCRAFT_SUPABASE_URL&&window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY?window.BCAuthClient("pro",{detectSessionInUrl:true}):null;
+let user=null;
+async function refresh(){
+ if(!client)return;
+ const {data,error}=await client.auth.getUser();
+ user=error?null:data.user;
+ if(user){
+  const {data:portal,error:portalError}=await client.rpc("bc_pro_portal_access");
+  if(portalError){
+   await client.auth.signOut({scope:"local"});
+   user=null;
+   $("authStatus").textContent="Nu putem verifica rolul PRO. Sesiunea a fost închisă preventiv.";
+  }
+  if(!portalError&&portal?.allowed!==true){
+   await client.auth.signOut({scope:"local"});
+   user=null;
+   $("authStatus").textContent="Acesta este un cont Client. Pentru PRO, folosește un cont profesional separat sau un cont cu acces aprobat la salon.";
+  }
+ }
+ document.body.classList.toggle("proSignedIn",!!user);$("guest").hidden=!!user;$("member").hidden=!user;$("identity").textContent=user?"Autentificat: "+(user.email||""):"";if(user){$("contactEmail").value=user.email||"";await loadApplications();await loadVerifiedAccess();await populateCalendarSalons();document.dispatchEvent(new Event("bc-pro-reload-lifecycle"));await loadMyInvitations();const info=$("proHomeAccess");if(info)info.textContent=$("verifiedAccess").textContent;proNavigate("overview");}}
+async function authenticate(type){
+ const btn=type==="signUp"?$("signUp"):$("signIn");
+ const status=$("authStatus");
+ const email=$("email").value.trim();
+ const password=$("password").value;
+ status.textContent=type==="signUp"?"Se verifică datele pentru contul PRO...":"Se încearcă autentificarea PRO...";
+ if(!client){status.textContent="Biblioteca de autentificare nu s-a încărcat. Reîncarcă pagina în Chrome.";return;}
+ if(!email||!email.includes("@")||password.length<8){status.textContent="Completează e-mailul și parola de minimum 8 caractere.";return;}
+ $("signIn").disabled=true;$("signUp").disabled=true;
+ try{
+  const operation=type==="signUp"
+  ?client.auth.signUp({email,password,options:{emailRedirectTo:"https://nistordaniel06-cpu.github.io/barber-booking/professionals.html",data:{barbercraft_account_type:"professional"}}})
+  :client.auth.signInWithPassword({email,password});
+  const result=await Promise.race([operation,new Promise((_,reject)=>setTimeout(()=>reject(new Error("Conexiunea a expirat după 15 secunde. Verifică internetul și încearcă din Chrome.")),15000))]);
+  if(result.error){status.textContent="Eroare PRO: "+result.error.message;return;}
+  window.BCCommitPortalLogin?.("pro");
+  if(type==="signUp"&&!result.data.session){status.textContent="Dacă adresa poate fi înregistrată, vei primi un e-mail de confirmare. Dacă există deja un cont, folosește Autentificare sau o altă adresă.";return;}
+  status.textContent="Autentificare reușită. Se încarcă profilul...";
+  await refresh();
+ }catch(e){status.textContent="Eroare de conectare: "+(e?.message||"necunoscută");}
+ finally{$("signIn").disabled=false;$("signUp").disabled=false;}
+}
+$("signIn").onclick=()=>authenticate("signIn");$("signUp").onclick=()=>authenticate("signUp");$("signOut").onclick=async()=>{await client.auth.signOut({scope:"local"});await refresh();};
+async function loadVerifiedAccess(){
+const {data,error}=await client.rpc("bc_my_professional_access");
+const el=$("verifiedAccess");el.replaceChildren();
+if(error){el.textContent="Nu am putut verifica permisiunile profesionale.";return;}
+if(!data?.length){
+ el.textContent="Cont autentificat, dar fără un salon activ. Dacă cererea a fost aprobată, verifică activarea salonului în Admin.";
+ return;
+}
+for(const role of data){const item=document.createElement("div");item.className="item";const label=document.createElement("span");label.textContent=(role.salon_name||"Salon")+" · "+(role.member_role==="owner"?"Admin":role.member_role==="moderator"?"Moderator":role.member_role==="manager"?"Manager":"Staff");item.append(label);el.append(item);}
+}
+async function loadApplications(){const {data,error}=await client.from("bc_partner_applications").select("id,public_name,entity_type,city,status,created_at").order("created_at",{ascending:false}).limit(20);$("applications").replaceChildren();if(error){$("applications").textContent="Cererile nu pot fi încărcate.";return;}if(!data?.length){$("applications").textContent="Nu ai trimis încă nicio solicitare.";return;}const seen=new Set();for(const item of data){const key=item.public_name.toLocaleLowerCase("ro-RO").trim();if(seen.has(key))continue;seen.add(key);const div=document.createElement("div");div.className="item";const name=document.createElement("span");name.textContent=item.public_name+" · "+item.city;const status=document.createElement("small");status.textContent=item.status;div.append(name,status);$("applications").append(div);}}
+$("apply").addEventListener("submit",async e=>{e.preventDefault();if(!user)return;const data={user_id:user.id,entity_type:$("entity").value,public_name:$("name").value.trim(),city:$("city").value.trim(),contact_email:$("contactEmail").value.trim(),contact_phone:$("phone").value.trim()};$("applyStatus").textContent="Se trimite...";const {error}=await client.from("bc_partner_applications").insert(data);$("applyStatus").textContent=error?"Eroare: "+error.message:"Cererea a fost salvată și așteaptă verificarea.";if(!error){$("apply").reset();await loadApplications();}});
+
+let meroCurrent=null;
+$("meroPreviewBtn").onclick=async()=>{
+ $("meroPreview").hidden=true;meroCurrent=null;
+ const value=$("meroUrl").value.trim();
+ let u;try{u=new URL(value)}catch{$("meroStatus").textContent="Introdu un URL MERO valid.";return;}
+ if(u.protocol!=="https:"||!["mero.ro","www.mero.ro"].includes(u.hostname)||!new RegExp("^/p/[a-z0-9-]{2,90}/?$","i").test(u.pathname)){
+   $("meroStatus").textContent="Introdu un profil public MERO, de exemplu https://mero.ro/p/4men";return;
+ }
+ if(!client||!user){$("meroStatus").textContent="Autentifică-te mai întâi.";return;}
+ $("meroPreviewBtn").disabled=true;$("meroStatus").textContent="Se verifică profilul MERO...";
+ try{
+ const {data:session}=await client.auth.getSession();
+ if(!session.session)throw Error("Sesiune expirată. Autentifică-te din nou.");
+ const resp=await fetch(window.BARBERCRAFT_SUPABASE_URL+"/functions/v1/barbercraft-mero-preview",{
+ method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+session.session.access_token,"apikey":window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY},
+ body:JSON.stringify({url:u.href})
+ });
+ const data=await resp.json();
+ if(!resp.ok)throw Error(data.error||"Profilul nu a putut fi citit.");
+ meroCurrent=data;
+ $("meroName").value=data.salon_name||"";$("meroAddress").value=String(data.address||"").replace(/<[^>]*>/g," ").replace(/\\s+/g," ").trim();
+ $("meroRating").textContent=data.public_rating===null?"Ratingul public nu a fost identificat.":("Rating: "+data.public_rating+" · "+(data.public_review_count??"—")+" evaluări.");
+ $("meroServices").replaceChildren();
+ for(const svc of data.services||[]){const item=document.createElement("div");item.className="item";const name=document.createElement("span");name.textContent=svc.name;const detail=document.createElement("small");detail.textContent=svc.duration+" · "+svc.price;item.append(name,detail);$("meroServices").append(item);}
+ if(!data.services?.length){$("meroServices").textContent="Nu au fost detectate servicii; completează-le ulterior manual.";}
+ $("meroPreview").hidden=false;
+ $("meroStatus").textContent="Previzualizare extrasă din pagina publică. Verifică toate câmpurile: parsarea poate fi incompletă.";
+ }catch(e){$("meroStatus").textContent=e.message||"Importul nu a reușit.";}
+ finally{$("meroPreviewBtn").disabled=false;}
+};
+$("meroSubmitBtn").onclick=async()=>{
+ if(!user||!meroCurrent){$("meroStatus").textContent="Autentifică-te și generează previzualizarea mai întâi.";return;}
+ const details=$("meroSelectDetails").checked,services=$("meroSelectServices").checked;
+ if(!details&&!services){$("meroStatus").textContent="Selectează cel puțin un tip de informație.";return;}
+ const payload={user_id:user.id,source_url:meroCurrent.source_url,salon_name:$("meroName").value.trim()||meroCurrent.salon_name,address:details?$("meroAddress").value.trim():null,public_rating:details?meroCurrent.public_rating:null,public_review_count:details?meroCurrent.public_review_count:null,services:services?meroCurrent.services:[],imported_fields:[...(details?["identity","address","rating"]:[]),...(services?["services"]:[])]};
+ $("meroStatus").textContent="Se salvează cererea...";
+ const {error}=await client.from("bc_mero_import_drafts").insert(payload);
+ $("meroStatus").textContent=error?"Nu am putut salva cererea: "+error.message:"Cererea a fost salvată pentru verificare. Niciun profil public și nicio programare nu au fost modificate.";
+};
+
+$("googleImport").onclick=()=>{$("googleImportPanel").hidden=false;$("meroUrl").closest(".field").hidden=true;$("meroPreviewBtn").hidden=true;};$("meroImportChoice").onclick=()=>{$("googleImportPanel").hidden=true;$("meroUrl").closest(".field").hidden=false;$("meroPreviewBtn").hidden=false;};$("googleOpen").onclick=()=>{const url=$("googleMapsUrl").value.trim();try{const u=new URL(url);if(u.protocol!=="https:"||!["google.com","www.google.com","maps.google.com","maps.app.goo.gl"].includes(u.hostname))throw Error("Linkul trebuie să fie de pe Google Maps.");window.open(u.href,"_blank","noopener");}catch(e){$("meroStatus").textContent=e.message||"Link invalid.";}};
+document.querySelectorAll("[data-toggle-password]").forEach(b=>b.onclick=()=>{const input=$(b.dataset.togglePassword);const reveal=input.type==="password";input.type=reveal?"text":"password";b.setAttribute("aria-pressed",String(reveal));b.setAttribute("aria-label",reveal?"Ascunde parola":"Arată parola");b.textContent=reveal?"◎":"◉";});
+
+let weekAnchor=new Date();
+function monday(d){const a=new Date(d);a.setHours(12,0,0,0);a.setDate(a.getDate()-(a.getDay()+6)%7);return a;}
+function isoDay(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function weekDates(){const start=monday(weekAnchor);return Array.from({length:7},(_,n)=>{const d=new Date(start);d.setDate(start.getDate()+n);return d})}
+async function populateCalendarSalons(){
+ const {data,error}=await client.rpc("bc_my_professional_access");const sel=$("calSalon");sel.replaceChildren(new Option("Selectează salonul aprobat",""));
+ if(error){$("calStatus").textContent="Nu am putut verifica accesul la saloane.";return;}
+ currentProAccess=data||[];for(const s of data||[])sel.add(new Option(s.salon_name,s.salon_id));
+ if(data?.length){sel.value=data[0].salon_id;await loadCalendar();}
+ else{$("calStatus").textContent="Nu există încă un salon aprobat și asociat contului tău. Calendarul va deveni disponibil după activarea de către administrator.";renderCalendar([])}
+}
+
+let calendarMode="three";
+let calendarDragEnabled=false;
+let activeCalendarSelection=null;
+let suppressCalendarClickUntil=0;
+let calendarEvents=[];
+let editedCalendarId=null;
+function calendarDates(){if(calendarMode==="week")return weekDates();const count=calendarMode==="three"?3:1;return Array.from({length:count},(_,n)=>{const day=new Date(weekAnchor);day.setHours(12,0,0,0);day.setDate(day.getDate()+n);return day;});}
+function localStamp(date){const d=new Date(date);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")+"T"+[String(d.getHours()).padStart(2,"0"),String(d.getMinutes()).padStart(2,"0")].join(":");}
+async function calendarOpen(startDate=null,event=null,endDate=null){
+ if(!proCalendarEditable()){$("calStatus").textContent="Doar proprietarul sau managerul poate modifica acest calendar.";return;}
+ editedCalendarId=event?.id||null;
+ const start=startDate||new Date();if(!startDate&&!event){start.setMinutes(start.getMinutes()<30?30:0,0,0);if(start.getMinutes()===0)start.setHours(start.getHours()+1);}
+ const end=event?new Date(event.ends_at):endDate?new Date(endDate):new Date(start.getTime()+30*60000);
+ $("calManualStart").value=localStamp(start);
+ $("calManualEnd").value=localStamp(end);
+ $("calEventKind").value=event?.status==="confirmed"?"confirmed":"busy";
+ $("calManualClient").value=event?.status==="busy"?(event?.client_display_name==="Ocupat"?"":event.client_display_name):event?.client_display_name||"";
+ $("calManualService").value=event?.service_label||"";
+ $("calendarManualTitle").textContent=event?"Modifică intervalul":"Interval nou";
+ $("calendarManualStatus").textContent="";
+ $("calendarCancelEvent").hidden=!event;
+ $("calendarOverlay").hidden=false;$("calendarManualForm").hidden=false;
+ $("calConflictHint").hidden=true;await populateCalendarSpecialists(event?.specialist_user_id||null);
+}
+function calendarClose(){$("calendarManualForm").hidden=true;$("calendarOverlay").hidden=true;editedCalendarId=null;}
+
+function calendarDragPreview(selection){
+ const cells=$("calWeek").querySelectorAll(".calCell");
+ for(const cell of cells){
+  const same=cell.dataset.day===selection.day;
+  const index=Number(cell.dataset.quarterIndex);
+  cell.classList.toggle("calSelected",same && index<selection.last && index+2>selection.first);
+ }
+ const minutes=(selection.last-selection.first)*15;
+ const hourMinute=q=>{const mins=7*60+q*15;return String(Math.floor(mins/60)).padStart(2,"0")+":"+String(mins%60).padStart(2,"0")};
+ $("calStatus").textContent="Blocaj selectat: "+hourMinute(selection.first)+" – "+hourMinute(selection.last)+" ("+minutes+" minute). Eliberează pentru a confirma.";
+}
+function clearCalendarDragPreview(){
+ $("calWeek").querySelectorAll(".calSelected").forEach(cell=>cell.classList.remove("calSelected"));
+ activeCalendarSelection=null;
+}
+function calendarBeginDrag(e,day,index,cell){
+ if(!calendarDragEnabled||!proCalendarEditable()||e.button!==0)return;
+ e.preventDefault();
+ const rect=cell.getBoundingClientRect();
+ const originIndex=index*2,offset=e.clientY-rect.top;
+ const first=Math.max(0,Math.min(63,originIndex+(offset>=rect.height/2?1:0)));
+ activeCalendarSelection={pointerId:e.pointerId,day:isoDay(day),date:new Date(day),first,last:first+1,rect,index};
+ cell.setPointerCapture(e.pointerId);
+ calendarDragPreview(activeCalendarSelection);
+}
+function calendarMoveDrag(e){
+ const s=activeCalendarSelection;if(!s||s.pointerId!==e.pointerId)return;
+ e.preventDefault();
+ const absoluteQuarter=s.index*2+Math.ceil((e.clientY-s.rect.top)/(s.rect.height/2));
+ s.last=Math.min(64,Math.max(s.first+1,absoluteQuarter));
+ calendarDragPreview(s);
+}
+function calendarFinishDrag(e,cancel=false){
+ const s=activeCalendarSelection;if(!s||s.pointerId!==e.pointerId)return;
+ if(!cancel)calendarMoveDrag(e);
+ const start=new Date(s.date),end=new Date(s.date);
+ const startMins=420+s.first*15,endMins=420+s.last*15;
+ start.setHours(Math.floor(startMins/60),startMins%60,0,0);
+ end.setHours(Math.floor(endMins/60),endMins%60,0,0);
+ suppressCalendarClickUntil=Date.now()+600;
+ clearCalendarDragPreview();
+ if(cancel){$("calStatus").textContent="Selecție anulată.";return;}
+ calendarOpen(start,null,end);
+ $("calendarManualTitle").textContent="Confirmă blocajul de "+((end-start)/60000)+" min";
+ $("calEventKind").value="busy";
+ $("calManualService").value="Blocaj";
+}
+function renderCalendar(events){
+ calendarEvents=events||[];
+ const days=calendarDates(),grid=$("calWeek");grid.replaceChildren();
+ const visibleStart=new Date(days[0]);visibleStart.setHours(0,0,0,0);
+ $("calWeekName").textContent=days.length===1?days[0].toLocaleDateString("ro-RO",{weekday:"long",day:"numeric",month:"long",year:"numeric"}):days[0].toLocaleDateString("ro-RO",{day:"numeric",month:"short"})+" – "+days.at(-1).toLocaleDateString("ro-RO",{day:"numeric",month:"short",year:"numeric"});
+ const count=days.length;grid.style.gridTemplateColumns="52px repeat("+count+", minmax("+(count===7?"88":"0")+"px,1fr))";grid.style.gridTemplateRows="48px repeat(32,46px)";grid.style.minWidth=count===7?"705px":"0";
+ grid.classList.toggle("calDragActive",calendarDragEnabled);
+ const corner=document.createElement("div");corner.className="calDay";corner.textContent="Ora";grid.append(corner);
+ for(const d of days){const el=document.createElement("div");el.className="calDay"+(isoDay(d)===isoDay(new Date())?" calToday":"");el.textContent=d.toLocaleDateString("ro-RO",{weekday:"short",day:"numeric"});grid.append(el);}
+ for(let hour=7;hour<23;hour++)for(let half=0;half<2;half++){
+  const index=(hour-7)*2+half;const label=document.createElement("div");label.className="calTime";label.style.gridRow=String(index+2);label.textContent=half===0?String(hour).padStart(2,"0")+":00":":30";grid.append(label);
+  days.forEach((day,i)=>{
+   const cell=document.createElement("button");cell.type="button";cell.className="calCell";
+   cell.style.gridColumn=String(i+2);cell.style.gridRow=String(index+2);
+   cell.dataset.day=isoDay(day);cell.dataset.quarterIndex=String(index*2);
+   cell.setAttribute("aria-label","Adaugă interval "+day.toLocaleDateString("ro-RO")+" "+String(hour).padStart(2,"0")+":"+String(half*30).padStart(2,"0"));
+   const d=new Date(day);d.setHours(hour,half*30,0,0);
+   cell.onclick=()=>{if(Date.now()<suppressCalendarClickUntil||calendarDragEnabled)return;calendarOpen(d)};
+   cell.onpointerdown=e=>calendarBeginDrag(e,day,index,cell);
+   cell.onpointermove=calendarMoveDrag;
+   cell.onpointerup=e=>calendarFinishDrag(e);
+   cell.onpointercancel=e=>calendarFinishDrag(e,true);
+   grid.append(cell);
+  });
+ }
+ for(const event of events||[]){
+  if(event.status==="cancelled")continue;
+  const start=new Date(event.starts_at),end=new Date(event.ends_at);
+  if(!Number.isFinite(start.getTime())||!Number.isFinite(end.getTime())||end<=start)continue;
+  const duration=(end-start)/60000;
+  const bulk=event.status==="busy" && duration>8*60;
+  for(let i=0;i<days.length;i++){
+   const date=new Date(days[i]);date.setHours(0,0,0,0);
+   const nextDay=new Date(date);nextDay.setDate(nextDay.getDate()+1);
+   if(start>=nextDay||end<=date)continue;
+   if(bulk){
+    const shade=document.createElement("div");shade.className="calBulkShade";
+    shade.style.gridColumn=String(i+2);shade.style.gridRow="2 / span 32";grid.append(shade);
+    const block=document.createElement("button");block.type="button";
+    block.className="calBulkBanner";
+    block.style.gridColumn=String(i+2);block.style.gridRow="2";
+    block.textContent=event.service_label||"Zi blocată";
+    block.title="Blocaj: "+start.toLocaleString("ro-RO")+" – "+end.toLocaleString("ro-RO");
+    block.onclick=()=>event.source_provider==="manual"?calendarOpen(start,event):($("calStatus").textContent="Blocajul importat nu poate fi modificat aici.");
+    grid.append(block);continue;
+   }
+   const dayStart=new Date(date);dayStart.setHours(7,0,0,0);
+   const dayEnd=new Date(date);dayEnd.setHours(23,0,0,0);
+   const begin=Math.max(start.getTime(),dayStart.getTime()),finish=Math.min(end.getTime(),dayEnd.getTime());
+   if(begin>=finish)continue;
+   const minutes=(begin-dayStart.getTime())/60000;
+   const length=(finish-begin)/60000;
+   const row=Math.floor(minutes/30)+2;
+   const offset=(minutes%30)/30*46;
+   const height=Math.max(14,Math.round(length/30*46)-3);
+   const element=document.createElement("button");element.type="button";
+   element.className="calEvent "+(event.status==="busy"?"busy":"confirmed")+(event.overlap_override?" isOverlapped":"");
+   element.style.gridColumn=String(i+2);element.style.gridRow=String(row);
+   element.style.height=height+"px";element.style.top=offset+"px";element.style.alignSelf="start";
+   const title=document.createElement("strong");title.textContent=event.status==="busy"?"Ocupat":event.client_display_name||"Programare";
+   const detail=document.createElement("small");detail.textContent=new Date(begin).toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"})+" · "+(event.service_label||"Interval");
+   if(event.overlap_override){element.title="Suprapunere confirmată de frizer";title.textContent="↔ "+title.textContent;}
+   element.append(title,detail);
+   const colliding=(events||[]).filter(x=>x.id!==event.id&&x.status==="confirmed"&&event.status==="confirmed"&&new Date(x.starts_at)<end&&new Date(x.ends_at)>start&&new Date(x.starts_at)<nextDay&&new Date(x.ends_at)>date);
+   if(colliding.length){
+    const ordered=[event,...colliding].sort((x,y)=>new Date(x.starts_at)-new Date(y.starts_at)||String(x.id).localeCompare(String(y.id)));
+    const n=ordered.length,pos=ordered.findIndex(x=>x.id===event.id);
+    element.style.width=(100/n-1)+"%";element.style.marginLeft=(pos*100/n)+"%";
+   }
+   element.onclick=()=>event.source_provider==="manual"?calendarOpen(start,event):($("calStatus").textContent="Acest interval provine dintr-un calendar importat și nu poate fi editat manual.");
+   grid.append(element);
+  }
+ }
+}
+let calendarQuerySequence=0;
+async function loadCalendar(){
+ const sequence=++calendarQuerySequence;
+ const salonId=$("calSalon").value;
+ if(!salonId){renderCalendar([]);$("calStatus").textContent="Selectează un salon.";return;}
+ $("calStatus").textContent="Se încarcă intervalele...";
+ try{
+  const days=calendarDates();const from=new Date(days[0]);from.setHours(0,0,0,0);
+  const until=new Date(days.at(-1));until.setDate(until.getDate()+1);until.setHours(0,0,0,0);
+  const {data,error}=await client.from("bc_pro_calendar_events").select("id,starts_at,ends_at,client_display_name,service_label,status,source_provider,specialist_user_id,overlap_override").eq("salon_id",salonId).neq("status","cancelled").lt("starts_at",until.toISOString()).gt("ends_at",from.toISOString()).order("starts_at").limit(400);
+  if(sequence!==calendarQuerySequence)return;
+  if(error)throw error;
+  renderCalendar(data||[]);
+  $("calStatus").textContent=data?.length?"Intervale găsite: "+data.length:"Nu există intervale salvate. Apasă pe o oră din grilă pentru a adăuga un blocaj.";
+ }catch(e){if(sequence===calendarQuerySequence)$("calStatus").textContent="Calendar indisponibil: "+e.message;}
+}
+$("prevWeek").onclick=()=>{weekAnchor.setDate(weekAnchor.getDate()-(calendarMode==="day"?1:calendarMode==="three"?3:7));loadCalendar();};
+$("nextWeek").onclick=()=>{weekAnchor.setDate(weekAnchor.getDate()+(calendarMode==="day"?1:calendarMode==="three"?3:7));loadCalendar();};
+$("todayWeek").onclick=()=>{weekAnchor=new Date();loadCalendar();};
+$("calSalon").onchange=loadCalendar;
+function proCalendarEditable(){return !!($("calSalon").value&&currentProAccess.some(x=>x.salon_id===$("calSalon").value&&["owner","manager","staff"].includes(x.member_role)));}
+function proCalendarCanManageSalon(){return !!($("calSalon").value&&currentProAccess.some(x=>x.salon_id===$("calSalon").value&&["owner","manager"].includes(x.member_role)));}
+let currentProAccess=[];
+function setCalendarMode(mode){if(!["day","three","week"].includes(mode))return;calendarMode=mode;document.querySelectorAll("[data-calendar-mode]").forEach(button=>{const selected=button.dataset.calendarMode===mode;button.classList.toggle("selected",selected);button.setAttribute("aria-pressed",String(selected));});loadCalendar();}
+$("calViewDay").onclick=()=>setCalendarMode("day");
+$("calViewThree").onclick=()=>setCalendarMode("three");
+$("calViewWeek").onclick=()=>setCalendarMode("week");
+
+async function populateCalendarSpecialists(selected=null){
+ const picker=$("calManualSpecialist"),salon=$("calSalon").value;
+ picker.replaceChildren(new Option("Se încarcă echipa...",""));picker.disabled=true;
+ const access=currentProAccess.find(x=>x.salon_id===salon),manager=["owner","manager"].includes(access?.member_role);
+ const [result,team]=await Promise.all([client.rpc("bc_pro_staff_settings",{p_salon:salon}),manager?client.rpc("bc_pro_team_list",{p_salon:salon}):Promise.resolve({data:[]})]);
+ if($("calSalon").value!==salon||$("calendarManualForm").hidden)return;
+ picker.replaceChildren();if(manager)picker.add(new Option("Tot salonul (blocaj general)",""));
+ const members=manager?(result.data||[]):(result.data||[]).filter(m=>m.user_id===user?.id);
+ const names=new Map((team.data||[]).map(m=>[m.user_id,m.display_name||m.email]));
+ for(const m of members){
+  if(!["owner","manager","staff"].includes(m.role))continue;
+  const mine=m.user_id===user?.id;
+  picker.add(new Option(mine?"Eu · "+(names.get(m.user_id)||"Frizer"):(names.get(m.user_id)||"Specialist "+m.user_id.slice(0,8)),m.user_id));
+ }
+ if(result.error||!picker.options.length){
+  picker.replaceChildren(new Option("Niciun frizer activ",""));
+  $("calendarManualStatus").textContent="Nu am putut încărca echipa: "+(result.error?.message||"Cont fără rol de frizer.");
+ }
+ picker.value=selected||((manager&&$("calEventKind").value==="busy")?"":user?.id||"");
+ if(picker.selectedIndex<0)picker.selectedIndex=0;
+ picker.disabled=false;
+}
+$("calEventKind").onchange=()=>{
+ const picker=$("calManualSpecialist");
+ if($("calEventKind").value==="confirmed"&&!picker.value&&user?.id&&[...picker.options].some(x=>x.value===user.id))picker.value=user.id;
+};
+
+$("calendarManualAdd").onclick=()=>calendarOpen();
+
+function calendarBulkRange(scope,value){
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(value))throw Error("Selectează o dată validă.");
+ const [year,month,day]=value.split("-").map(Number);
+ const reference=new Date(year,month-1,day,0,0,0,0);
+ if(reference.getFullYear()!==year||reference.getMonth()!==month-1||reference.getDate()!==day)throw Error("Data nu este validă.");
+ const start=new Date(reference);
+ if(scope==="week")start.setDate(start.getDate()-(start.getDay()+6)%7);
+ else if(scope==="month")start.setDate(1);
+ else if(scope!=="day")throw Error("Tip perioadă invalid.");
+ const end=new Date(start);
+ if(scope==="day")end.setDate(end.getDate()+1);
+ if(scope==="week")end.setDate(end.getDate()+7);
+ if(scope==="month")end.setMonth(end.getMonth()+1);
+ return {start,end};
+}
+function updateCalendarBulkSummary(){
+ try{
+  const {start,end}=calendarBulkRange($("calendarBulkScope").value,$("calendarBulkDate").value);
+  const until=new Date(end);until.setDate(until.getDate()-1);
+  $("calendarBulkSummary").textContent="Perioada: "+start.toLocaleDateString("ro-RO",{day:"numeric",month:"long",year:"numeric"})+" – "+until.toLocaleDateString("ro-RO",{day:"numeric",month:"long",year:"numeric"})+" (inclusiv).";
+ }catch(e){$("calendarBulkSummary").textContent=e.message}
+}
+$("calendarDragToggle").onclick=()=>{
+ calendarDragEnabled=!calendarDragEnabled;clearCalendarDragPreview();
+ const toggle=$("calendarDragToggle");
+ toggle.setAttribute("aria-pressed",String(calendarDragEnabled));
+ toggle.textContent=calendarDragEnabled?"↕ Glisează pentru blocaj · ON":"↕ Glisează pentru blocaj · OFF";
+ $("calWeek").classList.toggle("calDragActive",calendarDragEnabled);
+ $("calendarDragHelp").textContent=calendarDragEnabled?"Apasă și glisează în jos pe aceeași zi. Selecția se ajustează din 15 în 15 minute. Dezactivează pentru derulare.":"Activează «Glisează» pentru blocaje de 15/30/45 minute. Dezactivează pentru derulare normală.";
+};
+$("calendarBulkToggle").onclick=()=>{
+ if(!proCalendarCanManageSalon()){$("calStatus").textContent="Blocajul general este rezervat proprietarului sau managerului. Ca frizer poți bloca propriul interval din grilă.";return;}
+ const panel=$("calendarBulkPanel");panel.hidden=!panel.hidden;
+ if(!panel.hidden){$("calendarBulkDate").value=isoDay(calendarDates()[0]);$("calendarBulkStatus").textContent="";updateCalendarBulkSummary();}
+};
+$("calendarBulkScope").onchange=updateCalendarBulkSummary;
+$("calendarBulkDate").onchange=updateCalendarBulkSummary;
+$("calendarBulkSave").onclick=async()=>{
+ const status=$("calendarBulkStatus"),button=$("calendarBulkSave");
+ if(!proCalendarCanManageSalon()){status.textContent="Blocarea întregului salon necesită rol Owner sau Manager.";return;}
+ let range;try{range=calendarBulkRange($("calendarBulkScope").value,$("calendarBulkDate").value)}catch(e){status.textContent=e.message;return;}
+ const label={day:"Zi întreagă blocată",week:"Săptămână blocată",month:"Lună blocată"}[$("calendarBulkScope").value];
+ if(!confirm("Confirmi: "+label+", de la "+range.start.toLocaleDateString("ro-RO")+" până la "+new Date(range.end-1).toLocaleDateString("ro-RO")+"? Programările existente nu vor fi anulate."))return;
+ button.disabled=true;status.textContent="Se blochează perioada...";
+ try{
+  const {error}=await client.rpc("bc_pro_calendar_upsert",{
+   p_id:null,p_salon:$("calSalon").value,
+   p_start:range.start.toISOString(),p_end:range.end.toISOString(),
+   p_client:"Ocupat",p_service:label,p_status:"busy"
+  });
+  if(error)throw error;
+  $("calendarBulkPanel").hidden=true;
+  await loadCalendar();$("calStatus").textContent=label+" — salvat în Supabase. Atinge blocajul pentru editare sau anulare.";
+ }catch(e){status.textContent=e.message?.includes("TIME_CONFLICT")||e.code==="23P01"?"Perioada se suprapune cu o programare sau un alt blocaj. Nimic nu a fost modificat.":"Eroare: "+(e.message||"Nu s-a salvat.");}
+ finally{button.disabled=false;}
+};
+
+$("calendarCloseEditor").onclick=calendarClose;
+$("calendarOverlay").onclick=calendarClose;
+
+$("calendarManualSave").onclick=async()=>{
+ const status=$("calendarManualStatus"),salon=$("calSalon").value;
+ const begin=new Date($("calManualStart").value),end=new Date($("calManualEnd").value);
+ if(!proCalendarEditable()||!Number.isFinite(begin.getTime())||!Number.isFinite(end.getTime())||end<=begin){status.textContent="Verifică salonul și intervalul.";return;}
+ const kind=$("calEventKind").value,selected=$("calManualSpecialist").value||null;
+ const clientName=$("calManualClient").value.trim()||(kind==="busy"?"Ocupat":"");
+ if(!clientName){status.textContent="Introdu numele clientului.";return;}
+ if(kind==="confirmed"&&!selected){status.textContent="Selectează frizerul. Programările nu pot rămâne fără specialist.";return;}
+ const details={p_id:editedCalendarId,p_salon:salon,p_start:begin.toISOString(),p_end:end.toISOString(),
+  p_client:clientName,p_service:$("calManualService").value.trim()||(kind==="busy"?"Blocaj":"Serviciu"),
+  p_status:kind,p_specialist:selected,p_allow_overlap:false,p_ack_ids:[]};
+ const saveButton=$("calendarManualSave");saveButton.disabled=true;status.textContent="Se verifică disponibilitatea...";
+ $("calConflictHint").hidden=true;
+ try{
+  let {data,error}=await client.rpc("bc_pro_calendar_save",details);
+  if(error)throw error;
+  if(data?.blocked||(!data?.ok&&!data?.requires_confirmation)){
+   $("calConflictHint").textContent="Intervalul este blocat de o pauză, zi liberă sau alt interval rezervat. Nu poate fi suprascris.";
+   $("calConflictHint").hidden=false;return;
+  }
+  if(data?.requires_confirmation){
+   const conflicts=data.conflicts||[];
+   const lines=conflicts.map(c=>{
+    const start=new Date(c.start).toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"});
+    const end=new Date(c.end).toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"});
+    return "• "+(c.client||"Programare")+" ("+start+"–"+end+")";
+   }).join("\n");
+   const mine=!!selected&&selected===user?.id;
+   $("calConflictHint").textContent="Atenție! Intervalul este deja ocupat:\n"+lines+(mine?"\nPoți confirma manual încă o programare.":"\nNumai frizerul care deține calendarul poate confirma o suprapunere.");
+   $("calConflictHint").hidden=false;
+   if(!mine){status.textContent="Cere frizerului să confirme suprapunerea din propriul cont PRO.";return;}
+   if(!confirm("ATENȚIE — SUPRAPUNERE!\n\n"+lines+"\n\nConfirmi că accepți încă o programare în același interval? Clientul va vedea în continuare ora ca OCUPATĂ.")){
+    status.textContent="Suprapunerea nu a fost salvată.";return;
+   }
+   const approved={...details,p_allow_overlap:true,p_ack_ids:conflicts.map(c=>c.id)};
+   ({data,error}=await client.rpc("bc_pro_calendar_save",approved));
+   if(error)throw error;
+   if(!data?.ok){status.textContent="Între timp, programul s-a modificat. Verifică din nou orele.";return;}
+  }
+  if(!data?.ok)throw Error("Programarea nu a fost salvată.");
+  calendarClose();await loadCalendar();
+  $("calStatus").textContent=data.overlap_accepted?"Suprapunerea a fost confirmată de frizer și salvată. Pentru clienți intervalul rămâne ocupat.":"Interval salvat în Supabase.";
+ }catch(e){
+  status.textContent=e.message?.includes("TIME_CONFLICT")||e.code==="23P01"?"Altă rezervare a fost introdusă între timp. Verifică intervalul.":"Eroare: "+(e.message||"Nu s-a salvat.");
+ }finally{saveButton.disabled=false;}
+};
+
+$("calendarCancelEvent").onclick=async()=>{
+ if(!editedCalendarId||!confirm("Anulezi acest interval? Va rămâne în istoric."))return;
+ const status=$("calendarManualStatus");$("calendarCancelEvent").disabled=true;
+ const {error}=await client.rpc("bc_pro_calendar_cancel",{p_id:editedCalendarId,p_salon:$("calSalon").value});
+ if(error){status.textContent="Eroare: "+error.message;}else{calendarClose();await loadCalendar();$("calStatus").textContent="Interval anulat.";}
+ $("calendarCancelEvent").disabled=false;
+};
+function readICSDate(line){
+ const parts=line.split(":");const value=parts.slice(1).join(":").trim();
+ if(!/^\d{8}T\d{6}Z?$/.test(value))return null;
+ const year=+value.slice(0,4),month=+value.slice(4,6)-1,day=+value.slice(6,8),hour=+value.slice(9,11),minute=+value.slice(11,13),second=+value.slice(13,15);
+ const hasZulu=value.endsWith("Z");const tzid=line.match(/TZID=([^;:]+)/i)?.[1];
+ if(tzid&&!["Europe/Bucharest","UTC","Etc/UTC"].includes(tzid))return null;
+ return hasZulu||tzid==="UTC"||tzid==="Etc/UTC"?new Date(Date.UTC(year,month,day,hour,minute,second)):new Date(year,month,day,hour,minute,second);
+}
+function parseICS(text){
+ const blocks=text.replace(/\r?\n[ \t]/g,"").split(/BEGIN:VEVENT\r?\n/).slice(1);const events=[];
+ for(const block of blocks){
+  if(!/END:VEVENT/.test(block)||/^(RRULE|RECURRENCE-ID)[;:]/m.test(block))continue;
+  const lines=block.split(/\r?\n/);
+  const start=lines.find(l=>/^DTSTART(?:;|:)/.test(l)),end=lines.find(l=>/^DTEND(?:;|:)/.test(l)),uid=lines.find(l=>/^UID:/.test(l));
+  if(!start||!end||!uid)continue;
+  const from=readICSDate(start),to=readICSDate(end);
+  if(!from||!to||!Number.isFinite(from.getTime())||!Number.isFinite(to.getTime())||to<=from)continue;
+  events.push({starts_at:from.toISOString(),ends_at:to.toISOString(),source_uid:uid.slice(4).trim().slice(0,250),source_provider:"ics",client_display_name:"Ocupat",service_label:"Calendar importat",status:"busy"});
+  if(events.length>=150)break;
+ }
+ return events;
+}
+$("calendarICSFile").onchange=async()=>{
+ const file=$("calendarICSFile").files?.[0];if(!file)return;
+ const salon=$("calSalon").value;
+ if(!proCalendarEditable()){$("calStatus").textContent="Doar Owner sau Manager poate importa calendarul.";return;}
+ if(file.size>2*1024*1024){$("calStatus").textContent="Fișierul .ics trebuie să aibă maximum 2 MB.";return;}
+ const text=await file.text();const events=parseICS(text);
+ if(!events.length){$("calStatus").textContent="Nu am găsit evenimente compatibile. Calendarul trebuie exportat ca .ics, cu date și ore. Evenimentele recurente trebuie extinse înainte de import.";return;}
+ if(!confirm("Importăm "+events.length+" intervale ocupate în salonul selectat? Importul NU este sincronizare automată și nu creează programări confirmate pentru clienți."))return;
+ let accepted=0,errors=[];
+ for(let i=0;i<events.length;i+=40){
+  const batch=events.slice(i,i+40).map(e=>({...e,salon_id:salon}));
+  const {error}=await client.from("bc_pro_calendar_events").upsert(batch,{onConflict:"salon_id,source_uid"});
+  if(error){errors.push(error.message);break;}accepted+=batch.length;
+ }
+ $("calStatus").textContent="Intervale importate/actualizate: "+accepted+" din "+events.length+(errors.length?" · Eroare: "+errors[0]:"")+". Verifică vizual calendarul înainte de utilizare.";
+ if(accepted)await loadCalendar();
+};
+async function exportPhoneCalendar(forShare=false){
+ const salon=$("calSalon").value;if(!salon){$("calStatus").textContent="Selectează un salon.";return;}
+ const {data,error}=await client.from("bc_pro_calendar_events").select("id,starts_at,ends_at,client_display_name,service_label").eq("salon_id",salon).gte("starts_at",new Date(Date.now()-365*86400000).toISOString()).limit(1000);
+ if(error){$("calStatus").textContent=error.message;return;}
+ const stamp=date=>new Date(date).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+ const escapeIC=v=>String(v||"").replace(/[\\;,]/g," ").replace(/[\r\n]/g," ");
+ let txt="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//BARBERCRAFT//Calendar//RO\r\n";
+ for(const item of data||[]){txt+="BEGIN:VEVENT\r\nUID:"+item.id+"@barbercraft\r\nDTSTART:"+stamp(item.starts_at)+"\r\nDTEND:"+stamp(item.ends_at)+"\r\nSUMMARY:"+escapeIC(item.service_label||"Programare")+"\r\nEND:VEVENT\r\n";}
+ txt+="END:VCALENDAR\r\n";
+ const file=new File([txt],"barbercraft-calendar.ics",{type:"text/calendar"});
+ if(forShare&&navigator.canShare?.({files:[file]})){
+  try{await navigator.share({files:[file],title:"BARBERCRAFT · Calendar"});$("calStatus").textContent="Fișierul calendarului a fost trimis către aplicația aleasă.";return;}catch(e){if(e.name==="AbortError")return;}
+ }
+ const url=URL.createObjectURL(file);const a=document.createElement("a");a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
+ $("calStatus").textContent="Fișier .ics pregătit. Deschide-l cu Google Calendar, Apple Calendar sau altă aplicație compatibilă; nu este sincronizare automată.";
+};;
+$("calendarExportICS").onclick=()=>exportPhoneCalendar(false);
+$("calendarSharePhone").onclick=()=>exportPhoneCalendar(true);
+
+
+$("calendarFeedButton").onclick=async()=>{
+ const salon=$("calSalon").value;if(!salon){$("calStatus").textContent="Selectează un salon.";return;}
+ if(!confirm("Generezi un link privat de abonare la calendar? Dacă aveai un link anterior, acesta nu va mai funcționa. Nu distribui linkul public."))return;
+ const btn=$("calendarFeedButton");btn.disabled=true;$("calStatus").textContent="Se generează abonarea privată...";
+ try{
+  const {data,error}=await client.rpc("bc_pro_create_calendar_feed",{p_salon:salon});
+  if(error)throw error;
+  const feed=window.BARBERCRAFT_SUPABASE_URL+"/functions/v1/barbercraft-calendar-feed?token="+encodeURIComponent(data);
+  const container=$("calendarFeedDetails");container.replaceChildren();container.hidden=false;
+  const heading=document.createElement("strong");heading.textContent="Abonare privată la calendar";
+  const warning=document.createElement("p");warning.textContent="Actualizările din BARBERCRAFT vor apărea periodic în aplicațiile care acceptă abonări iCalendar. Numele clienților nu sunt exportate. Nu este sincronizare bidirecțională.";
+  const input=document.createElement("input");input.className="input";input.readOnly=true;input.value=feed;input.setAttribute("aria-label","Link privat de abonare");
+  const actions=document.createElement("div");actions.className="calUtility";
+  const copy=document.createElement("button");copy.className="outline";copy.type="button";copy.textContent="Copiază linkul";
+  copy.onclick=async()=>{try{await navigator.clipboard.writeText(feed);copy.textContent="Link copiat";}catch{input.select();copy.textContent="Selectează și copiază";}};
+  const apple=document.createElement("a");apple.className="outline";apple.textContent="Abonare Apple Calendar";apple.href=feed.replace(/^https:/,"webcal:");apple.style.width="auto";apple.style.display="inline-flex";
+  const revoke=document.createElement("button");revoke.className="outline";revoke.textContent="Revocă abonarea";
+  revoke.onclick=async()=>{if(!confirm("Revoci toate sincronizările active pentru acest salon din contul tău?"))return;const {error}=await client.rpc("bc_pro_revoke_calendar_feed",{p_salon:salon});if(error){$("calStatus").textContent="Eroare: "+error.message;return;}container.hidden=true;container.replaceChildren();$("calStatus").textContent="Linkul de abonare a fost revocat.";};
+  actions.append(copy,apple,revoke);const details=document.createElement("p");details.className="muted";details.textContent="Google Calendar: în versiunea web → Alte calendare → Din URL → lipește linkul HTTPS. Apple Calendar acceptă abonări webcal://. Frecvența actualizărilor depinde de aplicație.";
+  container.append(heading,warning,input,actions,details);$("calStatus").textContent="Link creat. Păstrează-l privat.";
+ }catch(e){$("calStatus").textContent="Eroare la abonare: "+(e.message||"Necunoscută");}finally{btn.disabled=false;}
+};
+
+const proPanelIds={overview:"proOverviewPanel",calendar:"proCalendar",clients:"proClientsPanel",sales:"proSalesPanel",notifications:"proNotificationsPanel",lifecycle:"proLifecyclePanel",settings:"proSettingsPanel",detail:"proDetailPanel"};
+function proNavigate(route){
+ Object.values(proPanelIds).forEach(id=>{const el=document.getElementById(id);if(el){el.classList.add("proPanel");el.classList.toggle("active",id===proPanelIds[route]);}});
+ document.querySelectorAll("[data-pro-route]").forEach(el=>el.classList.toggle("active",el.dataset.proRoute===route));
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.addEventListener("click",e=>{const r=e.target.closest("[data-pro-route]");if(r){proNavigate(r.dataset.proRoute);if(r.dataset.proRoute==="clients")renderClientImport();if(r.dataset.proRoute==="sales")loadProSales();}const t=e.target.closest("[data-pro-target]");if(t)showProSettings(t.dataset.proTarget)});
+
+
+async function renderHoursEditor(body){
+ const salon=$("calSalon").value;if(!salon){body.textContent="Selectează un salon aprobat din Calendar.";return;}
+ const {data:access,error:accessError}=await client.rpc("bc_my_professional_access");
+ if(accessError||!access?.some(s=>s.salon_id===salon&&["owner","manager"].includes(s.member_role))){body.textContent="Doar proprietarul sau managerul poate modifica programul.";return;}
+ const {data,error}=await client.from("bc_pro_working_hours").select("weekday,opens,closes,is_closed").eq("salon_id",salon);
+ if(error){body.textContent="Eroare la citire: "+error.message;return;}
+ const hint=document.createElement("p");hint.className="muted";hint.textContent="Configurează orele salonului. Selectează «Închis» pentru zilele libere.";body.append(hint);
+ const existing=new Map((data||[]).map(x=>[x.weekday,x])),days=["Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă","Duminică"],rows=[];
+ for(let i=1;i<=7;i++){
+  const d=existing.get(i)||{},row=document.createElement("div");row.className="hoursCard";
+  const day=document.createElement("strong");day.className="hoursDay";day.textContent=days[i-1];
+  const startWrap=document.createElement("label");startWrap.className="hoursTime";startWrap.textContent="Deschide";
+  const open=document.createElement("input");open.type="time";open.value=d.opens?.slice(0,5)||"09:00";open.setAttribute("aria-label",days[i-1]+" deschidere");startWrap.append(open);
+  const endWrap=document.createElement("label");endWrap.className="hoursTime";endWrap.textContent="Închide";
+  const close=document.createElement("input");close.type="time";close.value=d.closes?.slice(0,5)||"19:00";close.setAttribute("aria-label",days[i-1]+" închidere");endWrap.append(close);
+  const switchLabel=document.createElement("label");switchLabel.className="hoursSwitchLabel";switchLabel.textContent="Zi liberă";
+  const closed=document.createElement("input");closed.type="checkbox";closed.className="hoursSwitch";closed.checked=!!d.is_closed;closed.setAttribute("aria-label",days[i-1]+" închis");switchLabel.append(closed);
+  const update=()=>{open.disabled=closed.checked;close.disabled=closed.checked};closed.onchange=update;update();
+  row.append(day,startWrap,endWrap,switchLabel);body.append(row);rows.push({weekday:i,open,close,closed});
+ }
+ const save=document.createElement("button");save.type="button";save.className="primary";save.textContent="Salvează programul";
+ const feedback=document.createElement("p");feedback.className="status";feedback.setAttribute("role","status");body.append(save,feedback);
+ save.onclick=async()=>{
+  for(const r of rows){if(!r.closed.checked&&r.open.value>=r.close.value){feedback.textContent="Verifică intervalul pentru "+days[r.weekday-1]+".";return;}}
+  save.disabled=true;feedback.textContent="Se salvează...";
+  const records=rows.map(r=>({salon_id:salon,weekday:r.weekday,opens:r.open.value,closes:r.close.value,is_closed:r.closed.checked}));
+  const {error}=await client.from("bc_pro_working_hours").upsert(records,{onConflict:"salon_id,weekday"});
+  feedback.textContent=error?"Eroare: "+error.message:"Program salvat în Supabase. Se va afișa în profilul public al salonului.";
+  save.disabled=false;
+ };
+}
+async function renderProServiceEditor(body){
+ const salon=$("calSalon").value;if(!salon){body.textContent="Selectează un salon din Calendar.";return;}
+ const {data:access}=await client.rpc("bc_my_professional_access");
+ if(!access?.some(a=>a.salon_id===salon&&["owner","manager"].includes(a.member_role))){body.textContent="Doar proprietarul sau managerul poate modifica serviciile.";return;}
+ const {data,error}=await client.rpc("bc_pro_services",{p_salon:salon});
+ if(error){body.textContent="Serviciile nu au putut fi încărcate: "+error.message;return;}
+ if(!data?.catalog_id){body.textContent="Profilul public nu este încă asociat salonului. Intră în Admin → Catalog saloane → Asociază profilul PRO.";return;}
+ const info=document.createElement("p");info.className="muted";info.textContent="Adaugă sau modifică serviciile și prețurile afișate clienților. Salvarea nu activează automat rezervările.";body.append(info);
+ const list=document.createElement("div");list.className="proServiceRows";body.append(list);
+ function addRow(service={}){
+  if(list.children.length>=80)return;
+  const row=document.createElement("div");row.className="proServiceRow";
+  const fields=[["name","Denumire","Ex.: Tuns"],["duration","Durată","Ex.: 45 min"],["price","Preț","Ex.: 80 lei"]];
+  for(const [key,label,placeholder] of fields){
+   const control=document.createElement("label");control.textContent=label;control.className="proServiceField";
+   const input=document.createElement("input");input.className="input";input.placeholder=placeholder;input.dataset.key=key;input.value=service[key]||"";input.maxLength=key==="name"?100:60;control.append(input);row.append(control);
+  }
+  const remove=document.createElement("button");remove.className="outline";remove.type="button";remove.textContent="Elimină";remove.onclick=()=>row.remove();row.append(remove);list.append(row);
+ }
+ (Array.isArray(data.services)?data.services:[]).forEach(addRow);
+ const actions=document.createElement("div");actions.className="calUtility";
+ const add=document.createElement("button");add.className="outline";add.type="button";add.textContent="+ Adaugă serviciu";add.onclick=()=>addRow();
+ const save=document.createElement("button");save.className="primary";save.type="button";save.textContent="Salvează serviciile";
+ const feedback=document.createElement("p");feedback.className="status";feedback.setAttribute("role","status");
+ actions.append(add,save);body.append(actions,feedback);
+ save.onclick=async()=>{
+  const services=[...list.children].map(row=>{const x={};row.querySelectorAll("input").forEach(i=>x[i.dataset.key]=i.value.trim());return x;});
+  if(services.some(x=>x.name.length<2)){feedback.textContent="Toate serviciile trebuie să aibă un nume de minimum două caractere.";return;}
+  save.disabled=true;feedback.textContent="Se salvează...";
+  const {error}=await client.rpc("bc_pro_services_save",{p_salon:salon,p_services:services});
+  feedback.textContent=error?"Eroare: "+error.message:"Serviciile au fost publicate în profilul BARBERCRAFT.";
+  save.disabled=false;
+ };
+}
+async function renderSalonShare(body){
+ const salon=$("calSalon").value;if(!salon){body.textContent="Selectează un salon activ în calendar.";return;}
+ const link=new URL("./",location.href);const option=$("calSalon").selectedOptions[0];const {data:profile}=await client.from("bc_public_salon_catalog").select("id").eq("salon_id",salon).eq("visibility","listed").maybeSingle();if(profile?.id)link.searchParams.set("salon",profile.id);else link.searchParams.set("q",option?.textContent||"salon");
+ const inp=document.createElement("input");inp.className="input";inp.readOnly=true;inp.value=link.href;const btn=document.createElement("button");btn.className="primary";btn.textContent="Distribuie linkul";body.append(inp,btn);
+ btn.onclick=async()=>{try{if(navigator.share)await navigator.share({title:"BARBERCRAFT",url:link.href});else if(navigator.clipboard){await navigator.clipboard.writeText(link.href);btn.textContent="Link copiat";}else{inp.select();btn.textContent="Copiază linkul selectat";}}catch(e){btn.textContent="Distribuire anulată";}};
+}
+async function renderClientImport(){
+ const section=$("proClientsPanel");if(section.dataset.ready)return;section.dataset.ready="1";const panel=section.querySelector(".pane");const h=document.createElement("h3");h.textContent="Import clienți din CSV";const desc=document.createElement("p");desc.className="muted";desc.textContent="Fișier CSV cu antetele nume,telefon,email. Importă doar date pe care ai dreptul să le prelucrezi. Fără mesaje automate.";
+ const file=document.createElement("input");file.type="file";file.accept=".csv,text/csv";const btn=document.createElement("button");btn.className="primary";btn.textContent="Importă lista";const status=document.createElement("p");status.className="status";panel.append(h,desc,file,btn,status);
+ btn.onclick=async()=>{const salon=$("calSalon").value;if(!salon){status.textContent="Asociază mai întâi un salon.";return;}const {data:access}=await client.rpc("bc_my_professional_access");if(!access?.some(s=>s.salon_id===salon&&["owner","admin","manager"].includes(s.member_role))){status.textContent="Nu ai drepturi de import pentru acest salon.";return;}if(!file.files?.[0]){status.textContent="Selectează fișierul CSV.";return;}
+ const text=await file.files[0].text();const lines=text.replace(/^\uFEFF/,"").split(/\r?\n/).filter(Boolean);if(lines.length>101){status.textContent="Importă maximum 100 de clienți pe lot.";return;}const headings=lines.shift().split(",").map(s=>s.trim().toLowerCase());if(!headings.includes("nume")){status.textContent="Prima linie trebuie să conțină coloana nume.";return;}
+ const records=lines.map(line=>{const cells=line.split(",");const val=key=>cells[headings.indexOf(key)]?.trim()||"";return{salon_id:salon,display_name:val("nume"),phone:val("telefon")||null,email:val("email")||null}});if(records.some(x=>!x.display_name)){status.textContent="Un client nu are nume.";return;}
+ const {error}=await client.from("bc_pro_clients").insert(records);status.textContent=error?"Eroare: "+error.message:"Au fost importați "+records.length+" clienți în agenda privată a salonului.";};
+}
+
+
+function formatRonMinor(value){return new Intl.NumberFormat("ro-RO",{style:"currency",currency:"RON"}).format((Number(value)||0)/100);}
+async function loadProSales(){
+ const salon=$("calSalon").value,view=$("proSalesMetrics"),campaign=$("proWarOptin"),status=$("proSalesStatus");
+ view.replaceChildren();campaign.replaceChildren();
+ if(!salon){status.textContent="Asociază un salon cu contul PRO.";return;}
+ const current=currentProAccess.find(x=>x.salon_id===salon);
+ if(!["owner","manager"].includes(current?.member_role)){status.textContent="Încasările pot fi văzute de proprietar sau manager.";return;}
+ const {data,error}=await client.rpc("bc_pro_sales_summary",{p_salon:salon});
+ if(error){status.textContent="Eroare: "+error.message;return;}
+ for(const [label,amount] of [["Total încasat",formatRonMinor(data.net_minor)],["Azi",formatRonMinor(data.today_minor)],["Reduceri",formatRonMinor(data.discount_minor)],["Tranzacții verificate",data.verified_transactions]]){
+  const tile=document.createElement("div");tile.className="proMetric";const text=document.createElement("span");text.textContent=label;const value=document.createElement("strong");value.textContent=String(amount);tile.append(text,value);view.append(tile);
+ }
+ status.textContent="Nu sunt incluse încasări manuale sau în curs de verificare.";
+ const headline=document.createElement("h3");headline.textContent="Bătălia Zonelor · participare salon";
+ const p=document.createElement("p");p.className="muted";p.textContent="Programul este în testare și nu aplică reduceri reale. Participarea va necesita validarea sectorului și confirmarea bugetului.";
+ campaign.append(headline,p);
+ if(current.member_role!=="owner")return;
+ const sector=document.createElement("select");sector.className="input";sector.add(new Option("Alege sectorul verificat",""));for(let i=1;i<=6;i++)sector.add(new Option("Sector "+i,String(i)));
+ const discount=document.createElement("select");discount.className="input";for(const x of [10,11,12,13,14,15])discount.add(new Option(x+"% reducere posibilă",String(x)));
+ const cap=document.createElement("input");cap.className="input";cap.type="number";cap.min="0";cap.max="1000";cap.value="25";
+ const opt=document.createElement("label");opt.className="twConsent";const check=document.createElement("input");check.type="checkbox";opt.append(check,document.createTextNode(" Solicit participarea salonului după validarea regulilor și bugetului."));
+ const save=document.createElement("button");save.type="button";save.className="outline";save.textContent="Salvează opțiunile de participare";
+ const feedback=document.createElement("p");feedback.className="status";feedback.setAttribute("role","status");
+ const field=(title,el)=>{const wrapper=document.createElement("label");wrapper.className="proWarField";wrapper.textContent=title;wrapper.append(el);campaign.append(wrapper);};
+ field("Sector salon",sector);field("Discount maximum",discount);field("Limită săptămânală de utilizări",cap);campaign.append(opt,save,feedback);
+ save.onclick=async()=>{if(!sector.value){feedback.textContent="Selectează sectorul salonului.";return;}save.disabled=true;const {error}=await client.rpc("bc_tw_salon_optin",{p_salon:salon,p_sector:Number(sector.value),p_discount:Number(discount.value),p_cap:Number(cap.value),p_upgrades:5,p_enabled:check.checked});feedback.textContent=error?"Eroare: "+error.message:"Preferințele salonului au fost salvate. Programul încă nu aplică reduceri.";save.disabled=false;};
+}
+
+async function renderStaffEditor(body){
+ const salon=$("calSalon").value;if(!salon){body.textContent="Selectează salonul în Calendar.";return;}
+ const {data:access,error:accessError}=await client.rpc("bc_my_professional_access");
+ if(accessError){body.textContent="Nu pot verifica drepturile: "+accessError.message;return;}
+ const me=access?.find(x=>x.salon_id===salon),canManage=["owner","manager"].includes(me?.member_role);
+ if(!me){body.textContent="Nu ai acces la acest salon.";return;}
+ const intro=document.createElement("p");intro.className="muted";
+ intro.textContent="Fiecare specialist își poate salva propriul orar și prețurile personale. Proprietarul sau managerul pot configura echipa.";
+ body.append(intro);
+ const [settingsResult,servicesResult,teamResult]=await Promise.all([
+  client.rpc("bc_pro_staff_settings",{p_salon:salon}),client.rpc("bc_pro_services",{p_salon:salon}),
+  canManage?client.rpc("bc_pro_team_list",{p_salon:salon}):Promise.resolve({data:[],error:null})
+ ]);
+ if(settingsResult.error){body.append(document.createTextNode(settingsResult.error.message));return;}
+ const mySettings=settingsResult.data||[];
+ const names=(Array.isArray(servicesResult.data?.services)?servicesResult.data.services:[]).map(x=>x.name).filter(Boolean);
+ const teamMap=new Map((teamResult.data||[]).map(m=>[m.user_id,m]));
+ const members=canManage?mySettings:mySettings.filter(m=>m.user_id===user?.id);
+ const days=["Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă","Duminică"];
+ for(const m of members){
+  const detail=document.createElement("details");detail.className="staffEditorCard";
+  const member=teamMap.get(m.user_id);
+  const heading=document.createElement("summary");heading.textContent=(member?.display_name||member?.email||"Programul meu")+" · "+(m.role==="owner"?"Admin":m.role);detail.append(heading);
+  const fields=document.createElement("div");fields.className="staffEditorFields";
+  const rows=[];for(let n=1;n<=7;n++){
+   const d=m.hours?.[n]||{open:"09:00",close:"19:00",closed:n===7};
+   const row=document.createElement("div");row.className="staffDayRow";
+   const title=document.createElement("strong");title.textContent=days[n-1];
+   const opens=document.createElement("input");opens.type="time";opens.value=d.open||"09:00";opens.setAttribute("aria-label",days[n-1]+" începere");
+   const closes=document.createElement("input");closes.type="time";closes.value=d.close||"19:00";closes.setAttribute("aria-label",days[n-1]+" încheiere");
+   const free=document.createElement("label");free.textContent="Liber ";const toggle=document.createElement("input");toggle.type="checkbox";toggle.checked=!!d.closed;free.append(toggle);
+   const update=()=>{opens.disabled=toggle.checked;closes.disabled=toggle.checked};toggle.onchange=update;update();
+   row.append(title,opens,closes,free);fields.append(row);rows.push({n,opens,closes,toggle});
+  }
+  const prices=document.createElement("div");prices.className="staffPrices";
+  const priceInputs=[];const label=document.createElement("h4");label.textContent="Prețuri individuale (lei)";prices.append(label);
+  if(!names.length){const note=document.createElement("p");note.className="muted";note.textContent="Mai întâi adaugă serviciile din Salon → Servicii.";prices.append(note);}
+  for(const name of names){const line=document.createElement("label");line.textContent=name;const input=document.createElement("input");input.type="number";input.min="0";input.max="10000";input.step=".01";input.placeholder="Prețul general al salonului";if(m.prices?.[name]!=null)input.value=String(m.prices[name]);line.append(input);prices.append(line);priceInputs.push({name,input});}
+  const save=document.createElement("button");save.type="button";save.className="primary";save.textContent="Salvează programul și prețurile";
+  const result=document.createElement("p");result.className="status";result.setAttribute("role","status");
+  save.onclick=async()=>{
+   const hours={};for(const r of rows){if(!r.toggle.checked&&r.opens.value>=r.closes.value){result.textContent="Verifică orele pentru "+days[r.n-1];return;}hours[r.n]={open:r.opens.value,close:r.closes.value,closed:r.toggle.checked};}
+   const prices={};for(const p of priceInputs){if(p.input.value==="")continue;const num=Number(p.input.value);if(!Number.isFinite(num)||num<0||num>10000){result.textContent="Preț invalid pentru "+p.name;return;}prices[p.name]=num;}
+   save.disabled=true;result.textContent="Se salvează...";
+   const {error}=await client.rpc("bc_pro_save_staff_settings",{p_salon:salon,p_staff:m.user_id,p_hours:hours,p_prices:prices});
+   result.textContent=error?"Eroare: "+error.message:"Programul și prețurile specialistului au fost salvate în Supabase.";save.disabled=false;
+  };
+  detail.append(fields,prices,save,result);body.append(detail);
+ }
+ if(me.member_role!=="owner")return;
+ const section=document.createElement("section");section.className="staffInviteSection";
+ const title=document.createElement("h3");title.textContent="Invită un angajat";
+ const info=document.createElement("p");info.className="muted";info.textContent="Persoana invitată trebuie să se autentifice și să accepte invitația. Rolurile nu sunt activate doar prin introducerea unui e-mail.";
+ const email=document.createElement("input");email.className="input";email.type="email";email.placeholder="angajat@example.com";
+ const role=document.createElement("select");role.className="input";for(const [v,n] of [["staff","Angajat"],["moderator","Moderator"],["manager","Manager"]])role.add(new Option(n,v));
+ const btn=document.createElement("button");btn.type="button";btn.className="primary";btn.textContent="Trimite invitație";
+ const status=document.createElement("p");status.className="status";status.setAttribute("role","status");
+ section.append(title,info,email,role,btn,status);body.append(section);
+ btn.onclick=async()=>{
+  if(!/^[^ @]+@[^ @]+\.[^ @]+$/.test(email.value.trim())){status.textContent="Introdu un e-mail valid.";return;}
+  btn.disabled=true;status.textContent="Se trimite invitația...";
+  try{const {data:{session}}=await client.auth.getSession();if(!session)throw Error("Autentifică-te din nou.");
+   const res=await fetch(window.BARBERCRAFT_SUPABASE_URL+"/functions/v1/barbercraft-team-invite",{method:"POST",headers:{"Content-Type":"application/json","apikey":window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY,"Authorization":"Bearer "+session.access_token},body:JSON.stringify({salon_id:salon,email:email.value.trim(),role:role.value})});
+   const data=await res.json();if(!res.ok||!data.ok)throw Error(data.error||"Eroare la invitație");
+   status.textContent=data.email_sent?"Invitația a fost trimisă.":"Invitația a fost salvată, însă e-mailul nu a fost trimis: "+(data.info||"verifică SMTP-ul");
+  }catch(e){status.textContent="Eroare: "+e.message}finally{btn.disabled=false;}
+ };
+}
+async function loadMyInvitations(){
+ const box=$("proPendingInvitations");if(!box)return;box.replaceChildren();
+ const {data,error}=await client.rpc("bc_my_invitations");if(error||!data?.length)return;
+ const heading=document.createElement("strong");heading.textContent="Invitații primite";box.append(heading);
+ for(const i of data){const row=document.createElement("div");row.className="inviteItem";
+ const label=document.createElement("span");label.textContent=i.salon_name+" · "+i.role;
+ const btn=document.createElement("button");btn.className="outline";btn.type="button";btn.textContent="Acceptă";
+ btn.onclick=async()=>{btn.disabled=true;const {error}=await client.rpc("bc_accept_staff_invitation",{p_id:i.id});if(error){btn.disabled=false;btn.textContent="Eroare: "+error.message;return;}await populateCalendarSalons();await loadVerifiedAccess();$("proHomeAccess").textContent=$("verifiedAccess").textContent;await loadMyInvitations();};
+ row.append(label,btn);box.append(row);}
+}
+async function renderSalonProfileEditor(body){
+ const salon=$("calSalon").value;
+ const holder=document.createElement("section");holder.className="pane";
+ const title=document.createElement("h2");title.textContent="Profilul salonului";holder.append(title);body.append(holder);
+ if(!salon){holder.append(document.createTextNode("Selectează un salon aprobat în Calendar."));return;}
+ const {data:access}=await client.rpc("bc_my_professional_access");
+ if(!access?.some(s=>s.salon_id===salon&&["owner","manager"].includes(s.member_role))){holder.append(document.createTextNode("Doar proprietarul sau managerul poate edita profilul."));return;}
+ const {data,error}=await client.rpc("bc_pro_get_salon",{p_salon:salon});
+ if(error){holder.append(document.createTextNode("Eroare: "+error.message));return;}
+ const form=document.createElement("div");form.className="profileForm";
+ const heading=document.createElement("p");heading.className="muted";heading.textContent=(data?.name||"Salon")+" · Copertă, descriere, telefon și website. Modificările apar public după asocierea profilului din Admin.";
+ const cover=document.createElement("img");cover.className="profileCoverPreview";cover.alt="Previzualizare copertă";cover.hidden=!data?.cover_image_url;if(data?.cover_image_url)cover.src=data.cover_image_url;
+ const fileLabel=document.createElement("label");fileLabel.textContent="Copertă (JPG, PNG, WebP · maximum 5 MB)";
+ const file=document.createElement("input");file.type="file";file.accept="image/jpeg,image/png,image/webp";fileLabel.append(file);
+ function field(label,value,multiline=false){const holder=document.createElement("label");holder.textContent=label;const control=document.createElement(multiline?"textarea":"input");control.className="input";control.value=value||"";holder.append(control);form.append(holder);return control;}
+ form.append(heading,cover,fileLabel);
+ const name=field("Numele salonului",data?.name);name.maxLength=120;const address=field("Adresa",data?.address);address.maxLength=300;
+ const description=field("Descriere salon",data?.description,true);description.maxLength=2000;
+ const phone=field("Telefon",data?.phone);phone.maxLength=35;
+ const website=field("Website (https://)",data?.website);website.maxLength=300;
+ const save=document.createElement("button");save.type="button";save.className="primary";save.textContent="Salvează profilul";
+ const status=document.createElement("p");status.className="status";status.setAttribute("role","status");
+ form.append(save,status);holder.append(form);
+ file.onchange=()=>{const current=file.files?.[0];if(!current)return;if(current.size>5*1024*1024||!["image/jpeg","image/png","image/webp"].includes(current.type)){file.value="";status.textContent="Selectează o imagine JPG, PNG sau WebP de maximum 5 MB.";return;}cover.src=URL.createObjectURL(current);cover.hidden=false;};
+ save.onclick=async()=>{
+  save.disabled=true;status.textContent="Se salvează...";
+  try{
+   let url=data?.cover_image_url||"";
+   const selected=file.files?.[0];if(selected){if(selected.size>5242880||!["image/jpeg","image/png","image/webp"].includes(selected.type))throw Error("Imagine invalidă.");const ext=selected.type==="image/png"?"png":selected.type==="image/webp"?"webp":"jpg";const path=salon+"/"+crypto.randomUUID()+"."+ext;
+    const upload=await client.storage.from("bc-salon-covers").upload(path,selected,{contentType:selected.type,upsert:false});if(upload.error)throw upload.error;
+    url=client.storage.from("bc-salon-covers").getPublicUrl(path).data.publicUrl;}
+   const {error}=await client.rpc("bc_pro_save_salon",{p_salon:salon,p_name:name.value,p_address:address.value,p_description:description.value,p_phone:phone.value,p_website:website.value,p_cover:url});
+   if(error)throw error;status.textContent="Profil salvat. Dacă nu se vede în aplicația clienților, asociază profilul public din Admin → Catalog saloane.";
+  }catch(e){status.textContent="Eroare: "+(e.message||"Nu s-a salvat.");}
+  finally{save.disabled=false;}
+ };
+}
+const meroImportPanel=$("meroImport");
+const applicationPanes=[$("apply"),$("applications"),$("verifiedAccess")].map(el=>el?.closest(".pane")).filter(Boolean);
+const proDetailTitles={services:"Servicii",team:"Echipă",packages:"Abonamente și pachete",products:"Produse și gestiune",profile:"Profil online",hours:"Program de lucru",messages:"Mesaje programări",reviews:"Recenzii",applications:"Verificare și cereri"};
+function showProSettings(key){
+ $("proDetailTitle").textContent=proDetailTitles[key]||"Setări";
+ const body=$("proDetailBody");body.replaceChildren();
+ if(key==="profile"){renderSalonProfileEditor(body);if(meroImportPanel)body.append(meroImportPanel);}else if(key==="services"){renderProServiceEditor(body);}else if(key==="hours"){renderHoursEditor(body);}else if(key==="team"){renderStaffEditor(body);}else if(key==="share"){renderSalonShare(body);}
+ else if(key==="applications"){body.append(...applicationPanes);}
+ else {const p=document.createElement("div");p.className="proPlaceholder";p.textContent=key==="team"?"Programul și specialiștii vor putea fi administrați după asocierea unui salon aprobat.":key==="services"?"Editorul de servicii va fi conectat catalogului salonului; momentan poți importa și verifica servicii în Profil online.":"Acest modul va fi activat după configurarea salonului și a serviciilor necesare.";body.append(p);}
+ proNavigate("detail");
+}
+$("proSettingsBack").onclick=()=>proNavigate("settings");
+$("logoutSetting").onclick=()=> $("signOut").click();
+
+$("proResendConfirmation").onclick=async()=>{
+ const email=$("email").value.trim(),button=$("proResendConfirmation");
+ if(!client||!email||!$("email").checkValidity()){$("authStatus").textContent="Introdu e-mailul corect al contului PRO.";return;}
+ button.disabled=true;$("authStatus").textContent="Retrimitem confirmarea…";
+ try{
+  const {error}=await client.auth.resend({type:"signup",email,
+   options:{emailRedirectTo:"https://nistordaniel06-cpu.github.io/barber-booking/professionals.html"}});
+  $("authStatus").textContent=error?"Retrimitere eșuată: "+error.message:
+   "Dacă adresa poate primi confirmări, vei primi un e-mail nou.";
+ }finally{button.disabled=false}
+};
+if(client){client.auth.onAuthStateChange(()=>setTimeout(()=>refresh().catch(err=>{$("authStatus").textContent="Eroare sesiune: "+err.message;}),0));refresh().catch(err=>{$("authStatus").textContent="Eroare la verificarea sesiunii: "+err.message;});}else{$("authStatus").textContent="Supabase nu este disponibil în acest browser. Deschide pagina în Chrome și reîncarcă.";}
+</script><script defer src="./premium-ui.js"></script><script defer src="./pro-lifecycle.js"></script></body></html>
