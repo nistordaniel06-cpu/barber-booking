@@ -38,7 +38,6 @@ for(const path of ["index.html","professionals.html","admin.html","catalog-booki
  "reward-redeem.js","battle-war-ui.js","kingdom-strategy.js","pilot-client.js",
  "passport.js","passport-preview.js"]){
  const s=read(path);
- for(const snippet of s.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi))if(snippet[1].trim())new vm.Script(snippet[1],{filename:path});
  if(path.endsWith(".js"))new vm.Script(s,{filename:path});
  console.log("PASS JS parse",path);
 }
