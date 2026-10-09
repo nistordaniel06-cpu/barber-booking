@@ -64,7 +64,7 @@ async function usePosition(ask){
   try{const p=await navigator.permissions.query({name:"geolocation"});if(p.state!=="granted")return}
   catch{return}
  }else if(!ask)return;
- notice.textContent="Determinăm cel mai apropiat oraș, fără să salvăm coordonatele tale.";
+ notice.textContent="Obținem poziția telefonului pentru raza de căutare. Nu o trimitem în Supabase.";
  navigator.geolocation.getCurrentPosition(({coords})=>{
   if(manualSelection)return;
   // The radius is measured from this actual GPS fix, never a city center.
@@ -73,11 +73,7 @@ async function usePosition(ask){
   for(const select of [county,city,sector])select.dispatchEvent(new Event("change",{bubbles:true}));
   notice.textContent="Lângă mine · 2 km implicit. Reglează raza mai jos. Doar saloanele cu poziție confirmată apar la căutarea GPS.";
   window.BCRefreshSearch?.();
-  return;
-  const nearby=locations.map(x=>({name:x[0],d:dist(coords.latitude,coords.longitude,x[1],x[2])})).sort((a,b)=>a.d-b.d)[0];
-  if(!nearby||nearby.d>65){setAll();notice.textContent="Nu am identificat un oraș apropiat dintre cele indexate. Rămâne activă toată România.";return}
-  if(manualSelection)return;
-  lastCity=nearby.name;setNearest(nearby.name,"gps");
+
  },()=>notice.textContent="Locația a fost refuzată sau indisponibilă. Poți naviga pe harta României.",
  {timeout:10000,maximumAge:180000,enableHighAccuracy:false});
 }
