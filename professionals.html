@@ -138,7 +138,7 @@ body{background:#f6f6f8;color:#17181d}
 :root[data-theme="light"] .calBulkPanel{background:#f8f9fb;border-color:#dedfe4}
 :root[data-theme="light"] .calCell.calSelected{background:rgba(214,165,35,.20)!important}
 @media(max-width:470px){.calBulkPanel{padding:13px}.calUtility #calendarBulkToggle,.calUtility #calendarDragToggle{font-size:12px}}
-</style></head><body><div class="page"><header class="top"><div class="brand">BARBER<b>CRAFT</b> <span class="tag">PRO</span></div><div style="display:flex;gap:8px;align-items:center"><button type="button" class="themeToggle" data-bc-theme-toggle aria-label="Schimbă tema">☾</button><a class="back" href="./">← Clienți</a></div></header><div id="proPublicIntro"><div class="eyebrow">BARBERCRAFT · PARTENERI</div><h1 class="heading">Spațiul tău profesional.</h1><p class="sub">Un singur cont poate fi atât client, cât și administrator de salon. Accesul profesional este acordat separat.</p></div>
+.calBulkShade{background:rgba(108,99,137,.22);border-left:2px solid rgba(199,176,236,.64);pointer-events:none;z-index:1}</style></head><body><div class="page"><header class="top"><div class="brand">BARBER<b>CRAFT</b> <span class="tag">PRO</span></div><div style="display:flex;gap:8px;align-items:center"><button type="button" class="themeToggle" data-bc-theme-toggle aria-label="Schimbă tema">☾</button><a class="back" href="./">← Clienți</a></div></header><div id="proPublicIntro"><div class="eyebrow">BARBERCRAFT · PARTENERI</div><h1 class="heading">Spațiul tău profesional.</h1><p class="sub">Un singur cont poate fi atât client, cât și administrator de salon. Accesul profesional este acordat separat.</p></div>
 <section id="guest" class="pane"><h2>Autentificare profesioniști</h2><label class="field">E-mail<input class="input" id="email" type="email" autocomplete="email" placeholder="contact@salon.ro"></label><label class="field">Parolă<span class="passwordWrap"><input class="input" id="password" type="password" minlength="8" autocomplete="current-password" placeholder="Minimum 8 caractere"><button type="button" class="eye" data-toggle-password="password" aria-label="Arată parola" aria-pressed="false">◉</button></span></label><button class="primary" id="signIn">Intră în cont</button><button class="outline" id="signUp">Creează cont profesional</button><p class="status" id="authStatus" role="status"></p></section>
 <section id="member" hidden><div class="proDashboardTop"><div><h1>BARBERCRAFT PRO</h1><p>Gestionează salonul într-un singur loc</p></div><span class="tag">Business</span></div>
 <section id="proOverviewPanel" class="proPanel active"><div class="proQuickGrid"><button type="button" class="proQuick" data-pro-route="calendar"><span class="qi">▦</span><strong>Calendar</strong><small>Programări și disponibilitate</small></button><button type="button" class="proQuick" data-pro-route="clients"><span class="qi">♙</span><strong>Clienți</strong><small>Istoric și preferințe</small></button><button type="button" class="proQuick" data-pro-route="sales"><span class="qi">▤</span><strong>Încasări</strong><small>Vânzări și rapoarte</small></button><button type="button" class="proQuick" data-pro-route="settings"><span class="qi">⚙</span><strong>Setări salon</strong><small>Echipă, servicii, profil</small></button></div><div class="pane"><h2>Salonul tău</h2><div id="proHomeAccess" class="notice">Se verifică drepturile de acces.</div><div id="proPendingInvitations"></div><p class="muted">Pentru programările clienților este necesar un salon aprobat și un calendar configurat. Nu afișăm rezervări demonstrative drept reale.</p></div></section>
@@ -411,6 +411,64 @@ $("calViewDay").onclick=()=>setCalendarMode("day");
 $("calViewThree").onclick=()=>setCalendarMode("three");
 $("calViewWeek").onclick=()=>setCalendarMode("week");
 $("calendarManualAdd").onclick=()=>calendarOpen();
+
+function calendarBulkRange(scope,value){
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(value))throw Error("Selectează o dată validă.");
+ const [year,month,day]=value.split("-").map(Number);
+ const reference=new Date(year,month-1,day,0,0,0,0);
+ if(reference.getFullYear()!==year||reference.getMonth()!==month-1||reference.getDate()!==day)throw Error("Data nu este validă.");
+ const start=new Date(reference);
+ if(scope==="week")start.setDate(start.getDate()-(start.getDay()+6)%7);
+ else if(scope==="month")start.setDate(1);
+ else if(scope!=="day")throw Error("Tip perioadă invalid.");
+ const end=new Date(start);
+ if(scope==="day")end.setDate(end.getDate()+1);
+ if(scope==="week")end.setDate(end.getDate()+7);
+ if(scope==="month")end.setMonth(end.getMonth()+1);
+ return {start,end};
+}
+function updateCalendarBulkSummary(){
+ try{
+  const {start,end}=calendarBulkRange($("calendarBulkScope").value,$("calendarBulkDate").value);
+  const until=new Date(end);until.setDate(until.getDate()-1);
+  $("calendarBulkSummary").textContent="Perioada: "+start.toLocaleDateString("ro-RO",{day:"numeric",month:"long",year:"numeric"})+" – "+until.toLocaleDateString("ro-RO",{day:"numeric",month:"long",year:"numeric"})+" (inclusiv).";
+ }catch(e){$("calendarBulkSummary").textContent=e.message}
+}
+$("calendarDragToggle").onclick=()=>{
+ calendarDragEnabled=!calendarDragEnabled;clearCalendarDragPreview();
+ const toggle=$("calendarDragToggle");
+ toggle.setAttribute("aria-pressed",String(calendarDragEnabled));
+ toggle.textContent=calendarDragEnabled?"↕ Glisează pentru blocaj · ON":"↕ Glisează pentru blocaj · OFF";
+ $("calWeek").classList.toggle("calDragActive",calendarDragEnabled);
+ $("calendarDragHelp").textContent=calendarDragEnabled?"Apasă și glisează în jos pe aceeași zi. Selecția se ajustează din 15 în 15 minute. Dezactivează pentru derulare.":"Activează «Glisează» pentru blocaje de 15/30/45 minute. Dezactivează pentru derulare normală.";
+};
+$("calendarBulkToggle").onclick=()=>{
+ if(!proCalendarEditable()){$("calStatus").textContent="Doar Owner sau Manager poate bloca intervale.";return;}
+ const panel=$("calendarBulkPanel");panel.hidden=!panel.hidden;
+ if(!panel.hidden){$("calendarBulkDate").value=isoDay(calendarDates()[0]);$("calendarBulkStatus").textContent="";updateCalendarBulkSummary();}
+};
+$("calendarBulkScope").onchange=updateCalendarBulkSummary;
+$("calendarBulkDate").onchange=updateCalendarBulkSummary;
+$("calendarBulkSave").onclick=async()=>{
+ const status=$("calendarBulkStatus"),button=$("calendarBulkSave");
+ if(!proCalendarEditable()){status.textContent="Nu ai dreptul să blochezi calendarul.";return;}
+ let range;try{range=calendarBulkRange($("calendarBulkScope").value,$("calendarBulkDate").value)}catch(e){status.textContent=e.message;return;}
+ const label={day:"Zi întreagă blocată",week:"Săptămână blocată",month:"Lună blocată"}[$("calendarBulkScope").value];
+ if(!confirm("Confirmi: "+label+", de la "+range.start.toLocaleDateString("ro-RO")+" până la "+new Date(range.end-1).toLocaleDateString("ro-RO")+"? Programările existente nu vor fi anulate."))return;
+ button.disabled=true;status.textContent="Se blochează perioada...";
+ try{
+  const {error}=await client.rpc("bc_pro_calendar_upsert",{
+   p_id:null,p_salon:$("calSalon").value,
+   p_start:range.start.toISOString(),p_end:range.end.toISOString(),
+   p_client:"Ocupat",p_service:label,p_status:"busy"
+  });
+  if(error)throw error;
+  $("calendarBulkPanel").hidden=true;
+  await loadCalendar();$("calStatus").textContent=label+" — salvat în Supabase. Atinge blocajul pentru editare sau anulare.";
+ }catch(e){status.textContent=e.message?.includes("TIME_CONFLICT")||e.code==="23P01"?"Perioada se suprapune cu o programare sau un alt blocaj. Nimic nu a fost modificat.":"Eroare: "+(e.message||"Nu s-a salvat.");}
+ finally{button.disabled=false;}
+};
+
 $("calendarCloseEditor").onclick=calendarClose;
 $("calendarOverlay").onclick=calendarClose;
 $("calendarManualSave").onclick=async()=>{
