@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#111319">
+<title>Calendar · BARBERCRAFT PRO</title><base href="../../"><link rel="stylesheet" href="./pro-calendar-app.css">
+</head><body>
+<main id="calendarApp" class="calendarApp" aria-label="Calendar BARBERCRAFT PRO">
+ <header class="appHeader">
+  <a class="back" href="./pro/" aria-label="Înapoi la portalul PRO">‹</a>
+  <div class="brand"><b>BARBERCRAFT</b><small>Calendar PRO</small></div>
+  <button id="today" class="today" type="button">Azi</button>
+  <button id="settings" class="toolBtn" type="button" aria-label="Sincronizare și filtre">⚙</button>
+ </header>
+ <div class="dateBar">
+  <button id="prev" type="button" aria-label="Perioada anterioară">‹</button>
+  <label class="dateLabel"><span id="dateLabel">Calendar</span><input id="pickDate" type="date" aria-label="Alege data"></label>
+  <button id="next" type="button" aria-label="Perioada următoare">›</button>
+  <div class="viewModes" aria-label="Vizualizare">
+   <button data-mode="day" class="active" type="button">Zi</button>
+   <button data-mode="three" type="button">3 zile</button>
+   <button data-mode="week" type="button">7 zile</button>
+  </div>
+ </div>
+ <div id="staffBar" class="staffBar" aria-label="Filtrează specialiști"></div>
+ <div class="calendarArea">
+  <div class="timelineScroller" id="calendarScroll" tabindex="0" role="region" aria-label="Grila calendarului pe 24 de ore, derulabilă vertical și orizontal">
+   <div id="timeline" class="timeline"></div>
+  </div>
+  <div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
+ </div>
+ <nav class="bottomBar" aria-label="Navigare PRO">
+  <a href="./pro/"><span>⌂</span>Acasă</a>
+  <a href="./pro/calendar/" class="selected" aria-current="page"><span>▦</span>Calendar</a>
+  <button id="fastAdd" type="button"><span>＋</span>Adaugă</button>
+  <a href="./pro/"><span>♙</span>Clienți</a>
+ </nav>
+</main>
+<div id="gate" class="gate" hidden><div class="gateBox"><b>BARBERCRAFT PRO</b><h1>Calendarul salonului</h1><p id="gateText">Verificăm contul tău PRO...</p><a href="./pro/" class="goldLink">Intră în contul PRO</a></div></div>
+<div id="sheetBackdrop" class="backdrop" hidden>
+ <section id="quickSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Adaugă în calendar">
+  <div class="sheetHead"><strong id="selectionLabel">Interval selectat</strong><button id="closeQuick" type="button" aria-label="Închide">✕</button></div>
+  <p class="sheetSub">Ce vrei să adaugi?</p>
+  <button id="chooseBooking" class="choice primary" type="button">＋ Programare nouă</button>
+  <button id="chooseBusy" class="choice" type="button">▥ Blochează timpul</button>
+ </section>
+ <section id="editSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Editează programarea" hidden>
+  <div class="sheetHead"><strong id="editTitle">Programare nouă</strong><button id="closeEdit" type="button" aria-label="Închide">✕</button></div>
+  <form id="eventForm">
+   <label>Specialist<select id="eventStaff" required></select></label>
+   <div class="twoCols"><label>De la<input id="startAt" type="datetime-local" required></label><label>Până la<input id="endAt" type="datetime-local" required></label></div>
+   <label id="clientField">Nume client<input id="clientName" maxlength="150" placeholder="Ex. Alex" autocomplete="off"></label>
+   <label id="serviceField">Serviciu<input id="serviceName" maxlength="150" placeholder="Ex. Tuns + barbă"></label>
+   <p id="saveNotice" class="notice" role="status" aria-live="polite"></p>
+   <div class="saveActions"><button id="removeEvent" type="button" hidden>Anulează</button><button id="saveEvent" type="submit" class="save">Salvează</button></div>
+  </form>
+ </section>
+ <section id="syncSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Calendarul telefonului" hidden>
+  <div class="sheetHead"><strong>Calendarul telefonului</strong><button id="closeSync" type="button" aria-label="Închide">✕</button></div>
+  <p class="sheetSub">Conectezi o singură dată. După abonare, rezervările noi din BARBERCRAFT apar automat la actualizarea calendarului din telefon.</p>
+  <label>Salon<select id="syncSalon"></select></label>
+  <button id="createFeed" class="choice primary" type="button">🔗 Creează linkul privat de sincronizare</button>
+  <div id="feedResult" hidden>
+   <label>Link privat (nu îl distribui)<input id="feedUrl" readonly aria-label="Link privat de abonare calendar"></label>
+   <div class="twoCols"><button id="copyFeed" type="button" class="choice">Copiază linkul</button><a id="appleSubscribe" class="choice" href="#" role="button">Apple Calendar</a></div>
+   <a id="googleCalendarSettings" target="_blank" rel="noopener noreferrer" class="choice" href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl">Google Calendar · adaugă prin URL ↗</a>
+   <p class="sheetSub">Android: în Google Calendar pe web, mergi la Alte calendare → Adaugă prin URL și lipește linkul. iPhone: folosește „Apple Calendar”. Google și Apple controlează cât de des se actualizează abonamentul; nu este instant și nu este sincronizare bidirecțională. Datele clienților sunt ascunse în feed.</p>
+  </div>
+  <p id="syncNotice" class="notice" role="status"></p>
+ </section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="./auth-config.js"></script>
+<script defer src="./pro-calendar-app.js"></script>
+</body></html>
