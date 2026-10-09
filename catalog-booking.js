@@ -28,7 +28,8 @@ async function checkAccount(){
    setStatus("Cont aprobat. Alege serviciul și ora pentru rezervare.");return true;
   }
   $("pilotClientForm").hidden=true;
-  status.textContent=state==="pending"?"Contul tău este în așteptarea aprobării din Admin. Revino aici după aprobare.":
+  status.textContent=state==="wrong_portal"?"Ai intrat cu un cont PRO. Pentru programări ca client, folosește un cont Client separat.":
+   state==="pending"?"Contul tău este în așteptarea aprobării din Admin. Revino aici după aprobare.":
    state==="suspended"?"Contul tău este suspendat. Contactează administratorul.":
    "Contul nu a fost aprobat. Contactează administratorul BARBERCRAFT.";
   return false;
