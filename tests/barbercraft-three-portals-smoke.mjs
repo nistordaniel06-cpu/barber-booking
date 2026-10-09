@@ -8,7 +8,7 @@ for(const [portal,source] of Object.entries(portals)){
  assert.equal(built,portalDocument(html,portal),"Portal "+portal+" matches canonical app source");
  assert.ok(built.includes('<base href="../">'),"Portal assets resolve to app root");
  assert.ok(built.includes('name="barbercraft-portal" content="'+portal+'"'),"Explicit portal marker");
- for(const m of built.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)){
+ for(const m of built.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)){
   if(m[1].trim())new vm.Script(m[1],{filename:portal+"/index.html:inline"});
  }
 }
