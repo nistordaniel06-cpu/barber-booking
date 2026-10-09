@@ -24,3 +24,33 @@ body.bc-referral{margin:0;background:#0b0b0e;color:#f7f5f0;font-family:"DM Sans"
 .refLine small{color:#b3b0ac;font-size:11px}
 @media(max-width:550px){.refTwo{grid-template-columns:1fr}.refWrap{padding:13px}.refCard{padding:17px}}
 [hidden]{display:none!important}
+/* Referral layout: guarantee all owner cards, invites and buttons remain inside the screen. */
+html:has(body.bc-referral),body.bc-referral{max-width:100%;overflow-x:clip}
+body.bc-referral,body.bc-referral *,body.bc-referral *::before,body.bc-referral *::after{box-sizing:border-box}
+body.bc-referral .refWrap{max-width:820px;width:100%;min-width:0;padding:clamp(12px,3.5vw,22px) clamp(12px,3.5vw,24px) 110px}
+body.bc-referral .refWrap>*{min-width:0;max-width:100%}
+body.bc-referral .refWrap header{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+body.bc-referral .refWrap header a,body.bc-referral .refWrap header strong{max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.4}
+body.bc-referral .refWrap header strong{font-size:clamp(11px,3vw,15px)}
+body.bc-referral .refHero{padding:clamp(18px,5vw,28px)}
+body.bc-referral .refHero h1{font-size:clamp(25px,7vw,44px);overflow-wrap:anywhere}
+body.bc-referral .refCard{padding:clamp(13px,4vw,23px);overflow:hidden}
+body.bc-referral .refCard h2{font-size:clamp(18px,5vw,24px);overflow-wrap:anywhere}
+body.bc-referral .refTwo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+body.bc-referral .refTwo>div{min-width:0;padding:clamp(12px,3vw,17px);overflow:hidden}
+body.bc-referral .refCard input,body.bc-referral .refCard select{max-width:100%;min-width:0;box-sizing:border-box;font-size:16px}
+body.bc-referral .refCard label{max-width:100%;min-width:0;overflow-wrap:anywhere}
+body.bc-referral .refCard button{max-width:100%;min-height:43px;white-space:normal;line-height:1.4;overflow-wrap:anywhere}
+body.bc-referral .refActions{display:flex;flex-wrap:wrap}
+body.bc-referral .refActions button{flex:1 1 140px}
+body.bc-referral .refLine{display:flex;flex-wrap:wrap;overflow-wrap:anywhere;gap:9px}
+body.bc-referral .refLine>div{flex:1 1 180px;min-width:0;max-width:100%}
+body.bc-referral #refLinks p{overflow-wrap:anywhere;word-break:break-word}
+body.bc-referral .refLine button{flex:0 1 180px}
+@media(max-width:680px){
+ body.bc-referral .refTwo{grid-template-columns:1fr}
+ body.bc-referral .refTwo>div{padding:15px}
+ body.bc-referral .refTwo button{width:100%}
+}
+@media(max-width:355px){body.bc-referral .refWrap header{justify-content:center}
+ body.bc-referral .refLine button{flex:1 1 100%}}
