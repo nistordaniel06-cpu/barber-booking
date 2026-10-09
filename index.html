@@ -184,7 +184,10 @@ async function loadCatalog(){
 }).filter(s=>{const key=(s.name+"|"+String(s.address||"").replace(/<[^>]+>/g," ")).toLowerCase().replace(/\s+/g," ").trim();if(seen.has(key))return false;seen.add(key);return true;});
  window.BCCatalogSalons=catalogSalons;
  window.dispatchEvent(new CustomEvent("bc-published-salons-ready",{detail:{count:catalogSalons.length}}));
- for(const [id,field] of [["cityFilter","city"],["countyFilter","county"],["sectorFilter","sector"]]){const sel=document.getElementById(id);if(!sel)continue;const previous=sel.value;sel.replaceChildren(new Option(id==="cityFilter"?"Toate orașele":id==="countyFilter"?"Toate județele":"Toate sectoarele",""));for(const value of [...new Set(catalogSalons.map(s=>s[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ro")))sel.add(new Option(value,value));sel.value=previous;}renderSearch();}catch(err){console.warn("Catalog momentan indisponibil",err.message);$("salongrid").textContent="Catalogul nu poate fi încărcat acum. Verifică conexiunea și reîncarcă pagina.";}
+ for(const [id,field] of [["cityFilter","city"],["countyFilter","county"],["sectorFilter","sector"]]){const sel=document.getElementById(id);if(!sel)continue;const previous=sel.value;sel.replaceChildren(new Option(id==="cityFilter"?"Toate orașele":id==="countyFilter"?"Toate județele":"Toate sectoarele",""));for(const value of [...new Set(catalogSalons.map(s=>s[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ro")))sel.add(new Option(value,value));sel.value=previous;}renderSearch();
+ const requestedId=new URLSearchParams(window.location.search).get("salon");
+ if(requestedId){const salon=catalogSalons.find(s=>s.id===requestedId);if(salon)void renderCatalogProfile(salon);}
+ }catch(err){console.warn("Catalog momentan indisponibil",err.message);$("salongrid").textContent="Catalogul nu poate fi încărcat acum. Verifică conexiunea și reîncarcă pagina.";}
 }
 $("heroSearchBtn").onclick=()=>{$("search").focus();$("search").scrollIntoView({behavior:"smooth",block:"center"});};$("showAllSalons").onclick=()=>{$("search").value="";renderSearch();$("salongrid").scrollIntoView({behavior:"smooth",block:"start"});};$("search").addEventListener("input",renderSearch);["cityFilter","countyFilter","sectorFilter"].forEach(id=>document.getElementById(id)?.addEventListener("change",renderSearch));
 function showCatalogTab(tab){
