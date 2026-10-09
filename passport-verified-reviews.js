@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id),el=(tag,text,klass)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(klass)n.className=klass;return n};
 const root=$("verifiedReviewsForm"),list=$("verifiedReviewsMine");
 if(!root||!list||!window.supabase)return;
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=await window.BCPassportSession();
 const {data:{user}}=await sb.auth.getUser();if(!user)return;
 const status=$("verifiedReviewStatus"),sel=root.elements.visit;
 async function load(){
