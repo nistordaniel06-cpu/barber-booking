@@ -70,7 +70,37 @@ try{
    root.append(row);
   }
  }
- async function refresh(){
+ async function refreshPublicCatalog(){
+  const wrap=$("pilotPublicCatalogs"),notice=$("pilotPublicStatus");
+  wrap.replaceChildren();
+  try{
+   const items=await rpc("bc_catalog_owner_booking_state",{p_salon:select.value});
+   if(!items?.length){
+    wrap.append(node("p","Salonul nu este încă asociat în Catalog. Cere administratorului să folosească «Asociază profilul PRO»."));return;
+   }
+   for(const item of items){
+    const row=node("div");row.className="pilotPublicRow";
+    const text=node("div");
+    text.append(node("strong",item.name),node("small",item.listed?"Profil publicat în Catalog":"Profil delistat"));
+    const enabled=node("label");enabled.className="pilotPublicToggle";
+    const input=node("input");input.type="checkbox";input.checked=!!item.public_booking_enabled;
+    const caption=node("span","Acceptă programări publice");
+    enabled.append(input,caption);
+    const saveBtn=node("button","Salvează activarea publică");saveBtn.type="button";saveBtn.className="pilotPrimary";
+    saveBtn.onclick=async()=>{
+     if(input.checked&&!config?.enabled){notice.textContent="Activează mai întâi calendarul și serviciile în Pasul 2.";return}
+     if(input.checked&&!confirm("Confirmi că reprezinți acest salon și accepți programările REALE făcute de publicul BARBERCRAFT?"))return;
+     saveBtn.disabled=true;
+     try{await rpc("bc_catalog_booking_toggle",{p_catalog:item.id,p_enabled:input.checked});
+      notice.textContent=input.checked?"Programările publice sunt active. Clienții pot rezerva din Catalog.":"Programările publice au fost oprite.";
+      await refreshPublicCatalog();
+     }catch(e){notice.textContent="Nu s-a putut actualiza: "+e.message;saveBtn.disabled=false}
+    };
+    row.append(text,enabled,saveBtn);wrap.append(row);
+   }
+  }catch(e){wrap.textContent="Nu am putut verifica Catalogul: "+e.message;}
+ }
+  async function refresh(){
   try{
    const state=await rpc("bc_pilot_owner_state",{p_salon:select.value});
    config=state;
@@ -78,7 +108,7 @@ try{
    $("pilotOpens").value=state.opens||"10:00";
    $("pilotCloses").value=state.closes||"19:00";
    services=(state.services||[]).map(s=>({...s}));serviceEditor();
-   showBookings(state.bookings);renderLink();
+   showBookings(state.bookings);renderLink();await refreshPublicCatalog();
    const feedbackBox=$("pilotFeedbackList");feedbackBox.replaceChildren();
    if(!state.feedback?.length)feedbackBox.append(node("p","Clienții nu au trimis încă feedback."));
    for(const answer of state.feedback||[]){
