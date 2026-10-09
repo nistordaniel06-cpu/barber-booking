@@ -24,7 +24,18 @@ async function findSession(){
 }
 async function call(name,args){if(!active)throw Error("LOGIN_REQUIRED");const {data,error}=await active.rpc(name,args);if(error)throw Error(error.message);return data}
 async function draw(){
- const user=await findSession();$("refAuth").hidden=!!user;$("refOwner").hidden=!user;
+ let user=await findSession();
+ if(user){
+  const gate=mode==="pro"?"bc_pro_portal_access":"bc_client_my_approval";
+  const {data,error}=await active.rpc(gate);
+  const allowed=!error&&(mode==="pro"?data?.allowed===true:data?.status!=="wrong_portal");
+  if(!allowed){
+   await active.auth.signOut({scope:"local"});
+   active=null;user=null;
+   status(mode==="pro"?"Acest cont nu are acces PRO. Folosește un cont profesional.":"Acesta este un cont PRO; pentru invitațiile client folosește contul Client.");
+  }
+ }
+ $("refAuth").hidden=!!user;$("refOwner").hidden=!user;
  if(!user){status("Intră în cont pentru a activa invitația sau a crea linkuri.");return}
  const [state,access]=await Promise.all([call("bc_referral_my_status",{}),active.rpc("bc_my_professional_access")]);
  staff=access.data?.filter(x=>["owner","manager"].includes(x.member_role))||[];
