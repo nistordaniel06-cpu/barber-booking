@@ -16,7 +16,8 @@ for(const f of ["index.html","passport.html","passport-preview.html","profession
 }
 const home=read("index.html"),discover=read("enhancements.js"),pro=read("professionals.html");
 const passport=read("passport.html"),view=read("passport-preview.html"),scan=read("reward-redeem.js"),admin=read("admin.html");
-assert.ok(home.includes("bc-battle")&&home.includes("./territory-war.html"),"Game artwork + navigation");
+assert.ok(home.includes("bc-battle")&&home.includes('href="./passport.html"'),"Passport featured without territorial game link");
+assert.ok(!home.includes('href="./territory-war.html"'),"Territory game removed from public Client");
 assert.ok(read("premium.css").includes("assets/batalia-zonelor.svg"),"Local battle asset");
 assert.match(read("assets/batalia-zonelor.svg"),/<svg[\s>]/);
 assert.ok(!discover.includes("Caută adresă Google"),"No Google search UI");
@@ -35,5 +36,5 @@ assert.ok(scan.includes("bc_passport_qr_checkin")&&scan.includes("bc_reward_clai
 assert.ok(scan.includes("BarcodeDetector")&&scan.includes("Html5Qrcode"),"Camera scanner fallback");
 assert.ok(scan.includes("confirm("),"Human confirmation required");
 assert.ok(read("passport-checkin.js").includes("BCP1 ····"),"QR secret initially masked");
-assert.ok(read("premium-ui.js").includes("bc_is_platform_admin"),"Platform role-check");
+assert.ok(!read("premium-ui.js").includes('"🏆 Bătălia Zonelor"'),"Legacy cross-role game menu removed");
 console.log("PASS premium UI and permissions-oriented wiring");
