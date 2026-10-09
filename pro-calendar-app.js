@@ -91,22 +91,44 @@ function startSelection(e,cell,column,q){
  if(e.button!==0||!$("sheetBackdrop").hidden)return;
  e.preventDefault();
  const rect=scroller.getBoundingClientRect();
- state.gesture={id:e.pointerId,col:column,start:q,startY:e.clientY,rect,scroll:scroller.scrollTop,moved:false};
+ const touch=e.pointerType==="touch"||e.pointerType==="pen";
+ const g={id:e.pointerId,col:column,start:q,rect,startY:e.clientY,startX:e.clientX,
+  lastY:e.clientY,lastX:e.clientX,lastTick:performance.now(),velocityY:0,mode:touch?"pending":"select",timer:null};
+ state.gesture=g;
  state.selection={col:column,date:columns()[column].date,staff:columns()[column].staff,from:q,to:Math.min(hourRows,q+2)};
- cell.setPointerCapture(e.pointerId);paintSelection();
+ cell.setPointerCapture(e.pointerId);
+ if(touch){
+  // Scroll with one finger by swiping any empty hour. Hold for 250 ms,
+  // then slide to select a multi-hour range (no mode switch).
+  g.timer=setTimeout(()=>{
+   if(state.gesture!==g||g.mode!=="pending")return;
+   g.mode="select";paintSelection();
+   try{navigator.vibrate?.(8)}catch(_){}
+  },250);
+ }else paintSelection();
 }
 function positionFromPointer(e){
  const rect=scroller.getBoundingClientRect();
- // Quarter index stays precise even when the timeline has scrolled.
  const relative=e.clientY-rect.top+scroller.scrollTop-52;
  return Math.max(0,Math.min(hourRows-1,Math.floor(relative/pixelPerQuarter)));
+}
+function scrollByTouch(g,e){
+ const now=performance.now(),dt=Math.max(1,now-g.lastTick),dy=e.clientY-g.lastY,dx=e.clientX-g.lastX;
+ scroller.scrollTop-=dy;scroller.scrollLeft-=dx;
+ g.velocityY=dy/dt;
+ g.lastY=e.clientY;g.lastX=e.clientX;g.lastTick=now;
 }
 function moveSelection(e){
  const g=state.gesture;if(!g||e.pointerId!==g.id)return;
  e.preventDefault();
+ if(g.mode==="pending"){
+  if(Math.hypot(e.clientY-g.startY,e.clientX-g.startX)>9){
+   clearTimeout(g.timer);g.mode="scroll";state.selection=null;scrollByTouch(g,e);
+  }
+  return;
+ }
+ if(g.mode==="scroll"){scrollByTouch(g,e);return}
  const q=positionFromPointer(e);
- if(Math.abs(e.clientY-g.startY)<8&&q===g.start)return;
- g.moved=true;
  state.selection.from=Math.min(g.start,q);
  state.selection.to=Math.min(hourRows,Math.max(g.start,q)+1);
  const r=scroller.getBoundingClientRect();
@@ -114,11 +136,22 @@ function moveSelection(e){
  else if(e.clientY<r.top+65)scroller.scrollTop-=12;
  paintSelection();
 }
+function coastScroll(g){
+ let velocity=g.velocityY*15,frames=0;
+ function frame(){
+  if(++frames>24||Math.abs(velocity)<.5||state.gesture)return;
+  scroller.scrollTop-=velocity;velocity*=.82;requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+}
 function endSelection(e,cancel){
  const g=state.gesture;if(!g||e.pointerId!==g.id)return;
- if(!cancel)moveSelection(e);
+ clearTimeout(g.timer);
+ if(!cancel&&g.mode==="select")moveSelection(e);
  state.gesture=null;
- if(cancel){closeSheet();return;}
+ if(cancel){state.selection=null;return}
+ if(g.mode==="scroll"){coastScroll(g);return}
+ // A simple tap opens the same two-action sheet with 30 minutes selected.
  if(!state.selection)return;
  const d=selectionText(state.selection);
  $("selectionLabel").textContent=d.label;
