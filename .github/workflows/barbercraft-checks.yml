@@ -50,4 +50,5 @@ jobs:
           node tests/barbercraft-portal-session-isolation-smoke.mjs
           node tests/barbercraft-three-portals-smoke.mjs
           node tests/barbercraft-calendar-feed-throttle-smoke.mjs
+          node tests/barbercraft-calendar-fullscreen-phone-sync-smoke.mjs
           node tests/barbercraft-auth-resend-recovery-smoke.mjs
