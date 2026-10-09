@@ -45,10 +45,11 @@ $("catalogRegister").onclick=async()=>{
  if(!email||password.length<8){$("catalogAccountStatus").textContent="Introdu e-mailul și o parolă de minimum 8 caractere.";return;}
  const {data,error}=await sb.auth.signUp({email,password});
  if(error){$("catalogAccountStatus").textContent="Nu am putut crea contul: "+error.message;return;}
- $("catalogAccountStatus").textContent=data.session?
-  "Cont creat. Așteaptă aprobarea din Admin înainte să rezervi.":
-  "Verifică e-mailul pentru confirmarea contului, apoi așteaptă aprobarea administratorului.";
- await checkAccount();
+ if(data.session){
+  await checkAccount();
+ }else{
+  $("catalogAccountStatus").textContent="Verifică e-mailul pentru confirmarea contului, apoi așteaptă aprobarea administratorului.";
+ }
 };
 $("catalogLogout").onclick=async()=>{await sb.auth.signOut();await checkAccount();};
 $("catalogRecheck").onclick=checkAccount;
