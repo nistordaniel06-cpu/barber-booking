@@ -33,6 +33,7 @@ const messages={
  calendar:"Atinge o oră ca să programezi; poți glisa un interval. Selectează 1, 3 sau 7 zile și folosește două degete pentru zoom.",
  pro:"În Setări salon poți modifica programul de lucru, copia orele în alte zile și configura specialiștii. Doar orele salvate devin publice.",
  admin:"În prima pagină Admin vezi utilizatori noi și saloane care așteaptă aprobarea. Selectează notificarea pentru a le verifica înainte de publicare.",
+ plans:"Nu-i suport pe cei cu 7,99 lei, așa că am pus 8 lei. 😄 Prețurile sunt directe: 15 lei pentru salon, 8 lei pentru frizer sau +5 lei la un salon activ. Încă nu încasăm abonamente.",
  partners:"Un salon costă 15 lei/lună pentru funcțiile cosmetice propuse; un profil personal 8 lei, sau 5 lei în plus cu abonamentul salonului activ. Checkout-ul nu este încă pornit.",
  notifications:"Notificările telefonului au nevoie de permisiunea browserului și de activarea unui serviciu Web Push. Fără abonarea la un serviciu Push, nu putem trimite alerte din fundal."
 };
@@ -42,6 +43,7 @@ function context(){
  if(pathname.includes("/pro/calendar"))return "calendar";
  if(pathname.includes("/pro/")||pathname.includes("professionals.html"))return "pro";
  if(pathname.includes("passport"))return "passport";
+ if(pathname.includes("barber-pass"))return "plans";
  if(pathname.includes("partner"))return "partners";
  if(pathname.includes("notification"))return "notifications";
  if(pathname.includes("/client")||pathname.endsWith("/index.html")||pathname.endsWith("/"))return document.querySelector(".view.active")?.id==="account"?"account":"discovery";
