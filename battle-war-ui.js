@@ -89,7 +89,7 @@ async function loadWar(){
  $("userStatus").textContent=stats.home_sector?
   "Echipa ta: Sectorul "+stats.home_sector+". Schimbările sunt limitate pentru a preveni abuzul.":
   "Explorează o zonă pe hartă și intră în echipa ei.";
- showChooseButton(stats.home_sector||6,stats.home_sector,seq);
+ showChooseButton(window.BCMap?.getState().sector||stats.home_sector||6,stats.home_sector,seq);
  if(stats.pending_prizes?.length)
   $("myAwards").textContent="Beneficii în așteptarea verificării: "+
    stats.pending_prizes.map(x=>x.kind+" ("+x.month+")").join(", ");
