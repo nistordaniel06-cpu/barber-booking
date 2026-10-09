@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id);
 const format=n=>new Intl.NumberFormat("ro-RO").format(n||0);
 const sb=window.supabase&&window.BARBERCRAFT_SUPABASE_URL?
- window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY):null;
+ window.BCAuthClient("client"):null;
 let request=0,loadedCity=null,loadedSummary=null;
 const clear=()=>{$("sectorScores").replaceChildren();$("sectorActions").replaceChildren();$("myAwards").replaceChildren()};
 function makeCard(n,round){
