@@ -29,9 +29,9 @@ drawer.innerHTML='<summary>⚙ Filtre · Servicii, oraș și sector</summary>';
 const current=home.querySelector(".locationFilters");if(current)drawer.append(current);
 controls.insertAdjacentElement("afterend",drawer);
 const mapCard=document.createElement("section");mapCard.className="bcCountryMap";mapCard.hidden=true;
-mapCard.innerHTML='<div class="bcMapHeader"><div><strong>Explorează saloanele din România</strong><small>Marcaje agregate pe oraș. Nu sunt poziții exacte ale saloanelor.</small></div><button id="bcMapClose" type="button">Închide</button></div><div id="bcMapRoot" aria-label="Harta României cu saloane grupate pe oraș"></div><div id="bcMapLegend"></div>';
+mapCard.innerHTML='<div class="bcMapHeader"><button id="bcMapClose" type="button" aria-label="Înapoi la saloane">←</button><div><strong>Toate serviciile</strong><small>În jurul locației tale · 5 km inițial</small></div><button id="bcMapFilters" type="button" aria-label="Filtre hartă">⚙</button></div><div id="bcMapRoot" aria-label="Hartă interactivă cu saloane reale și grupări pe oraș"></div><button id="bcMapLocate" type="button" aria-label="Centrează harta pe poziția ta">⌖</button><div id="bcMapLegend" aria-live="polite"></div>';
 drawer.insertAdjacentElement("afterend",mapCard);
-let map=null,markers=null,lastCity=null,pendingCity=null,manualSelection=false;
+let map=null,markers=null,locationLayer=null,lastCity=null,pendingCity=null,manualSelection=false;
 const notice=$("bcLocationNotice");
 function refreshSearch(){window.BCRefreshSearch?.();}
 function setAll(){
@@ -69,6 +69,7 @@ async function usePosition(ask){
   if(manualSelection)return;
   // The radius is measured from this actual GPS fix, never a city center.
   window.BCLocationRadius?.setPosition?.(coords.latitude,coords.longitude);
+  if(map&&!mapCard.hidden){map.setView([coords.latitude,coords.longitude],13);void updatePins()}
   county.value="";city.value="";sector.value="";
   for(const select of [county,city,sector])select.dispatchEvent(new Event("change",{bubbles:true}));
   notice.textContent="Lângă mine · 2 km implicit. Reglează raza mai jos. Doar saloanele cu poziție confirmată apar la căutarea GPS.";
@@ -87,6 +88,7 @@ function initMap(){
  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
  {maxZoom:17,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
  markers=L.layerGroup().addTo(map);
+ locationLayer=L.layerGroup().addTo(map);
  updatePins();
 }
 async function updatePins(){
@@ -94,9 +96,15 @@ async function updatePins(){
  markers.clearLayers();
  // Only public source-defined city-level aggregates; locations without known centers stay in search results.
  try{
-  const client=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
-  const {data,error}=await client.from("bc_public_salon_catalog").select("id,name,city,visibility,geo_lat,geo_lng").eq("visibility","listed").limit(500);
-  if(error)throw error;
+  // Reuse the published salon catalogue already on the page for instant
+  // updates during radius changes, instead of another network request per swipe.
+  let data=window.BCCatalogSalons;
+  if(!Array.isArray(data)){
+   const client=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+   const response=await client.from("bc_public_salon_catalog").select("id,name,city,visibility,geo_lat,geo_lng").eq("visibility","listed").limit(500);
+   if(response.error)throw response.error;
+   data=response.data||[];
+  }
   const count={},visible=window.BCVisibleSalons;
   const published=Array.isArray(visible)?(data||[]).filter(s=>visible.some(v=>v.id===s.id)):(data||[]);
   for(const row of published){
@@ -122,12 +130,56 @@ async function updatePins(){
    marker.on("click",()=>{setNearest(name);mapCard.hidden=true;$("bcShowMap").setAttribute("aria-pressed","false");});
    marker.addTo(markers);
   }
-  $("bcMapLegend").textContent="● Auriu: salon cu poziție GPS confirmată · ⭕ Cerc: saloane fără coordonate, grupate la nivelul orașului. Căutarea și filtrele se aplică și pe hartă.";
+  $("bcMapLegend").replaceChildren();
+  const activeRadius=window.BCLocationRadius?.state?.();
+  const info=document.createElement("p");
+  info.textContent=activeRadius?.enabled?
+   "Raza activă: "+activeRadius.km+" km · doar pinurile verificate intră în filtrarea exactă.":
+   "● Auriu: salon cu GPS confirmat · ⭕ Cerc: salon fără pin confirmat.";
+  $("bcMapLegend").append(info);
+  const unverified=(data||[]).filter(s=>s.geo_lat==null||s.geo_lng==null).slice(0,4);
+  if(unverified.length){
+   const label=document.createElement("span");label.textContent="Fără pin confirmat: ";
+   $("bcMapLegend").append(label);
+   for(const item of unverified){
+    const btn=document.createElement("button");btn.type="button";btn.textContent=item.name+" ↗";
+    btn.onclick=()=>{window.BCOpenCatalogSalon?.(item.id);mapCard.hidden=true;$( "bcShowMap").setAttribute("aria-pressed","false");};
+    $("bcMapLegend").append(btn);
+   }
+  }
+  const position=window.BCLocationRadius?.position?.();
+  if(locationLayer){
+   locationLayer.clearLayers();
+   if(position){
+    const center=[position.lat,position.lon];
+    window.L.circleMarker(center,{radius:8,fillColor:"#3478e2",color:"#fff",weight:3,fillOpacity:1}).addTo(locationLayer);
+    window.L.circle(center,{radius:(activeRadius?.km||5)*1000,color:"#3478e2",weight:2,fillOpacity:.08}).addTo(locationLayer);
+   }
+  }
  }catch(e){$("bcMapLegend").textContent="Saloanele nu pot fi încărcate pe hartă momentan. Folosește căutarea.";console.warn(e)}
 }
 $("bcShowMap").onclick=()=>{
  mapCard.hidden=!mapCard.hidden;$("bcShowMap").setAttribute("aria-pressed",String(!mapCard.hidden));
- if(!mapCard.hidden){initMap();setTimeout(()=>map?.invalidateSize(),70);updatePins()}
+ if(mapCard.hidden)return;
+ window.BCLocationRadius?.setRadius?.(5);
+ initMap();
+ const gps=window.BCLocationRadius?.position?.();
+ if(gps&&map)map.setView([gps.lat,gps.lon],13);
+ else {
+  manualSelection=false;
+  usePosition(true);
+ }
+ setTimeout(()=>map?.invalidateSize(),70);
+ void updatePins();
+};
+$("bcMapFilters").onclick=()=>{
+ mapCard.hidden=true;$("bcShowMap").setAttribute("aria-pressed","false");
+ drawer.open=true;drawer.scrollIntoView({block:"nearest",behavior:"smooth"});
+};
+$("bcMapLocate").onclick=()=>{
+ manualSelection=false;usePosition(true);
+ const center=window.BCLocationRadius?.position?.();
+ if(center&&map)map.setView([center.lat,center.lon],13);
 };
 $("bcMapClose").onclick=()=>{mapCard.hidden=true;$("bcShowMap").setAttribute("aria-pressed","false")};
 // A user-selected city always wins over an automatic GPS result.
