@@ -22,10 +22,10 @@ const locations=[
 const norm=x=>String(x||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 const dist=(a,b,c,d)=>{let r=Math.PI/180,la=(c-a)*r,lo=(d-b)*r,term=Math.sin(la/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(lo/2)**2;return 6371*2*Math.asin(Math.sqrt(term))};
 const controls=document.createElement("div");controls.className="bcDiscoverBar";controls.innerHTML=
- '<div class="bcDiscoverActions"><button id="bcNearMe" type="button">⌖ Lângă mine</button><button id="bcAllRomania" type="button">▦ Toată România</button><button id="bcShowMap" type="button" aria-pressed="false">▧ Vezi harta</button></div><p id="bcLocationNotice" role="status"></p>';
+ '<div class="bcDiscoverActions"><button id="bcNearMe" type="button">📍 Locația ta</button><button id="bcAllRomania" type="button">▦ Toată România</button><button id="bcShowMap" type="button" aria-pressed="false">▧ Vezi harta</button></div><p id="bcLocationNotice" role="status"></p>';
 const search=home.querySelector(".search");search?.insertAdjacentElement("beforebegin",controls);
 const drawer=document.createElement("details");drawer.className="bcAdvancedFilters";
-drawer.innerHTML='<summary>Filtre suplimentare · județ, oraș, sector</summary>';
+drawer.innerHTML='<summary>⚙ Filtre · Servicii, oraș și sector</summary>';
 const current=home.querySelector(".locationFilters");if(current)drawer.append(current);
 controls.insertAdjacentElement("afterend",drawer);
 const mapCard=document.createElement("section");mapCard.className="bcCountryMap";mapCard.hidden=true;
@@ -155,7 +155,7 @@ if(mode==="all"){manualSelection=true;setAll();}
 else if(mode==="manual"&&remembered){manualSelection=true;setNearest(remembered,"manual");}
 else if(mode==="nearby"&&remembered){setNearest(remembered,"gps");}
 else {
- notice.textContent="Apasă „Lângă mine” pentru a căuta inițial în raza de 2 km. Accesul GPS este cerut numai când alegi acest mod.";
+ notice.textContent="Apasă „Locația ta” pentru a căuta inițial în raza de 2 km. Accesul GPS este cerut numai când alegi acest mod.";
 }
 window.addEventListener("bc-discovery-results",()=>{if(!mapCard.hidden)void updatePins()});
 window.BCLocationMap={updatePins,showAll:setAll};
