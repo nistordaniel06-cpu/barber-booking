@@ -23,7 +23,7 @@ async function load(){
   const grid=$("kingBuildings");grid.replaceChildren();
   for(const [key,title,description] of kinds){
    const lvl=Number(data.buildings?.[key]||1),cost=[30,25,20].map(x=>x*lvl*lvl);
-   const card=document.createElement("article");card.className="kingBuilding";
+   const card=document.createElement("article");card.className="kingBuilding";card.dataset.kind=key;
    const header=document.createElement("strong");header.textContent=title+" · Nivel "+lvl;
    const detail=document.createElement("small");detail.textContent=description;
    const price=document.createElement("small");price.textContent="Următorul nivel: "+cost[0]+" lemn · "+cost[1]+" piatră · "+cost[2]+" fier";
@@ -33,6 +33,7 @@ async function load(){
     catch(e){status.textContent=e.message;await load()}};
    card.append(header,detail,price,button);grid.append(card);
   }
+  window.dispatchEvent(new CustomEvent("bc-kingdom-updated",{detail:data}));
   status.textContent="Regatul tău se salvează automat pe server. Producția de resurse e limitată la 6 ore între vizite.";
  }catch(e){status.textContent="Regatul nu este disponibil: "+e.message}
 }
