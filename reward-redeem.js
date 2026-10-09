@@ -9,6 +9,7 @@ if(shopsError||!shops?.length){$("authStatus").textContent=shopsError?"Nu s-au �
 $("portal").hidden=false;$("authStatus").textContent="Acces verificat: "+shops.length+" locații disponibile.";
 const select=$("salon");
 for(const shop of shops)select.append(new Option(shop.salon_name+" · "+shop.member_role,shop.salon_id));
+document.dispatchEvent(new Event("bc-pro-salon-ready"));
 const current=()=>shops.find(s=>s.salon_id===select.value);
 async function loadOffers(){
  const s=current(),canEdit=["owner","manager"].includes(s.member_role);
@@ -52,6 +53,7 @@ $("redeemBtn").onclick=async()=>{
   if(error)throw error;
   $("redeemStatus").textContent=identity?"✓ Check-in verificat: "+data.display_name+(data.new_checkin?" · înregistrat":" · deja înregistrat recent")+". Nu s-au acordat XP.":"✓ Recompensă validată: "+data.reward+" · "+data.points_used+" puncte consumate.";
   input.value="";
+  if(identity)document.dispatchEvent(new Event("bc-pro-checkin-confirmed"));
   await loadHistory();
  }catch(err){$("redeemStatus").textContent="Cod respins: "+err.message}finally{button.disabled=false}
 };

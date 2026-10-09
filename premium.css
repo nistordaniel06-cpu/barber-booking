@@ -264,3 +264,32 @@ body.bc-premium.bc-scan #qrCamera[hidden]{display:none}
 body.bc-premium.bc-scan #qrCamera video{max-width:100%;object-fit:cover}
 body.bc-premium.bc-scan #qrCamera img{max-width:100%}
 @media(min-width:770px){body.bc-premium.bc-admin .bc-admin-hub{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* Social links in existing Passport and PRO dashboards */
+.socialPassportQuick{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.socialPassportQuick a{padding:11px 14px;background:#211e19;border:1px solid #66522f;color:#f7d78b;font-size:12px;
+ font-weight:800;text-decoration:none;border-radius:12px}
+body.bc-premium.bc-pro a.bcSocialProTile{color:#f8f5ec!important}
+body.bc-premium.bc-pro a.bcSocialProTile .qi{color:#f7d17a}
+body.bc-premium.bc-preview .bc-ig-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+body.bc-premium.bc-preview .bc-ig-actions a{min-width:0;display:grid;place-items:center;min-height:46px}
+body.bc-premium.bc-preview #previewSocialSummary{margin:14px 0}
+body.bc-premium.bc-preview #previewSocialSummary p{color:#d9c3a1;font-size:12px}
+body.bc-premium.bc-preview #previewSocialSummary a{display:inline-block;color:#f4cc70;font-size:12px;margin-top:5px}
+body.bc-premium.bc-passport #passportCheckinCode{max-width:320px!important;width:min(100%,320px)!important;
+ margin:18px auto!important;padding:22px 15px!important;overflow:hidden}
+body.bc-premium.bc-passport #passportCheckinCode .rewardQrSquare{box-sizing:border-box!important;
+ width:205px!important;height:205px!important;min-height:0!important;max-width:100%!important;
+ padding:11px!important;margin:15px auto!important;display:flex!important;flex-direction:column!important;
+ align-items:center!important;justify-content:center!important;flex-shrink:0!important}
+body.bc-premium.bc-passport #passportCheckinCode .rewardQrSquare canvas,
+body.bc-premium.bc-passport #passportCheckinCode .rewardQrSquare img{width:166px!important;height:166px!important;
+ max-width:100%!important;flex:0 0 auto!important}
+body.bc-premium.bc-passport #passportCheckinCode .rewardQrSquare:has(img) canvas{display:none!important}
+body.bc-premium.bc-passport #passportCheckinCode .rewardQrSquare img{display:block!important;margin:0 auto!important}
+body.bc-premium.bc-passport #passportCheckinCode .rewardQrCode{max-width:240px!important;padding:9px!important;
+ white-space:normal!important;margin:10px auto!important}
+body.bc-premium.bc-passport #passportCheckinCode .eyebrow{font-size:10px;letter-spacing:1.3px}
+body.bc-premium.bc-passport #passportCheckinCode .bc-qr-disclosure{margin:10px auto}
+@media(max-width:385px){body.bc-premium.bc-preview .bc-ig-actions{grid-template-columns:1fr}
+ body.bc-premium.bc-passport #passportCheckinCode{padding:19px 12px!important}}
