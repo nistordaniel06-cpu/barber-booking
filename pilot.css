@@ -45,3 +45,11 @@
 }
 @media(max-width:360px){.pilotSlots{grid-template-columns:repeat(2,minmax(0,1fr))}
 .pilotTwo{grid-template-columns:1fr}.pilotActions button{width:100%}}
+
+.pilotFeedback{margin-top:22px;padding-top:20px;border-top:1px solid #414047}
+.pilotFeedback h3{font-size:19px;margin:0 0 10px}
+.pilotFeedback textarea{display:block;width:100%;max-width:100%;min-width:0;border:1px solid #50525d;
+ background:#0f1015;color:#fff;border-radius:11px;padding:12px;font:inherit;font-size:16px;resize:vertical}
+.pilotFeedback textarea:focus{outline:2px solid #ffd16c}
+.pilotFeedbackRow{padding:13px 0;border-bottom:1px solid #45414b;display:grid;gap:6px}
+.pilotFeedbackRow strong{color:#ffdd99}.pilotFeedbackRow small{color:#bdc0c7;font-size:12px;overflow-wrap:anywhere}
