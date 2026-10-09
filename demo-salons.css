@@ -1,0 +1,26 @@
+.bcSampleArea{margin:24px 0;display:grid;gap:12px}
+.bcSampleArea h3{font-size:21px;letter-spacing:-.5px;margin:0}
+.bcSampleArea>p{font-size:12px;color:#ada9a5;line-height:1.6;margin:0 0 7px}
+.bcSampleGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.bcSampleCard{padding:0;border:1px solid #4d4131;border-radius:17px;background:#18191e;color:#f1eff1;overflow:hidden;text-align:left;cursor:pointer;min-width:0}
+.bcSampleCard img{display:block;width:100%;height:110px;object-fit:cover;opacity:.95}
+.bcSampleCard .bcSampleText{display:grid;gap:6px;padding:13px}
+.bcSampleCard strong{font-size:14px}.bcSampleCard small{font-size:11px;color:#a8a5aa;line-height:1.4}
+.bcSampleBadge{display:inline-block;color:#f2ce88;font-size:10px;font-weight:800}
+.bcSampleCard:hover{border-color:#e4be71}
+dialog.bcSampleDialog{width:min(93vw,530px);max-height:85vh;overflow:auto;padding:0;
+ background:#17181e;color:#f8f8fa;border:1px solid #977749;border-radius:23px;box-shadow:0 26px 70px #000c}
+dialog.bcSampleDialog::backdrop{background:#08090bdb;backdrop-filter:blur(5px)}
+.bcSampleModalCover{height:130px;width:100%;object-fit:cover}
+.bcSampleBody{padding:20px}.bcSampleBody h2{font-size:23px;margin:8px 0}
+.bcSampleBody p{font-size:12px;color:#aca9a5;line-height:1.6}
+.bcSampleBody h3{font-size:15px;margin:22px 0 8px;color:#f9d68e}
+.bcSampleService{padding:10px 0;border-bottom:1px solid #35363e;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.bcSampleService strong{font-size:12px}.bcSampleService small{display:block;color:#a6a4aa;font-size:10px;margin-top:5px}
+.bcSampleService b{font-size:12px;color:#f4d083;white-space:nowrap}
+.bcSampleCtas{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:22px}
+.bcSampleCtas a,.bcSampleCtas button{padding:11px 14px;border-radius:11px;border:1px solid #b58a4b;text-decoration:none;
+ background:#edd083;color:#1b1712;font-weight:900;font-size:12px}
+.bcSampleCtas button{background:#2b2b30;color:#ede7dd}
+@media(min-width:740px){.bcSampleGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:390px){.bcSampleCard img{height:91px}.bcSampleCard .bcSampleText{padding:10px}.bcSampleCard strong{font-size:12px}}
