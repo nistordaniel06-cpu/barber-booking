@@ -24,7 +24,7 @@ assert.ok(!discover.includes("Vezi toate frizeriile pe Google Maps"),"No Google 
 for(const [name,s] of [["index",home],["pro",pro],["admin",admin],["battle",read("territory-war.html")]]){
  assert.ok(!s.includes("Territory War"),name+" has no old name");
 }
-assert.ok(pro.includes("proScanBottom")&&pro.includes("./reward-redeem.html"),"PRO staff shortcut");
+assert.ok(!pro.includes("proScanBottom")&&pro.includes("./reward-redeem.html"),"One PRO header scanner only");
 assert.ok(pro.includes("Activitate & fidelizare"),"PRO financial section renamed");
 assert.ok(admin.includes("Activitate & fidelizare"),"Admin activity renamed");
 assert.ok(admin.includes('data-tab="storefront"'),"Admin design settings accessible");
