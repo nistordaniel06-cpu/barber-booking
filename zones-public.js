@@ -1,7 +1,7 @@
 /* City options from verified BARBERCRAFT directory. No competing leaderboard calls. */
 (async()=>{"use strict";
 const city=document.getElementById("warCity");if(!city||!window.supabase)return;
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=window.BCAuthClient("client");
 const {data,error}=await sb.rpc("bc_city_zones_public");
 if(error){console.warn("Nu se pot încărca orașele",error.message);return}
 const cities=Array.isArray(data)?data:[];if(!cities.length)return;
