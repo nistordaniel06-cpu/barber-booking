@@ -1,0 +1,17 @@
+.bcIndividualPassport{display:grid;gap:12px;background:#202127;border:1px solid #68532f;border-radius:20px;padding:18px;margin:15px 0}
+.bcPassTop{display:flex;justify-content:space-between;align-items:center;gap:9px}
+.bcPassTop small{font-size:10px;color:#d6b873;font-weight:850}
+.bcPassTop h2{font-size:24px;margin:5px 0;color:#fff}
+.bcPassTier{border-radius:24px;border:1px solid #88713e;color:#f7d17b;padding:8px 12px;font-size:11px;font-weight:900}
+.bcPassTotal{font-size:13px;margin:0;font-weight:800;color:#e7d3a8}
+.bcPassMeter{height:10px;border:1px solid #7b6d56;border-radius:15px;overflow:hidden;background:#34343b}
+.bcPassMeter span{display:block;height:100%;background:#f6cf65;border-radius:15px;transition:width .25s}
+.bcPassMuted{margin:0;color:#bbb9bb;font-size:12px;line-height:1.5}
+.bcPassQuests{display:grid;gap:10px;padding-top:10px;border-top:1px solid #4a4b52}
+.bcPassQuests h3{margin:0;color:#f4d083;font-size:17px}
+.bcPassQuestList{display:grid;gap:8px}
+.bcPassQuest{display:flex;justify-content:space-between;gap:9px;align-items:center;background:#292b33;border:1px solid #454851;border-radius:13px;padding:11px}
+.bcPassQuest strong{display:block;font-size:13px}.bcPassQuest small{display:block;color:#bcbec7;font-size:11px;margin-top:4px}
+.bcPassQuest>span{flex-shrink:0;color:#f5d080;font-size:11px;font-weight:750}
+.bcPassReward{padding:11px;border-radius:12px;border:1px solid #7c6035;background:#28231a;color:#f3d48d;font-size:12px;font-weight:800}
+@media(max-width:400px){.bcPassQuest{flex-direction:column;align-items:flex-start}.bcPassQuest>span{align-self:flex-end}}
