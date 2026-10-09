@@ -30,7 +30,7 @@ begin
     select id,'partner'::text kind,public_name::text label,city::text place,
       created_at from public.bc_partner_applications where status='pending'
     union all
-    select user_id,'client'::text kind,coalesce(p.display_name,'Client nou')::text label,
+    select c.user_id,'client'::text kind,coalesce(p.display_name,'Client nou')::text label,
       ''::text place,c.requested_at created_at
     from public.bc_client_approvals c
     left join public.bc_profiles p on p.user_id=c.user_id
