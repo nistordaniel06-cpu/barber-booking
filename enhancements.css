@@ -1,0 +1,17 @@
+
+/* Light, restrained home additions; responsive to BARBERCRAFT themes. */
+.bcGeoToolbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px}
+.bcGeoBtn{background:var(--surface);color:inherit;border:1px solid var(--line);font-size:12px;font-weight:700;padding:10px 12px;border-radius:12px}
+.bcGeoStatus{font-size:11px;color:var(--muted);line-height:1.5;margin:9px 0 14px;min-height:16px}
+.bcGeoExternal{margin-left:auto}.bcMapsLink{font-size:11px;color:#a27a16;text-decoration:underline;text-underline-offset:3px}
+.bcPlacesMount{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:10px;margin-top:9px}
+.bcPlacesMount gmp-place-autocomplete{width:100%;color:#151515;color-scheme:light}
+.bcPartnerLabel{font-size:11px;color:var(--muted);margin:1px 0 12px}
+.bcGameTeaser{display:flex;align-items:center;gap:14px;border:1px solid var(--line);background:var(--surface);padding:17px;border-radius:18px;margin:25px 0 5px}
+.bcGameIcon{font-size:30px;color:#d5a736}.bcGameTeaser strong{font-size:14px}.bcGameTeaser p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+.bcGameLink{font-size:11px;color:#a0780d;font-weight:800;white-space:nowrap;text-decoration:none;margin-left:auto}
+.bcPassportShortcut{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;padding:17px;border-radius:14px;background:linear-gradient(110deg,#30281a,#151515);color:#f9d785;text-decoration:none;font-weight:800;font-size:14px}
+.bcPassportShortcut span{font-weight:500;font-size:11px;color:#ded3bc}
+:root[data-theme="dark"] .bcGeoBtn,:root[data-theme="dark"] .bcGameTeaser{background:#161619!important}
+:root[data-theme="dark"] .bcMapsLink,:root[data-theme="dark"] .bcGameLink{color:#f3c965}
+@media(max-width:600px){.bcGeoExternal{flex-basis:100%;margin:2px 0}.bcGameTeaser{flex-wrap:wrap}.bcGameLink{margin-left:46px}}
