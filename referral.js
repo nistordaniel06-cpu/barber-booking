@@ -57,7 +57,7 @@ $("refLogin").onsubmit=async e=>{
   await target.auth.signUp({email,password,options:{emailRedirectTo:redirect.href}}):
   await target.auth.signInWithPassword({email,password});
  if(error){status(error.message);return}
- if(kind==="signup"&&!data.user?.confirmed_at){status("Verifică e-mailul pentru activarea contului, apoi revino pe același link.");return}
+ if(kind==="signup"&&!data.session){status("Verifică e-mailul pentru activarea contului, apoi revino pe același link.");return}
  await draw();
 };
 $("refClaim").onsubmit=async e=>{
