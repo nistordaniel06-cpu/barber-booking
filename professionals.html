@@ -164,7 +164,7 @@ body{background:#f6f6f8;color:#17181d}
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
-const client=window.supabase&&window.BARBERCRAFT_SUPABASE_URL&&window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY?window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY,{auth:{storageKey:"barbercraft-pro-session",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
+const client=window.supabase&&window.BARBERCRAFT_SUPABASE_URL&&window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY?window.BCAuthClient("pro",{detectSessionInUrl:true}):null;
 let user=null;
 async function refresh(){if(!client)return;const {data,error}=await client.auth.getUser();user=error?null:data.user;document.body.classList.toggle("proSignedIn",!!user);$("guest").hidden=!!user;$("member").hidden=!user;$("identity").textContent=user?"Autentificat: "+(user.email||""):"";if(user){$("contactEmail").value=user.email||"";await loadApplications();await loadVerifiedAccess();await populateCalendarSalons();document.dispatchEvent(new Event("bc-pro-reload-lifecycle"));await loadMyInvitations();const info=$("proHomeAccess");if(info)info.textContent=$("verifiedAccess").textContent;proNavigate("overview");}}
 async function authenticate(type){
