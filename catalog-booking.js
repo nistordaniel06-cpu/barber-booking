@@ -10,6 +10,49 @@ if(!window.supabase){setStatus("Serviciul de rezervări nu este disponibil.");re
 const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
 const rpc=async(fn,args={})=>{const {data,error}=await sb.rpc(fn,args);if(error)throw Error(error.message);return data};
 let config=null,requestId=null,selected=null,busy=false;
+async function checkAccount(){
+ const access=$("catalogApprovalAccess"),form=$("catalogAccountLogin"),status=$("catalogAccountStatus");
+ const {data:{user},error}=await sb.auth.getUser();
+ access.hidden=false;
+ if(error||!user){
+  $("pilotClientForm").hidden=true;form.hidden=false;$("catalogLogout").hidden=true;
+  status.textContent="Conectează-te sau creează cont. Conturile noi au nevoie de aprobarea administratorului.";
+  return false;
+ }
+ $("catalogLogout").hidden=false;form.hidden=true;
+ try{
+  const result=await rpc("bc_client_my_approval");
+  const state=result?.status||"pending";
+  if(state==="approved"){
+   access.hidden=true;$("pilotClientForm").hidden=false;
+   setStatus("Cont aprobat. Alege serviciul și ora pentru rezervare.");return true;
+  }
+  $("pilotClientForm").hidden=true;
+  status.textContent=state==="pending"?"Contul tău este în așteptarea aprobării din Admin. Revino aici după aprobare.":
+   state==="suspended"?"Contul tău este suspendat. Contactează administratorul.":
+   "Contul nu a fost aprobat. Contactează administratorul BARBERCRAFT.";
+  return false;
+ }catch(e){$("pilotClientForm").hidden=true;status.textContent="Nu am putut verifica aprobarea: "+e.message;return false;}
+}
+$("catalogAccountLogin").onsubmit=async e=>{
+ e.preventDefault();const email=$("catalogAuthEmail").value.trim(),password=$("catalogAuthPassword").value;
+ const {error}=await sb.auth.signInWithPassword({email,password});
+ if(error){$("catalogAccountStatus").textContent="Autentificare eșuată: "+error.message;return;}
+ await checkAccount();
+};
+$("catalogRegister").onclick=async()=>{
+ const email=$("catalogAuthEmail").value.trim(),password=$("catalogAuthPassword").value;
+ if(!email||password.length<8){$("catalogAccountStatus").textContent="Introdu e-mailul și o parolă de minimum 8 caractere.";return;}
+ const {data,error}=await sb.auth.signUp({email,password});
+ if(error){$("catalogAccountStatus").textContent="Nu am putut crea contul: "+error.message;return;}
+ $("catalogAccountStatus").textContent=data.session?
+  "Cont creat. Așteaptă aprobarea din Admin înainte să rezervi.":
+  "Verifică e-mailul pentru confirmarea contului, apoi așteaptă aprobarea administratorului.";
+ await checkAccount();
+};
+$("catalogLogout").onclick=async()=>{await sb.auth.signOut();await checkAccount();};
+$("catalogRecheck").onclick=checkAccount;
+
 const localDate=(d)=>{
  const parts=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Bucharest",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d);
  const get=x=>parts.find(v=>v.type===x)?.value||"";
@@ -44,6 +87,7 @@ $("pilotDate").onchange=slots;
 $("pilotBookingForm").onsubmit=async e=>{
  e.preventDefault();
  if(busy)return;
+ if(!(await checkAccount())){setStatus("Așteaptă aprobarea contului din Admin înainte de confirmare.");return;}
  if(!selected){setStatus("Selectează o oră disponibilă.");return}
  if(!$("pilotConsent").checked){setStatus("Pentru rezervare este necesar acordul privind datele de contact.");return}
  const name=$("pilotClientName").value.trim();
@@ -92,8 +136,7 @@ try{
  $("pilotSalonName").textContent=config.name;
  $("pilotSalonAddress").textContent=config.address||"";
  for(const s of config.services||[])$("pilotService").append(new Option(s.name+" · "+price(s),s.name));
- $("pilotClientForm").hidden=false;
- setStatus("Alege serviciul și ora pentru programarea ta. Rezervarea finală va apărea în calendarul salonului.");
+ await checkAccount();
  $("pilotService").dispatchEvent(new Event("change"));
 }catch(e){setStatus("Nu am putut verifica salonul: "+e.message)}
 })();
