@@ -130,7 +130,7 @@ function askFamiliar(){
 window.addEventListener("bc-client-auth-changed",()=>{
  if(window.BCClientUser&&familiar===null)setTimeout(askFamiliar,1600)
 });
-setTimeout(()=>{if(familiar==="beginner")showHint();else if(familiar===null&&document.querySelector(".bc-client"))askFamiliar()},3000);
+setTimeout(()=>{if(familiar==="beginner")showHint();else if(familiar===null&&window.BCClientUser)askFamiliar()},3000);
 let lastContext=context();
 const watcher=new MutationObserver(()=>{
  const next=context();if(next!==lastContext){lastContext=next;showHint();}
