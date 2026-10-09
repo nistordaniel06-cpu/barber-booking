@@ -109,7 +109,7 @@ begin
  u:=(select auth.uid());
  if u is null or not public.bc_social_is_barber(u) then raise exception 'BARBER_ONLY';end if;
  if p_path is null or split_part(p_path,'/',1)<>u::text
-   or p_path !~ '^[0-9a-f-]{36}/[0-9a-f-]{36}\\.(jpg|png|webp)$'
+   or p_path !~ '^[0-9a-f-]{36}/[0-9a-f-]{36}[.](jpg|png|webp)$'
    or char_length(coalesce(p_caption,''))>160
    or not exists(select 1 from storage.objects where bucket_id='bc-barber-portfolio' and name=p_path)
  then raise exception 'INVALID_IMAGE';end if;
@@ -183,7 +183,7 @@ begin
  if exists(select 1 from public.bc_client_social_photo_claims where checkin_id=p_checkin)
  then raise exception 'PHOTO_ALREADY_POSTED_FOR_VISIT';end if;
  if p_path is null or split_part(p_path,'/',1)<>u::text
-   or p_path !~ '^[0-9a-f-]{36}/[0-9a-f-]{36}\\.(jpg|png|webp)$'
+   or p_path !~ '^[0-9a-f-]{36}/[0-9a-f-]{36}[.](jpg|png|webp)$'
    or char_length(coalesce(p_caption,''))>160
  then raise exception 'INVALID_IMAGE';end if;
  select created_at into media_uploaded from storage.objects
