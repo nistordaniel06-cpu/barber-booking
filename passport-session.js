@@ -1,21 +1,14 @@
-/* Shared client/PRO session for BARBERCRAFT Passports and social profiles. */
+/* BARBERCRAFT social/passport session resolver.
+   Never fall back from Client to PRO or from PRO to Client.
+   URLs from PRO explicitly set ?from=pro, otherwise this is a Client page. */
 (()=>{
 "use strict";
-let pending=null;
-async function resolveSession(){
- const api=window.supabase;
- if(!api||!window.BARBERCRAFT_SUPABASE_URL||!window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY)return null;
- const url=window.BARBERCRAFT_SUPABASE_URL,key=window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY;
- const client=api.createClient(url,key);
- const pro=api.createClient(url,key,{auth:{
-  storageKey:"barbercraft-pro-session",persistSession:true,autoRefreshToken:true,detectSessionInUrl:false
- }});
- const preferPro=new URLSearchParams(location.search).get("from")==="pro";
- for(const current of preferPro?[pro,client]:[client,pro]){
-  const {data,error}=await current.auth.getUser();
-  if(!error&&data?.user)return current;
+const pending={};
+window.BCPassportSession=function(){
+ const portal=new URLSearchParams(location.search).get("from")==="pro"?"pro":"client";
+ if(!pending[portal]){
+  pending[portal]=Promise.resolve(window.BCAuthClient?.(portal,{detectSessionInUrl:false})||null);
  }
- return preferPro?pro:client;
-}
-window.BCPassportSession=()=>pending||(pending=resolveSession());
+ return pending[portal];
+};
 })();
