@@ -1,0 +1,49 @@
+*{box-sizing:border-box}body{margin:0;background:#0b100f;color:#f5f0e5;font-family:"DM Sans",system-ui,sans-serif}
+.kingWrap{max-width:900px;margin:auto;padding:18px 16px 100px}
+.kingWrap header{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #4a4231;padding-bottom:19px}
+.kingWrap a{color:#efca7b;text-decoration:none;font-size:12px;font-weight:800}
+.kingWrap header strong{font-size:13px}.kingWrap header strong span{color:#e3ba68}
+.kingHero{border:1px solid #887041;background:linear-gradient(115deg,#342a1c,#17211d 78%);border-radius:22px;padding:27px;margin:23px 0 12px}
+.kingEyebrow{color:#f3d893;letter-spacing:1.5px;font-size:11px;font-weight:900}
+.kingHero h1{font-size:clamp(29px,6vw,49px);letter-spacing:-1.5px;margin:11px 0}
+.kingHero p,.kingPanel p{font-size:13px;line-height:1.55;color:#d0c6ad}
+.kingDisclaimer{padding:11px;border-radius:12px;border:1px solid #977947;color:#e6d7b5;font-size:11px;background:#30291b}
+.kingAlert{padding:14px 16px;background:#22251d;border-radius:12px;border:1px solid #6d633c;color:#f1dcaf;font-size:12px;line-height:1.5}
+.kingScene{border:1px solid #8a7141;border-radius:22px;overflow:hidden;margin:19px 0;background:#232f23}
+.kingVillage{height:270px;position:relative;overflow:hidden;background:
+ linear-gradient(0deg,#334b36 0%,#526e46 44%,#86966d 45%,#263b40 75%,#16272e)}
+.kingSky{position:absolute;top:0;width:100%;height:37%;background:linear-gradient(#1b363f,#8d8b55)}
+.kingSun{position:absolute;right:21%;top:25px;width:46px;height:46px;border-radius:50%;background:#f6c675;box-shadow:0 0 52px 20px #ebc87688}
+.kingField{position:absolute;width:25%;height:28%;font-size:45px;text-align:center;padding-top:10px;filter:drop-shadow(0 8px 8px #14251d)}
+.kingField.f1{left:10%;top:35%}.kingField.f2{right:13%;top:28%}.kingField.f3{right:14%;bottom:7%}.kingField.f4{left:15%;bottom:2%}
+.kingCastle{position:absolute;left:39%;top:30%;background:linear-gradient(#b1a284,#5c5142);border:5px solid #504533;border-radius:12px 12px 3px 3px;font-size:100px;line-height:1;width:25%;height:42%;min-width:104px;text-align:center;box-shadow:0 12px 17px #14241eaa;color:#30291c}
+.kingRoad{position:absolute;left:49%;top:74%;height:36%;width:16%;transform:perspective(110px) rotateX(35deg);background:#9d9476}
+.kingVillageTitle{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;background:#161d19;gap:12px}
+.kingVillageTitle strong{font-size:16px}.kingVillageTitle span{color:#cdbb84;font-size:12px}
+.kingResources{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:15px 0}
+.kingResources div{display:grid;gap:5px;justify-items:center;border:1px solid #5a543d;border-radius:15px;padding:13px 6px;background:#18221d}
+.kingResources span{font-size:24px}.kingResources b{font-size:23px}.kingResources small{color:#cbbd95;font-size:11px}
+.kingWrap h2{font-size:20px;letter-spacing:-.5px;margin:26px 0 13px}
+.kingBuildings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.kingBuilding{background:#19231e;border:1px solid #53513e;border-radius:16px;padding:15px;display:grid;gap:10px}
+.kingBuilding strong{font-size:14px}.kingBuilding small{color:#c0b493;font-size:11px;line-height:1.5}
+.kingBuilding button,.kingActions button,.kingPanel button{border:1px solid #d4b16d;background:#ebc779;color:#161a12;
+ font:800 12px "DM Sans",system-ui;padding:11px 13px;border-radius:10px;cursor:pointer}
+.kingBuilding button:disabled,.kingPanel button:disabled{opacity:.5;cursor:not-allowed}
+.kingPanel{background:#18231d;border:1px solid #65583d;border-radius:19px;padding:20px;margin:18px 0}
+.kingPanel h2{margin:0 0 9px}.kingPanel strong{color:#ebd191}.kingActions{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}
+.kingHelp{font-size:11px!important}.kingFuture{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.kingFuture div{padding:13px;border:1px solid #454736;background:#22281e;border-radius:12px;font-size:15px}
+.kingFuture strong{display:block;font-size:12px;margin:5px 0}.kingFuture small{display:block;font-size:11px;color:#b9b5a6;line-height:1.5}
+.kingSecondary{padding:11px 16px;border-radius:11px;border:1px solid #9c8351;color:#eddbb2;background:#211f19}
+@media(max-width:460px){.kingWrap{padding:13px}.kingVillage{height:225px}.kingCastle{font-size:75px}.kingField{font-size:36px}
+ .kingResources b{font-size:19px}.kingBuildings{grid-template-columns:1fr}.kingFuture{grid-template-columns:1fr}}
+[hidden]{display:none!important}
+.kingAlliances{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:12px 0}
+.kingAllianceCard{background:#232b22;border:1px solid #514d3c;border-radius:14px;display:grid;gap:9px;padding:12px}
+.kingAllianceCard.selected{border-color:#e3c479;box-shadow:inset 0 0 0 1px #b99a50;background:#393322}
+.kingAllianceCard strong{font-size:12px;color:#f0d38c}
+.kingAllianceCard small{font-size:11px;color:#cabfa8;line-height:1.4}
+.kingFieldSelect{display:grid;gap:8px;color:#e2d6bd;font-size:12px;margin:15px 0}
+.kingFieldSelect select{padding:12px;background:#141a17;border:1px solid #6c603b;color:#fff;border-radius:11px}
+@media(max-width:520px){.kingAlliances{grid-template-columns:repeat(2,minmax(0,1fr))}}

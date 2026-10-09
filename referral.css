@@ -1,0 +1,26 @@
+body.bc-referral{margin:0;background:#0b0b0e;color:#f7f5f0;font-family:"DM Sans",system-ui,sans-serif}
+.refWrap{max-width:820px;margin:auto;padding:18px 17px 100px}
+.refWrap header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #33343b;padding-bottom:19px;gap:10px}
+.refWrap header a{color:#f4cc73;font-size:12px;text-decoration:none;font-weight:800}
+.refWrap header strong{font-size:14px}
+.refHero{background:linear-gradient(110deg,#3a2b1b,#18191f);border:1px solid #785b30;border-radius:23px;padding:27px;margin:20px 0}
+.refHero h1{font-size:clamp(25px,6vw,43px);margin:12px 0;line-height:1.08}
+.refHero p{color:#e3d2af;font-size:13px;line-height:1.6}
+.refNote{padding:12px 15px;background:#272016;border:1px solid #69532c;color:#f1d18c;border-radius:12px;margin:14px 0}
+.refCard{background:#18191f;border:1px solid #39393e;padding:20px;border-radius:19px;margin:14px 0}
+.refCard h2{margin:0 0 12px;font-size:22px}
+.refCard h3{font-size:16px;color:#f4d481;margin-top:22px}
+.refCard p{font-size:12px;color:#bdb9b4;line-height:1.6}
+.refCard label{display:grid;gap:8px;font-weight:700;font-size:12px;margin:12px 0}
+.refCard input,.refCard select{background:#0d0e12;border:1px solid #4a4a52;border-radius:12px;color:#fff;padding:13px;min-width:0;font:inherit;width:100%}
+.refCard button{border:1px solid #e9bf68;border-radius:11px;background:#f4cc71;color:#17100b;font-weight:800;padding:12px 16px;cursor:pointer;font-size:12px}
+.refCard button:disabled{opacity:.5}
+.refTwo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.refTwo>div{background:#212126;border:1px solid #40392e;padding:16px;border-radius:16px}
+.refTwo strong{font-size:14px}
+.refActions{display:flex;gap:8px;flex-wrap:wrap}
+.refLine{padding:11px 0;border-bottom:1px solid #3a3a40;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.refLine code{overflow-wrap:anywhere;font-size:12px;color:#f0d08f}
+.refLine small{color:#b3b0ac;font-size:11px}
+@media(max-width:550px){.refTwo{grid-template-columns:1fr}.refWrap{padding:13px}.refCard{padding:17px}}
+[hidden]{display:none!important}

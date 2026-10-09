@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450"><defs>
+<linearGradient id="bg" x2="1" y2="1"><stop stop-color="#4a3a23"/><stop offset=".7" stop-color="#16191c"/><stop offset="1" stop-color="#090b0e"/></linearGradient>
+<linearGradient id="metal"><stop stop-color="#e4b757"/><stop offset="1" stop-color="#886a37"/></linearGradient>
+<pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#bc9560" stroke-opacity=".07"/></pattern></defs>
+<rect width="800" height="450" fill="url(#bg)"/><rect width="800" height="450" fill="url(#grid)"/>
+<circle cx="585" cy="135" r="150" fill="#d19d4e" opacity=".08"/>
+<g transform="translate(380 50)" stroke="#d4b16c" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="#252628">
+<path d="M142 44c-62 0-94 43-93 98l12 74c3 28 27 43 80 43s79-15 82-43l12-74c1-55-31-98-93-98Z" fill="#342d25"/>
+<path d="M65 155h153" stroke="#82734f"/><path d="M61 201h162" stroke="#82734f"/>
+<path d="M48 181H21c-18 0-21 13-21 30v53c0 19 15 34 34 34h214c19 0 34-15 34-34v-53c0-17-3-30-21-30h-26" fill="#3e352b"/>
+<path d="M132 296v58M87 355h113M143 355v30M77 385h132" stroke="url(#metal)" stroke-width="13"/>
+</g><g fill="#eed099" font-family="Arial,sans-serif"><text x="54" y="87" font-size="24" font-weight="700" letter-spacing="5">BARBERCRAFT</text><text x="54" y="122" font-size="13" letter-spacing="2" opacity=".84">CATALOG DEMONSTRATIV</text></g>
+<rect x="53" y="339" width="267" height="51" rx="24" fill="#151515" stroke="#ad8751"/><text x="83" y="372" fill="#eac277" font-family="Arial,sans-serif" font-size="16">Ilustrație generică · fără poze copiate</text></svg>

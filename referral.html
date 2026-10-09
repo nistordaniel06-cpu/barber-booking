@@ -1,0 +1,27 @@
+<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invită prieteni · BARBERCRAFT</title><meta name="theme-color" content="#0b0b0e"><link rel="stylesheet" href="./premium.css">
+<link rel="stylesheet" href="./referral.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./auth-config.js"></script></head>
+<body class="bc-premium bc-referral"><main class="refWrap">
+<header><a href="./">‹ BARBERCRAFT</a><strong>INVITĂ & CÂȘTIGĂ</strong><a href="./professionals.html">PRO ↗</a></header>
+<section class="refHero"><span class="eyebrow">BENEFICII PENTRU COMUNITATE</span><h1>Cei buni vin împreună.</h1>
+<p>Invită prieteni sau alte saloane prin linkul tău. Bonusurile se pot activa numai pentru acțiuni verificate și doar în campanii aprobate.</p></section>
+<div id="refStatus" role="status" class="refNote">Se verifică sesiunea...</div>
+<section id="refAuth" class="refCard" hidden><h2>Intră în cont</h2><p>Folosește un cont existent sau creează unul nou. Invitația rămâne în link.</p>
+<form id="refLogin"><label>Email<input name="email" type="email" required autocomplete="email"></label>
+<label>Parolă<input name="password" type="password" minlength="8" required autocomplete="current-password"></label>
+<label>Tipul contului<select name="scope"><option value="client">Client BARBERCRAFT</option><option value="pro">Profesionist PRO</option></select></label>
+<div class="refActions"><button type="submit" name="action" value="login">Conectează-te</button><button type="submit" name="action" value="signup">Creează cont</button></div>
+</form></section>
+<section class="refCard"><h2>Ai primit o invitație?</h2><p>Codul se poate înregistra o singură dată, apoi trebuie să finalizezi o vizită reală sau activarea unui salon, conform regulamentului.</p>
+<form id="refClaim"><label>Codul primit<input id="refCode" name="code" placeholder="BC123..." pattern="BC[A-Fa-f0-9]{12}" maxlength="14" required></label>
+<button type="submit">Activează invitația</button></form></section>
+<section id="refOwner" class="refCard" hidden><h2>Creează linkul tău</h2>
+<div class="refTwo"><div><strong>Pentru prieteni</strong><p>Înregistrare + prima vizită verificată.</p><button type="button" id="refClient">Creează link client</button></div>
+<div><strong>Pentru saloane · PRO</strong><p>Recomandă un alt salon; validarea se face de administrator.</p>
+<label>Salonul tău<select id="refSalon"></select></label><button type="button" id="refPro">Creează link PRO</button></div></div>
+<div id="refLinks"></div><h3>Invitațiile mele</h3><div id="refHistory"></div>
+<h3>Beneficii înregistrate</h3><div id="refRewards"></div></section>
+<section class="refCard"><h2>Campanii și reguli</h2>
+<p id="refCampaign">Se încarcă termenii.</p>
+<p>Invitațiile nu creează automat o reducere, bani sau puncte de fidelitate. Campaniile necesită aprobare și buget; nu trimite spam. Fără auto-invitații sau conturi duplicat.</p></section>
+</main><script src="./referral.js" defer></script></body></html>

@@ -1,0 +1,47 @@
+<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b100f"><title>Regatul Tău — Bătălia Zonelor · BARBERCRAFT</title>
+<link rel="stylesheet" href="./kingdom-strategy.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./auth-config.js"></script></head>
+<body><main class="kingWrap">
+<header><a href="./territory-war.html">← Bătălia Zonelor</a><strong>BARBERCRAFT <span>REGATUL TĂU</span></strong><a href="./">Acasă</a></header>
+<section class="kingHero"><div class="kingEyebrow">MOD STRATEGIE · PRACTICĂ</div><h1>Construiește-ți regatul.</h1>
+<p>Adună resurse, dezvoltă clădiri, antrenează apărarea și pregătește-ți zona pentru viitoarele campanii.</p>
+<div class="kingDisclaimer">Modul strategic este separat de recompense: resursele și trupele sunt virtuale, fără valoare în bani, XP sau reduceri reale.</div></section>
+<p id="kingStatus" role="status" class="kingAlert">Conectăm satul la cont...</p>
+<section id="kingControls" hidden>
+<div class="kingScene"><div class="kingVillage">
+<div class="kingSky"><span>☼</span><span class="kingSun"></span></div>
+<div class="kingField f1">🌲</div><div class="kingField f2">⛰</div><div class="kingField f3">⚒</div>
+<div class="kingCastle">♜</div><div class="kingField f4">🌾</div>
+<div class="kingRoad"></div></div>
+<div class="kingVillageTitle"><strong id="kingName">Satul meu</strong><span id="kingSector">Fără sector ales</span></div></div>
+<div class="kingResources" aria-label="Resursele regatului">
+<div><span>🪵</span><b id="wood">—</b><small>Lemn</small></div>
+<div><span>🪨</span><b id="stone">—</b><small>Piatră</small></div>
+<div><span>⚒</span><b id="iron">—</b><small>Fier</small></div>
+<div><span>🌾</span><b id="food">—</b><small>Hrană</small></div></div>
+<h2>Dezvoltarea satului</h2><div id="kingBuildings" class="kingBuildings"></div>
+<section class="kingPanel"><div><h2>⚔ Cazarmă și apărare</h2><p>Antrenează unități de infanterie cu resursele tale. Capacitatea depinde de nivelul cazărmii.</p>
+<strong id="kingTroops">— soldați</strong></div>
+<div class="kingActions"><button type="button" data-train="1">Antrenează 1</button><button type="button" data-train="5">Antrenează 5</button></div>
+<p class="kingHelp">Cost per soldat: 18 fier + 12 hrană. Trupele și clădirile nu pot fi transformate în bani.</p></section>
+<section class="kingPanel"><h2>⚡ Provocarea zilnică</h2>
+<p>Intră în sat în fiecare zi pentru provizii virtuale. O singură colectare pe zi, verificată de server.</p>
+<button id="kingMission" type="button">Colectează +40 lemn, +40 piatră, +25 hrană</button></section>
+<section class="kingPanel"><h2>✦ Sistemele următoare</h2><div class="kingFuture">
+<div>🛡 <strong>Alianțe de cartier</strong><small>Planificat · echipe cu roluri și donații</small></div>
+<div>🗺 <strong>Expediții și explorare</strong><small>Planificat · misiuni strategice</small></div>
+<div>♛ <strong>Asediu și sezon</strong><small>Planificat · lupte cu reguli anti-abuz</small></div>
+<div>🏆 <strong>Clasament între orașe</strong><small>Planificat · scor doar din vizite verificate</small></div></div></section>
+<section class="kingPanel"><h2>🏰 Alianțe de sector</h2>
+<p>Contribuie cu lemn și piatră la fortăreața echipei tale. Sistem colaborativ persistent, fără bani sau puncte transferabile.</p>
+<div id="kingAllianceTeams" class="kingAlliances"></div>
+<div class="kingActions"><button id="kingDonate" type="button">Donează 20 lemn + 20 piatră</button>
+<button id="kingFortify" type="button">Întărește fortăreața alianței</button></div>
+<p id="kingAllianceStatus" class="kingHelp" role="status"></p></section>
+<section class="kingPanel"><h2>🧭 Expediție strategică</h2>
+<p>Trimite o patrulă împotriva unei fortificații NPC. Este o misiune PvE deterministă, nu un atac asupra altor jucători. Ai o singură expediție pe zi.</p>
+<label class="kingFieldSelect">Dificultate / țintă<select id="kingExpeditionTarget">
+<option value="1">Sector 1 · accesibil</option><option value="2">Sector 2 · ușor</option><option value="3">Sector 3 · mediu</option><option value="4">Sector 4 · dificil</option><option value="5">Sector 5 · avansat</option><option value="6">Sector 6 · expert</option>
+</select></label><button id="kingExpeditionGo" type="button">Pornește expediția</button>
+<p id="kingExpeditionStatus" class="kingHelp" role="status">Necesar: infanterie + nivel zid ≥ dificultate + 2; consumă 15 hrană.</p></section>
+<button id="kingRefresh" type="button" class="kingSecondary">Actualizează regatul</button>
+</section></main><script src="./kingdom-strategy.js" defer></script><script src="./kingdom-alliance.js" defer></script></body></html>

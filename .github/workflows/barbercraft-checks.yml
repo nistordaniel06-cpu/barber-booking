@@ -8,6 +8,7 @@ on:
       - feature/barbercraft-premium-photo-ui
       - fix/war-map-single-controls-admin-pro
       - feature/barbercraft-social-passports-verified-reviews
+      - feature/ro-map-referrals-kingdoms-salon-removal
 permissions:
   contents: read
 jobs:
@@ -25,3 +26,4 @@ jobs:
           node tests/barbercraft-premium-smoke.mjs
           node tests/barbercraft-map-regressions.mjs
           node tests/barbercraft-social-smoke.mjs
+          node tests/barbercraft-growth-smoke.mjs
