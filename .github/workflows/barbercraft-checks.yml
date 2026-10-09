@@ -6,6 +6,7 @@ on:
       - feature/barbercraft-zones-passport-rewards
       - feature/barbercraft-reward-redemption-qr-zones
       - feature/barbercraft-premium-photo-ui
+      - fix/war-map-single-controls-admin-pro
 permissions:
   contents: read
 jobs:
@@ -21,3 +22,4 @@ jobs:
           node tests/barbercraft-smoke.mjs
           node tests/barbercraft-rewards-smoke.mjs
           node tests/barbercraft-premium-smoke.mjs
+          node tests/barbercraft-map-regressions.mjs
