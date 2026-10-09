@@ -79,6 +79,14 @@ try{
    $("pilotCloses").value=state.closes||"19:00";
    services=(state.services||[]).map(s=>({...s}));serviceEditor();
    showBookings(state.bookings);renderLink();
+   const feedbackBox=$("pilotFeedbackList");feedbackBox.replaceChildren();
+   if(!state.feedback?.length)feedbackBox.append(node("p","Clienții nu au trimis încă feedback."));
+   for(const answer of state.feedback||[]){
+    const row=node("div");row.className="pilotFeedbackRow";
+    row.append(node("strong","★".repeat(answer.rating)+"☆".repeat(5-answer.rating)+" · "+answer.code),
+     node("small",answer.comment),node("small",new Date(answer.date).toLocaleDateString("ro-RO")));
+    feedbackBox.append(row);
+   }
    setStatus(state.enabled?"Pilotul este activ. Programările noi vor intra în calendarul PRO.":
     "Pilotul este oprit. Completează serviciile și apasă «Salvează configurarea» când ești pregătit.");
   }catch(e){setStatus("Configurația nu a putut fi încărcată: "+e.message)}
