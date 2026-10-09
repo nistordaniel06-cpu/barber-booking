@@ -39,12 +39,13 @@ function closeSheet(){
 $("closeQuick").onclick=closeSheet;$("closeEdit").onclick=closeSheet;$("closeSync").onclick=closeSheet;
 $("sheetBackdrop").addEventListener("click",e=>{if(e.target===$("sheetBackdrop"))closeSheet()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("sheetBackdrop").hidden)closeSheet()});
-function specialistName(id){return state.staff.find(x=>x.id===id)?.name||"Specialist"}
+function specialistName(id){return id?state.staff.find(x=>x.id===id)?.name||"Specialist":"De atribuit"}
 function columns(){
  const a=days();
  if(state.mode==="day"){
   let staff=state.filter==="all"?state.staff:state.staff.filter(s=>s.id===state.filter);
   if(!staff.length)staff=[{id:state.user?.id,name:"Eu"}];
+  if(state.filter==="all"&&staff.length>1&&state.events.some(e=>e.status==="confirmed"&&!e.specialist_user_id&&sameDate(new Date(e.starts_at),a[0])))staff=[...staff,{id:null,name:"De atribuit"}];
   return staff.map(s=>({date:a[0],staff:s.id,title:s.name}));
  }
  const chosen=state.filter==="all"?(state.staff.find(s=>s.id===state.user?.id)||state.staff[0])?.id:state.filter;
@@ -209,7 +210,12 @@ function renderTimeline(){
   const d=new Date(col.date);d.setHours(0,0,0,0);
   const n=new Date(d);n.setDate(n.getDate()+1);
   const st=new Date(ev.starts_at),en=new Date(ev.ends_at);
-  return st<n&&en>d&&(!ev.specialist_user_id||ev.specialist_user_id===col.staff);
+  if(!(st<n&&en>d))return false;
+  if(state.mode==="day"&&state.filter==="all"&&state.staff.length>1){
+   if(col.staff===null)return !ev.specialist_user_id&&ev.status==="confirmed";
+   if(!ev.specialist_user_id)return ev.status==="busy";
+  }
+  return !ev.specialist_user_id||ev.specialist_user_id===col.staff;
  };
  for(const ev of state.events){
   if(ev.status==="cancelled")continue;
