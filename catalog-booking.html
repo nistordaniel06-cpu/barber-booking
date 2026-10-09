@@ -5,6 +5,19 @@
 <section class="pilotHero"><span class="pilotEyebrow">PROGRAMARE LA SALON · REZERVARE ONLINE</span><h1>Rezervă-ți următorul tuns.</h1>
 <p>Alege serviciul și ora, apoi confirmă. Salonul primește rezervarea în calendar.</p></section>
 <p id="pilotClientStatus" role="status" class="pilotStatus">Verificăm disponibilitatea salonului…</p>
+<section id="catalogApprovalAccess" class="pilotCard" hidden>
+<h2>Cont BARBERCRAFT</h2>
+<p>Ca să confirmi o programare online trebuie să fii autentificat și să ai contul aprobat de administrator. Poți vedea saloanele fără cont.</p>
+<div id="catalogAccountStatus" class="pilotStatus" role="status">Verificăm aprobarea…</div>
+<form id="catalogAccountLogin">
+<label>E-mail<input id="catalogAuthEmail" type="email" autocomplete="email" required></label>
+<label>Parolă<input id="catalogAuthPassword" type="password" minlength="8" autocomplete="current-password" required></label>
+<div class="pilotActions"><button type="submit" class="pilotPrimary">Intră în cont</button>
+<button type="button" id="catalogRegister" class="pilotSecondary">Creează cont</button>
+<button type="button" id="catalogLogout" class="pilotSecondary" hidden>Deconectare</button></div>
+</form>
+<button type="button" id="catalogRecheck" class="pilotSecondary">↻ Verifică aprobarea</button>
+</section>
 <section id="pilotClientForm" hidden>
 <section class="pilotCard"><span class="pilotEyebrow">SALONUL TĂU</span><h2 id="pilotSalonName">Salon</h2><p id="pilotSalonAddress"></p></section>
 <form id="pilotBookingForm">
