@@ -3,17 +3,24 @@ const $=id=>document.getElementById(id),n=(t,text)=>{const x=document.createElem
 const params=new URLSearchParams(location.search);const mode=params.get("type")==="pro"?"pro":"client",invite=(params.get("ref")||"").toUpperCase();
 if(invite&&/^BC[A-F0-9]{12}$/.test(invite))$("refCode").value=invite;
 $("refLogin").elements.scope.value=mode;
+$("refLogin").elements.scope.onchange=event=>{
+ const url=new URL(location.href);
+ url.searchParams.set("type",event.target.value==="pro"?"pro":"client");
+ window.location.assign(url.href);
+};
 let active=null,scope=mode,staff=[];
 const clients={
- client:window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY),
- pro:window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY,{auth:{storageKey:"barbercraft-pro-session",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})
+ client:window.BCAuthClient("client",{detectSessionInUrl:mode==="client"}),
+ pro:window.BCAuthClient("pro",{detectSessionInUrl:mode==="pro"})
 };
 const status=msg=>$("refStatus").textContent=msg;
 async function findSession(){
- for(const which of [mode,mode==="client"?"pro":"client"]){
-  const {data:{user}}=await clients[which].auth.getUser();
-  if(user){active=clients[which];scope=which;return user}
- }return null
+ // The invitation's declared portal owns this session. Never silently authenticate
+ // Client with the PRO session, or reveal PRO data in a Client invitation.
+ const {data:{user},error}=await clients[mode].auth.getUser();
+ active=(!error&&user)?clients[mode]:null;
+ scope=mode;
+ return active?user:null;
 }
 async function call(name,args){if(!active)throw Error("LOGIN_REQUIRED");const {data,error}=await active.rpc(name,args);if(error)throw Error(error.message);return data}
 async function draw(){
