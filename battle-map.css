@@ -1,0 +1,52 @@
+/* Bătălia Zonelor / București — interactive tactical territory map */
+body.bc-war .battleMapStage{margin:23px 0 32px}
+.battleMapStage[hidden]{display:none!important}
+.battleMapStage{--map-accent:#e9c66d}
+.battleMapHeader{display:flex;justify-content:space-between;gap:13px;align-items:flex-start;margin-bottom:14px}
+.battleMapHeader .eyebrow{display:block;font-size:10px;margin-bottom:6px}
+.battleMapHeader h2{font-size:23px;line-height:1.15;margin:0 0 6px;letter-spacing:-.7px}
+.battleMapHeader .status{margin:0;font-size:11px;line-height:1.4}
+.battleMapHeader button{flex-shrink:0;background:#27231d;border:1px solid #6e552d;color:#f6d58a;font-size:12px;padding:10px;border-radius:12px}
+.battleMapShell{border:1px solid #73592c;background:#0e1119;border-radius:24px;overflow:hidden;position:relative;box-shadow:0 19px 45px #000a}
+#battleMap{height:clamp(340px,55vw,500px);width:100%;background:
+ radial-gradient(circle at 53% 50%,#3b3222 0,#12151c 42%,#090a0c 100%);z-index:1}
+#battleMap[hidden],#battleSchematic[hidden]{display:none!important}
+.battleMapBottom{position:relative;z-index:3;padding:13px 15px;background:#16171d;border-top:1px solid #483d2e}
+.battleMapBottom .status{font-size:11px;margin:0;color:#bcb5a6}
+.battleMapAttribution{font-size:10px;color:#9d9da7;line-height:1.45;padding-top:9px}
+.battleMapAttribution a{color:#e7c16c;text-decoration:underline}
+#battleSectorDetail{display:flex;flex-direction:column;gap:6px;background:
+ linear-gradient(115deg,#292218,#16181e 65%);padding:16px 18px;border:1px solid #73603f;border-radius:18px;margin:13px 0}
+#battleSectorDetail strong{font-size:25px;line-height:1}
+#battleSectorDetail p{font-size:12px;line-height:1.6;color:#d1c8bb;margin:0}
+.battleDetailStatus{font-size:11px;color:#f3d28a;letter-spacing:.03em}
+.battleSectorNav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:13px}
+.battleSectorChip{display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid #49474c;border-radius:13px;padding:10px 6px!important;background:#202127!important;color:#ececf0!important;font-size:12px;min-height:42px}
+.battleSectorChip.selected{border-color:#ffe09a!important;color:#ffe6b8!important;background:#3b3120!important;box-shadow:inset 0 0 0 1px #bd9852}
+.battleSectorDot{display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 7px #ffddaa55}
+.bc-war .leaflet-container{background:#0c0f16!important;font-family:"DM Sans",system-ui,sans-serif}
+.bc-war .leaflet-bar{border:1px solid #8a6a35;box-shadow:0 2px 11px #0008}
+.bc-war .leaflet-bar a{background:#242020;color:#f1cb80;border-bottom-color:#5f4728}
+.bc-war .leaflet-control-attribution{background:#0a0b0de8!important;color:#bbb8ae!important;font-size:9px}
+.bc-war .leaflet-control-attribution a{color:#eccb7b!important}
+.bc-war .bcMapSectorLabel{background:#0a0b0bdb;border:1px solid #c7a361;border-radius:9px;color:#f7db9e;font-weight:900;font-size:13px;
+ box-shadow:0 2px 10px #0007;letter-spacing:.03em;padding:4px 9px}
+.bc-war .bcMapSectorLabel:before{display:none}
+#battleSchematic{min-height:300px;background:
+ radial-gradient(ellipse at 50% 30%,#53442a,#101116 60%);padding:12px 12px 4px}
+#battleSchematic svg{display:block;margin:auto;width:min(100%,440px);max-height:400px;filter:drop-shadow(0 6px 17px #000a)}
+.battleSchematicPath{cursor:pointer;transition:fill-opacity .18s ease,stroke-width .18s ease}
+.battleSchematicPath:hover,.battleSchematicPath:focus-visible{stroke:#fff2ba;stroke-width:4;fill-opacity:.66}
+.battleMapSvgText{font:800 17px "DM Sans",system-ui,sans-serif;fill:#f5f1df;pointer-events:none}
+.battleMapCoreText{font:900 18px "DM Sans",system-ui,sans-serif;fill:#f4ce7c;pointer-events:none}
+.battleMapCaption{font-size:11px;text-align:center;color:#d2c3a4;line-height:1.5}
+.bc-war .battleTeamBlock h3{font-size:16px;color:#ffe0a5;margin:17px 0 8px}
+.bc-war .battleTeamBlock #sectorActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bc-war .battleTeamBlock #sectorActions button{min-width:0;font-size:12px;padding:10px 5px;min-height:42px;white-space:nowrap;border:1px solid #e2c06e}
+.bc-war .battleTeamBlock #sectorActions button.secondary{border-color:#43434a;background:#23242b}
+.bc-war .battleTeamBlock #sectorActions button:disabled{opacity:1;color:#161108;background:#e0b550}
+.bc-war .battleTeamBlock #sectorActions a{grid-column:1/-1}
+@media(max-width:430px){.battleMapSectorNav{gap:6px}.battleMapHeader h2{font-size:20px}
+ .battleSectorNav{gap:6px}.battleSectorChip{font-size:11px}
+ #battleMap{height:350px}}
+@media(prefers-reduced-motion:reduce){.battleSchematicPath{transition:none}}
