@@ -39,6 +39,7 @@ $("catalogAccountLogin").onsubmit=async e=>{
  e.preventDefault();const email=$("catalogAuthEmail").value.trim(),password=$("catalogAuthPassword").value;
  const {error}=await sb.auth.signInWithPassword({email,password});
  if(error){$("catalogAccountStatus").textContent="Autentificare eșuată: "+error.message;return;}
+ window.BCCommitPortalLogin?.("client");
  await checkAccount();
 };
 $("catalogRegister").onclick=async()=>{
@@ -55,6 +56,7 @@ $("catalogRegister").onclick=async()=>{
   }
  });
  if(error){$("catalogAccountStatus").textContent="Nu am putut crea contul: "+error.message;return;}
+ window.BCCommitPortalLogin?.("client");
  if(data.session){
   await checkAccount();
  }else{
