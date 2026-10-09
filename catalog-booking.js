@@ -43,7 +43,10 @@ $("catalogAccountLogin").onsubmit=async e=>{
 $("catalogRegister").onclick=async()=>{
  const email=$("catalogAuthEmail").value.trim(),password=$("catalogAuthPassword").value;
  if(!email||password.length<8){$("catalogAccountStatus").textContent="Introdu e-mailul și o parolă de minimum 8 caractere.";return;}
- const {data,error}=await sb.auth.signUp({email,password});
+ const {data,error}=await sb.auth.signUp({email,password,options:{
+  emailRedirectTo:window.BARBERCRAFT_AUTH_CONFIRM_URL,
+  data:{barbercraft_account_type:"client"}
+ }});
  if(error){$("catalogAccountStatus").textContent="Nu am putut crea contul: "+error.message;return;}
  if(data.session){
   await checkAccount();
