@@ -1,0 +1,35 @@
+<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d0e12"><title>Programare test · BARBERCRAFT</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="./pilot.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./auth-config.js"></script><script defer src="./pilot-client.js"></script></head>
+<body><main class="pilotWrap"><header class="pilotHeader"><a href="./">‹ BARBERCRAFT</a><strong>BARBER<span>CRAFT</span></strong><span class="pilotGuest">INVITAȚIE</span></header>
+<section class="pilotHero"><span class="pilotEyebrow">PROGRAMARE LA SALON · INVITAȚIE PRIVATĂ</span><h1>Rezervă-ți următorul tuns.</h1>
+<p>Alege serviciul și ora, apoi confirmă. Salonul primește rezervarea în calendar.</p></section>
+<p id="pilotClientStatus" role="status" class="pilotStatus">Verificăm invitația…</p>
+<section id="pilotClientForm" hidden>
+<section class="pilotCard"><span class="pilotEyebrow">SALONUL TĂU</span><h2 id="pilotSalonName">Salon</h2><p id="pilotSalonAddress"></p></section>
+<form id="pilotBookingForm">
+<section class="pilotCard"><h2>1. Ce serviciu dorești?</h2><label>Serviciu<select id="pilotService" required></select></label>
+<p id="pilotServiceDetail" class="pilotSmall"></p>
+<h2>2. Când vrei să vii?</h2><label>Ziua<input id="pilotDate" type="date" required></label>
+<p class="pilotSmall">Orele indisponibile sunt eliminate automat; selectează una dintre cele afișate.</p>
+<div id="pilotSlots" class="pilotSlots"></div><input type="hidden" id="pilotSelectedTime" required></section>
+<section class="pilotCard"><h2>3. Date pentru confirmare</h2>
+<label>Nume și prenume<input id="pilotClientName" autocomplete="name" maxlength="120" minlength="2" required placeholder="Numele tău"></label>
+<label>Telefon<input id="pilotClientPhone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+407xxxxxxxx"></label>
+<label class="pilotConsent"><input type="checkbox" id="pilotConsent" required><span>Sunt de acord ca salonul să utilizeze numele și numărul meu de telefon pentru această rezervare și eventuale clarificări. Știu că aceasta este o programare reală, nu una fictivă.</span></label>
+<button type="submit" class="pilotPrimary" id="pilotSubmit">Confirmă programarea</button>
+<p class="pilotSmall">Dacă rezervarea reușește, vei primi codul pe această pagină. Nu trimitem automat SMS sau e-mail. Pentru anulări contactează salonul.</p></section>
+</form>
+</section>
+<section id="pilotSuccess" class="pilotCard" hidden><span class="pilotEyebrow">REZERVARE CONFIRMATĂ</span><h2>Ne vedem la salon!</h2>
+<p id="pilotResult"></p><strong id="pilotBookingCode" class="pilotBookingCode"></strong>
+<p class="pilotSmall">Salvează codul. Dacă ai nevoie să schimbi programarea, contactează salonul.</p>
+<button type="button" id="pilotCopyCode" class="pilotSecondary">Copiază confirmarea</button>
+<div class="pilotFeedback"><h3>Cum a mers testul?</h3><p>Spune-ne dacă ai găsit ușor serviciul, data și ora. Feedbackul ajunge doar la salon.</p>
+<form id="pilotFeedbackForm"><label>Experiența ta<select id="pilotRating" required>
+<option value="5">★★★★★ · Foarte ușor</option><option value="4">★★★★☆ · Ușor</option>
+<option value="3">★★★☆☆ · Acceptabil</option><option value="2">★★☆☆☆ · Greu</option><option value="1">★☆☆☆☆ · Foarte greu</option>
+</select></label><label>Ce ai schimba?<textarea id="pilotComment" minlength="5" maxlength="500" rows="3"
+ required placeholder="Ce a mers bine și ce ai îmbunătăți?"></textarea></label>
+<button class="pilotPrimary" type="submit">Trimite feedback</button></form><p id="pilotFeedbackStatus" class="pilotSmall" role="status"></p></div></section>
+</main></body></html>
