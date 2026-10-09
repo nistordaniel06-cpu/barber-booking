@@ -293,3 +293,25 @@ body.bc-premium.bc-passport #passportCheckinCode .eyebrow{font-size:10px;letter-
 body.bc-premium.bc-passport #passportCheckinCode .bc-qr-disclosure{margin:10px auto}
 @media(max-width:385px){body.bc-premium.bc-preview .bc-ig-actions{grid-template-columns:1fr}
  body.bc-premium.bc-passport #passportCheckinCode{padding:19px 12px!important}}
+
+/* Fix previous blank QR: use vector matrix, never hide usable canvas due to an empty img tag. */
+body.bc-passport #passportCheckinCode{width:min(100%,390px)!important;max-width:390px!important;
+ margin:17px auto!important;padding:22px clamp(12px,4vw,25px)!important;text-align:center;overflow:visible!important}
+body.bc-passport #passportCheckinCode .rewardQrSquare{
+ width:min(100%,256px)!important;height:auto!important;min-height:244px!important;max-width:256px!important;
+ display:grid!important;place-items:center!important;overflow:hidden!important;background:#fff!important;
+ border:4px solid #e9c76e;border-radius:19px!important;padding:11px!important;margin:18px auto!important;
+ box-sizing:border-box!important
+}
+body.bc-passport #passportCheckinCode .rewardQrSquare svg{
+ width:100%!important;height:auto!important;display:block!important;aspect-ratio:1;image-rendering:pixelated;background:#fff}
+body.bc-passport #passportCheckinCode .rewardQrSquare canvas,
+body.bc-passport #passportCheckinCode .rewardQrSquare:has(img) canvas{
+ display:block!important;width:min(100%,220px)!important;height:auto!important;aspect-ratio:1;margin:0 auto!important}
+body.bc-passport #passportCheckinCode .rewardQrSquare img{display:none!important}
+body.bc-passport #passportCheckinCode .rewardQrSquare img:only-child{display:block!important;width:100%!important;height:auto!important}
+body.bc-passport #passportCheckinCode .rewardQrCode{
+ width:100%;max-width:310px!important;display:block!important;margin:12px auto!important;
+ white-space:normal;overflow-wrap:anywhere}
+body.bc-passport #passportCheckinCode button.btn{display:block;max-width:280px;width:100%;margin:12px auto}
+body.bc-passport #passportCheckinCode .bc-qr-disclosure{display:block;margin:11px auto}
