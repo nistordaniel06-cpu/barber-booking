@@ -51,7 +51,21 @@
 <p>Fotografiile au un link public după încărcare, chiar dacă profilul este privat. În comunitate apar doar când îți faci profilul public. Folosește numai fotografii pentru care ai acordul persoanelor din imagine.</p>
 <form id="socialPortfolioForm"><label class="socialField">Fotografie nouă<input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required></label>
 <label class="socialField">Descriere<input name="caption" maxlength="160" placeholder="Fade, clasic, texturat…"></label>
-<button type="submit" class="socialButton">Publică în portofoliu</button></form><p id="socialPortfolioStatus" class="socialPortfolioStatus" role="status" aria-live="polite">Poți publica fotografii JPG, PNG sau WebP de până la 5 MB.</p><div id="socialMyPortfolio" class="socialPortfolio"></div>
+<button type="submit" class="socialButton">Publică în portofoliu</button></form><p id="socialProQuota" class="socialGalleryQuota" role="status">Se verifică limita zilnică…</p><p id="socialPortfolioStatus" class="socialPortfolioStatus" role="status" aria-live="polite">Poți publica fotografii JPG, PNG sau WebP de până la 5 MB.</p><div id="socialMyPortfolio" class="socialPortfolio"></div>
+</div>
+<div class="socialCard" id="socialClientGallery" hidden>
+<h2>Galeria mea de tunsori · Client</h2>
+<p>După minimum 3 tunsori finalizate și confirmate în aplicație, poți publica <strong>o fotografie pentru fiecare vizită</strong>, în cel mult <strong>24 de ore de la verificarea QR-ului</strong> de către profesionist. Simplul check-in fără serviciu finalizat nu este suficient.</p>
+<p>Fotografiile încărcate au un link public, chiar dacă profilul social este privat. În comunitate apar numai după ce alegi să-ți publici profilul. Pozele tale din jurnalul privat Passport rămân separate.</p>
+<p id="socialClientQuota" class="socialGalleryQuota" role="status">Se verifică tunsorile confirmate…</p>
+<form id="socialClientGalleryForm">
+<label class="socialField">Vizită eligibilă<select name="visit" required id="socialClientGalleryVisit"></select></label>
+<label class="socialField">Fotografia tunsorii<input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required></label>
+<label class="socialField">Descriere<input name="caption" maxlength="160" placeholder="Fresh fade, tunsoare nouă…"></label>
+<button type="submit" class="socialButton primary" disabled>Publică fotografia</button>
+</form>
+<p id="socialClientGalleryStatus" class="socialPortfolioStatus" role="status" aria-live="polite"></p>
+<div id="socialClientGalleryPhotos" class="socialPortfolio"></div>
 </div>
 </section>
 <section class="socialPanel" id="panelMessages" hidden><div class="socialCard">
