@@ -6,10 +6,29 @@ const sb=await window.BCPassportSession(),{data:{user}}=await sb.auth.getUser();
 const rpc=async(fn,args={})=>{const {data,error}=await sb.rpc(fn,args);if(error)throw Error(error.message);return data};
 const feedback=s=>$("socialStatus").textContent=s;
 const composer=$("socialFeedComposer"),more=$("socialFeedMore");
-let cursor=null,loading=false,hasMore=true;
+let cursor=null,loading=false,hasMore=true,clientCooldown=null;
+const composerButton=form.querySelector('button[type="submit"]');
+async function refreshClientCooldown(){
+ if(!user)return;
+ try{
+  const state=await rpc("bc_social_post_cooldown");
+  clientCooldown=state;
+  const hint=$("socialFeedCooldown");
+  if(state.pro){if(hint)hint.textContent="PRO · maximum 5 postări pe oră.";return;}
+  const seconds=Number(state.wait_seconds)||0;
+  if(hint)hint.textContent=state.allowed
+    ?"Poți publica acum · "+state.used_today+"/6 postări în ultimele 24 de ore. Următoarea postare va putea fi publicată după 15 minute."
+    :"Pauză anti-spam: "+(seconds?Math.max(1,Math.ceil(seconds/60))+" min până la următoarea postare. ":"")+"Maximum 6 postări în 24 de ore.";
+  if(composerButton)composerButton.disabled=!state.allowed;
+ }catch(error){
+  if(composerButton)composerButton.disabled=true;
+  const hint=$("socialFeedCooldown");
+  if(hint)hint.textContent="Limita postărilor nu poate fi verificată momentan. Încearcă din nou.";
+ }
+}
 async function visibility(){
  if(!user){composer.hidden=true;return}
- try{const p=await rpc("bc_social_profile_read",{p_user:user.id});composer.hidden=!p?.is_public}
+ try{const p=await rpc("bc_social_profile_read",{p_user:user.id});composer.hidden=!p?.is_public;if(!composer.hidden)await refreshClientCooldown()}
  catch{composer.hidden=true}
 }
 function action(text,fn){const b=node("button",text,"socialButton");b.type="button";b.onclick=fn;return b}
@@ -71,6 +90,10 @@ form.onsubmit=async e=>{
  e.preventDefault();const b=form.querySelector("button"),file=form.elements.photo.files?.[0],
  body=form.elements.body.value.trim();let path=null;
  if(body.length<3){feedback("Scrie minimum 3 caractere.");return}
+ if(clientCooldown&&!clientCooldown.pro&&!clientCooldown.allowed){
+  feedback("Ai publicat recent. Așteaptă pauza anti-spam afișată deasupra formularului.");
+  await refreshClientCooldown();return;
+ }
  if(file&&(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5242880)){
   feedback("Fotografia trebuie să fie JPG, PNG sau WebP, maximum 5 MB.");return}
  if(file&&!confirm("Confirmi că fotografia este publică și ai acordul persoanelor din imagine?"))return;
@@ -83,11 +106,15 @@ form.onsubmit=async e=>{
   }
   try{await rpc("bc_social_post_create",{p_body:body,p_path:path})}
   catch(e){if(path)await sb.storage.from("bc-social-feed").remove([path]);throw e}
-  form.reset();feedback("Postare publicată pentru întreaga comunitate.");await feed(true);
- }catch(e){feedback("Eroare la publicare: "+e.message)}
- finally{b.disabled=false}
+  form.reset();feedback("Postare publicată pentru întreaga comunitate.");await feed(true);await refreshClientCooldown();
+ }catch(e){
+  const msg=String(e.message||e);
+  feedback(msg.includes("CLIENT_POST_COOLDOWN")?"Mai ai de așteptat 15 minute între postări.":msg.includes("CLIENT_DAILY_POST_LIMIT")?"Ai atins limita de 6 postări în 24 de ore.":"Eroare la publicare: "+msg);
+  await refreshClientCooldown();
+ }
+ finally{b.disabled=!!(clientCooldown&&!clientCooldown.pro&&!clientCooldown.allowed)}
 };
-$("socialFeedRefresh").onclick=()=>feed(true);
+$("socialFeedRefresh").onclick=async()=>{await feed(true);await refreshClientCooldown()};
 more.onclick=()=>feed(false);
 window.addEventListener("bc-social-profile-updated",visibility);
 await Promise.all([visibility(),feed(true)]);
