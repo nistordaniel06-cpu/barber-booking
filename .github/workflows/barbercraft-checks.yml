@@ -15,6 +15,7 @@ on:
       - fix/admin-explore-luxury-mobile-tiles
       - feature/explore-catalog-real-booking
       - fix/email-confirmation-github-social-checkbox
+      - fix/email-confirmation-resend-recovery
 permissions:
   contents: read
 jobs:
@@ -39,3 +40,4 @@ jobs:
           node tests/barbercraft-admin-luxury-smoke.mjs
           node tests/barbercraft-explore-public-booking-approvals-smoke.mjs
           node tests/barbercraft-auth-email-social-toggle-smoke.mjs
+          node tests/barbercraft-auth-resend-recovery-smoke.mjs
