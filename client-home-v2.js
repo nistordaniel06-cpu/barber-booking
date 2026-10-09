@@ -27,11 +27,8 @@ function populate(){
  box.replaceChildren();
  button("⌂ Descoperă saloane",openDiscovery);
  button("↗ Invită prietenii",()=>{void invite()});
- link("✂ Profil profesioniști","./pro/");
- if(window.BCClientUser){
-  link("▣ Tutorial BARBERCRAFT","./tutorial.html");
-  link("♛ Devino partener","./partner.html");
- }
+ link("◉ Portal client","./client/");
+ link("✂ Portal profesioniști","./pro/");
 }
 toggle.onclick=()=>{populate();if(typeof dialog.showModal==="function")dialog.showModal();else dialog.setAttribute("open","")};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&dialog.open)dialog.close()});
