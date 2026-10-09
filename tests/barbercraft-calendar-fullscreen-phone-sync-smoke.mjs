@@ -27,6 +27,21 @@ assert.match(js,/positionFromPointer/,"Drag resolves selected 15min interval");
 assert.match(js,/pointerdown/,"Touch starts new interval");
 assert.match(js,/pointermove/,"Drag updates");
 assert.match(js,/pointerup/,"Release opens action menu");
+assert.match(js,/timeline\.style\.gridTemplateColumns=gutter\+"px repeat\("\+count\+",minmax\(0,1fr\)\)"/,"All 3 and 7 columns flex to fill the viewport");
+assert.match(js,/timeline\.style\.minWidth="0px"/,"Multi-day grid has no fixed minimum width");
+assert.match(js,/scroller\.scrollLeft=0/,"No horizontal offset remains after changing calendar mode");
+assert.match(js,/state\.mode==="week"/,"Seven-day view uses abbreviated day labels");
+assert.match(js,/count>=7\?30:count===3\?40:48/,"Hour gutter leaves enough width for seven equal date columns");
+assert.match(css,/\.timeline\[data-view="week"\]/,"Week layout compresses appointment cells and headers");
+assert.match(css,/\.timeline\[data-view="three"\]/,"Three-day layout compresses appointment cells and headers");
+assert.match(js,/function startNativePinch/,"Native two-finger Android gesture handler installed");
+assert.match(js,/function moveNativePinch/,"Touchmove adjusts quarter-hour height smoothly");
+assert.match(js,/nativePinchDistance/,"Uses actual touch spacing for pinch");
+assert.match(js,/scroller\.addEventListener\("touchmove",moveNativePinch,\{passive:false,capture:true\}\)/,
+ "Calendar intercepts Android two-finger zoom in capture phase");
+assert.match(js,/nativeTouchPinch\|\|Date\.now\(\)<ignoreTouchPointersUntil/,
+ "Native touch gesture suppresses duplicate PointerEvents and accidental new appointments");
+
 assert.match(js,/scrollByTouch/,"One-finger swipe scrolls the timeline anywhere");
 assert.match(js,/coastScroll/,"Touch scrolling uses momentum");
 assert.match(js,/activeTouches=new Map\(\)/,"Touches tracked separately by pointer ID");
