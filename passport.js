@@ -11,25 +11,27 @@ try{
  const [{data:profile},{data:rewards,error:rewardsError},{data:summary,error:summaryError},{data:history,error:historyError}]=await Promise.all([
  sb.from("bc_profiles").select("display_name").eq("user_id",user.id).maybeSingle(),
  sb.from("bc_reward_templates").select("title,description,points_cost,category,stock").eq("is_active",true).order("points_cost").limit(25),
- sb.rpc("bc_client_rewards_summary"),sb.rpc("bc_passport_verified_visits")]);
+ sb.rpc("bc_passport_my_progress"),sb.rpc("bc_passport_my_visit_history")]);
  const name=profile?.display_name||user.email?.split("@")[0]||"Client";$("name").textContent=name;$("avatar").textContent=name.trim().charAt(0).toUpperCase();
  if(summaryError)throw summaryError;
- const xp=Number(summary?.xp)||0,points=Number(summary?.loyalty_points)||0;
- const ranks=[["Bronze",0],["Silver",500],["Gold",1500],["Platinum",3500],["Legend",7000]];
- const current=[...ranks].reverse().find(x=>xp>=x[1])||ranks[0];const next=ranks.find(x=>x[1]>xp);
- $("rank").textContent=current[0]+" · BARBERCRAFT";$("xp").textContent=fmt(xp);$("points").textContent=fmt(points);
- $("xpProgress").style.width=next?Math.min(100,Math.max(0,(xp-current[1])/(next[1]-current[1])*100))+"%":"100%";
- $("xpNext").textContent=next?fmt(next[1]-xp)+" XP până la "+next[0]:"Ai ajuns la rangul Legend.";
+ const xp=Number(summary?.xp_client)||0,level=Number(summary?.nivel_passport)||1;
+ const nextThreshold=level<20?100+50*(level-1)+10*(level-1)*(level-1):null;
+ let consumed=0;for(let i=1;i<level;i++)consumed+=100+50*(i-1)+10*(i-1)*(i-1);
+ const toward=Math.max(0,xp-consumed);
+ $("rank").textContent="Barber Passport · Nivel "+level;
+ $("xp").textContent=fmt(xp);$("points").textContent=String(level);
+ $("xpProgress").style.width=nextThreshold?Math.min(100,toward/nextThreshold*100)+"%":"100%";
+ $("xpNext").textContent=nextThreshold?fmt(nextThreshold-toward)+" XP până la nivelul "+(level+1):"Ai ajuns la nivelul maxim 20.";
  $("visits").textContent=historyError?"—":fmt(history?.total_visits);
  const h=$("history");h.replaceChildren();
  if(historyError)h.append(el("p","Istoricul verificat nu a putut fi încărcat: "+historyError.message,"muted"));
  else if(!(history?.recent||[]).length)h.append(el("p","Nu există încă vizite validate. Programările viitoare nu generează automat XP.","muted"));
- else for(const visit of history.recent){const row=el("div",undefined,"item"),date=el("span",new Date(visit.date).toLocaleDateString("ro-RO",{day:"numeric",month:"long",year:"numeric"}));row.append(date,el("strong","+"+fmt(visit.xp)+" XP · +"+fmt(visit.points)+" puncte"));h.append(row)}
+ else for(const visit of history.recent){const row=el("div",undefined,"item"),date=el("span",new Date(visit.date).toLocaleDateString("ro-RO",{day:"numeric",month:"long",year:"numeric"}));row.append(date,el("strong",visit.salon+" · +"+fmt(visit.xp)+" XP pentru vizita validată"));h.append(row)}
  const o=$("offers");o.replaceChildren();
  if(rewardsError)o.append(el("p","Recompensele nu sunt momentan disponibile.","muted"));
  else if(!(rewards||[]).length)o.append(el("p","Primele recompense sunt în curs de pregătire. Le vei vedea aici când sunt activate de administrator.","muted"));
  else for(const offer of rewards){const box=el("article",undefined,"offer");box.append(el("b",offer.category.toUpperCase()+" · "+fmt(offer.points_cost)+" puncte"),el("strong",offer.title),el("p",offer.description),el("p",offer.stock===0?"Stoc indisponibil":"Disponibilitatea și eligibilitatea se confirmă cu salonul."));o.append(box)}
- if(summary?.pending_prizes?.length)$("pendingAwards").textContent="Premii în așteptarea verificării: "+summary.pending_prizes.map(x=>x.kind).join(", ");
+ // Individual Barber Passport benefits appear in the progress panel above.
 }catch(e){status.textContent="Nu am putut încărca toate datele: "+e.message}
 const notes=$("notes"),photos=$("photos");
 async function loadNotes(){
