@@ -237,7 +237,7 @@ window.BCExploreAdmin={async render(sb,root){
    const link=el("div",undefined,"bcExploreCatalogLink");
    link.append(el("strong","✓ Profil importat în Catalog saloane"),
     el("small",item.catalog_pro_salon?"Asociat unui salon PRO. Modificările comerciale sunt gestionate de proprietar.":"Pentru rezervări trebuie asociat un salon PRO verificat și activat calendarul de către proprietar."));
-   link.append(button("Mergi la Catalog saloane ↗",()=>{window.location.hash="catalog";window.location.reload();},"bcExploreSecondary"));
+   link.append(button("Mergi la Catalog saloane ↗",()=>{window.location.hash="admin-catalog";window.location.reload();},"bcExploreSecondary"));
    form.append(link);
   }
    const danger=el("div",undefined,"bcExploreDeleteFooter");
