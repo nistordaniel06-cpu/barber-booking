@@ -48,4 +48,5 @@ jobs:
           node tests/barbercraft-client-link-navigation-smoke.mjs
           node tests/barbercraft-private-gallery-smoke.mjs
           node tests/barbercraft-portal-session-isolation-smoke.mjs
+          node tests/barbercraft-three-portals-smoke.mjs
           node tests/barbercraft-auth-resend-recovery-smoke.mjs
