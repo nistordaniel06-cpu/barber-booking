@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id);
 const el=(tag,content,cls)=>{const x=document.createElement(tag);if(content!==undefined)x.textContent=String(content);if(cls)x.className=cls;return x;};
 const root=$("rewardMarketplace");if(!root||!window.supabase)return;
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=await window.BCPassportSession();
 const {data:{user}}=await sb.auth.getUser();if(!user)return;
 const fmt=n=>new Intl.NumberFormat("ro-RO").format(Number(n)||0);
 const message=$("rewardFlowStatus"),claims=$("rewardClaimList"),qrPanel=$("rewardQrPanel"),market=$("rewardMarketList");
