@@ -67,3 +67,28 @@ body.modalOpen{overflow:hidden}
 
 /* Two-finger gesture adjusts the calendar time scale only, not the whole page. */
 .calendarZoomLevel{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:35;pointer-events:none;border:1px solid #bd9b51;border-radius:20px;background:#252119e8;color:#f8d47d;font-size:12px;font-weight:800;padding:7px 12px;box-shadow:0 5px 14px #0006}
+
+/* Responsive day columns: three and seven ALWAYS fit inside the phone, no horizontal pan. */
+.timeline[data-view="three"],
+.timeline[data-view="week"]{width:100%!important;min-width:0!important;max-width:100%;overflow:visible}
+.timeline[data-view="three"] .staffColumnHeader,
+.timeline[data-view="week"] .staffColumnHeader{min-width:0!important;overflow:hidden}
+.timeline[data-view="three"] .staffColumnHeader{padding:4px 5px;align-items:center;text-align:center}
+.timeline[data-view="three"] .staffColumnHeader strong{font-size:clamp(10px,2.8vw,12px)}
+.timeline[data-view="three"] .staffColumnHeader small{font-size:9px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timeline[data-view="week"] .staffColumnHeader{padding:5px 0;align-items:center;text-align:center}
+.timeline[data-view="week"] .staffColumnHeader strong{font-size:clamp(9px,2.65vw,11px);letter-spacing:-.3px}
+.timeline[data-view="week"] .timeLabel{font-size:9px;padding:0 1px 0 0;letter-spacing:-.5px}
+.timeline[data-view="three"] .timeLabel{font-size:10px;padding:0 2px 0 0}
+.timeline[data-view="three"] .calendarEvent,
+.timeline[data-view="week"] .calendarEvent{
+ box-sizing:border-box;min-width:0!important;max-width:calc(100% - 2px);
+ width:calc(100% - 2px);margin:1px!important;padding:3px 2px;
+ border-left-width:3px;border-radius:4px
+}
+.timeline[data-view="three"] .calendarEvent strong{font-size:10px}
+.timeline[data-view="three"] .calendarEvent small{font-size:9px}
+.timeline[data-view="week"] .calendarEvent strong{font-size:9px;line-height:12px}
+.timeline[data-view="week"] .calendarEvent small{display:none}
+.timeline[data-view="week"] .timeCell,
+.timeline[data-view="three"] .timeCell{min-width:0!important}
