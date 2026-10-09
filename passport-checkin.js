@@ -17,8 +17,8 @@ button.onclick=async()=>{
  const {data,error}=await sb.rpc("bc_passport_qr_issue");
  if(error){status.textContent="Codul nu a fost generat: "+(error.message==="TRY_AGAIN_SHORTLY"?"Reîncearcă în câteva secunde.":error.message);button.disabled=false;return}
  const square=el("div",undefined,"rewardQrSquare");
- if(window.QRCode)new window.QRCode(square,{text:data.payload,width:166,height:166,colorDark:"#151515",colorLight:"#fff",correctLevel:window.QRCode.CorrectLevel.M});
- else square.append(el("p","Scanerul QR nu este disponibil. Copiază codul de mai jos.","muted"));
+ try{window.BCRenderPassportQr(square,data.payload)}
+ catch(err){square.replaceChildren(el("p","QR indisponibil ("+err.message+"). Folosește «Copiază codul».","muted"));}
  const token=el("code","BCP1 ···· "+data.payload.slice(-8),"rewardQrCode");
  const reveal=el("button","Vezi codul complet","bc-qr-disclosure");reveal.type="button";
  reveal.onclick=()=>{const visible=token.dataset.revealed==="true";token.dataset.revealed=visible?"false":"true";
