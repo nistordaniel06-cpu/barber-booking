@@ -32,7 +32,7 @@ else for(const photo of photos.data){
  if(error||!signed?.signedUrl)continue;
  const btn=el("button",undefined,"bc-gallery-photo");btn.type="button";btn.setAttribute("aria-label","Deschide fotografia "+(photo.caption||"din galerie"));
  const img=el("img");img.loading="lazy";img.src=signed.signedUrl;img.alt=photo.caption||"Fotografie privată din Barber Passport";
- btn.append(img);btn.onclick=()=>{const box=$("profileLightbox");$("lightboxImage").src=signed.signedUrl;$("lightboxText").textContent=photo.caption||"Din galeria mea";box.hidden=false;$("lightboxClose").focus()};
+ btn.append(img);btn.onclick=()=>{const box=$("profileLightbox");$("lightboxImage").src=signed.signedUrl;$("lightboxNewTab").href=signed.signedUrl;$("lightboxText").textContent=photo.caption||"Din galeria mea";box.hidden=false;$("lightboxClose").focus()};
  gallery.append(btn);
 }
 $("lightboxClose").onclick=()=>$("profileLightbox").hidden=true;
