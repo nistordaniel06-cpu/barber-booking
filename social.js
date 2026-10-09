@@ -194,7 +194,7 @@ $("socialPortfolioForm").onsubmit=async e=>{
   portfolioNotice("Alege o fotografie JPG, PNG sau WebP de maximum 5 MB.",true);return;
  }
  if(!user){portfolioNotice("Conectează-te în contul PRO pentru a publica fotografii.",true);return}
- if(!confirm("Fotografia va fi publică dacă profilul tău este public. Confirmi că ai acordul persoanelor fotografiate?"))return;
+ if(!confirm("Fotografia va avea un link public chiar dacă profilul tău este privat. Confirmi că ai acordul persoanelor fotografiate?"))return;
  b.disabled=true;
  const oldLabel=b.textContent;
  b.textContent="Se publică…";
@@ -208,7 +208,7 @@ $("socialPortfolioForm").onsubmit=async e=>{
   f.reset();
   try{
    await loadBarberDetails(user.id,true);
-   portfolioNotice("Fotografia a fost salvată în portofoliu. Devine vizibilă celorlalți când publici profilul social.");
+   portfolioNotice("Fotografia a fost încărcată. În comunitate apare după publicarea profilului social; fișierul are un link public.");
   }catch(err){
    portfolioNotice("Fotografia a fost publicată, dar galeria nu s-a reîmprospătat. Reîncarcă pagina.",true);
   }
