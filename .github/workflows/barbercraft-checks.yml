@@ -3,6 +3,7 @@ on:
   pull_request:
   push:
     branches:
+      - main
       - feature/barbercraft-zones-passport-rewards
       - feature/barbercraft-reward-redemption-qr-zones
       - feature/barbercraft-premium-photo-ui
@@ -36,6 +37,7 @@ jobs:
           node tests/barbercraft-premium-smoke.mjs
           node tests/barbercraft-map-regressions.mjs
           node tests/barbercraft-social-smoke.mjs
+          node tests/barbercraft-social-gallery-quotas-smoke.mjs
           node tests/barbercraft-growth-smoke.mjs
           node tests/barbercraft-social-feed-qr-smoke.mjs
           node tests/barbercraft-kingdom-explore-mobile-smoke.mjs
