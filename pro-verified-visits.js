@@ -30,6 +30,7 @@ async function load(){
 }
 $("serviceConfirmReload").onclick=load;
 $("salon")?.addEventListener("change",load);
-$("redeemBtn")?.addEventListener("click",()=>setTimeout(load,750));
+document.addEventListener("bc-pro-salon-ready",load);
+document.addEventListener("bc-pro-checkin-confirmed",load);
 await load();
 })();
