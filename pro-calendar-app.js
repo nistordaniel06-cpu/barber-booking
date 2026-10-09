@@ -91,7 +91,7 @@ function startSelection(e,cell,column,q){
  if(e.button!==0||!$("sheetBackdrop").hidden)return;
  e.preventDefault();
  const rect=scroller.getBoundingClientRect();
- state.gesture={id:e.pointerId,col:column,start:q,rect,scroll:scroller.scrollTop,moved:false};
+ state.gesture={id:e.pointerId,col:column,start:q,startY:e.clientY,rect,scroll:scroller.scrollTop,moved:false};
  state.selection={col:column,date:columns()[column].date,staff:columns()[column].staff,from:q,to:Math.min(hourRows,q+2)};
  cell.setPointerCapture(e.pointerId);paintSelection();
 }
@@ -105,7 +105,7 @@ function moveSelection(e){
  const g=state.gesture;if(!g||e.pointerId!==g.id)return;
  e.preventDefault();
  const q=positionFromPointer(e);
- if(Math.abs(e.clientY-g.rect.top-g.start*pixelPerQuarter+g.scroll)<8&&q===g.start)return;
+ if(Math.abs(e.clientY-g.startY)<8&&q===g.start)return;
  g.moved=true;
  state.selection.from=Math.min(g.start,q);
  state.selection.to=Math.min(hourRows,Math.max(g.start,q)+1);
@@ -239,7 +239,7 @@ function openEditor(kind,event=null){
  $("clientField").hidden=kind==="busy";
  $("serviceField").querySelector("input").placeholder=kind==="busy"?"Ex. Pauză, training, concediu":"Ex. Tuns + barbă";
  const selected=event?{from:new Date(event.starts_at),to:new Date(event.ends_at),staff:event.specialist_user_id}:
-  state.selection?selectionText(state.selection):{from:new Date(),to:new Date(Date.now()+30*60000),staff:state.user.id};
+  window.__bcDraftSelection||{from:new Date(),to:new Date(Date.now()+30*60000),staff:state.user.id};
  // Capture selection before closeSheet reset (stored by caller for new events).
  const initial=event?selected:window.__bcDraftSelection||selected;
  $("startAt").value=datetime(initial.from);$("endAt").value=datetime(initial.to);
