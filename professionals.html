@@ -178,7 +178,7 @@ async function authenticate(type){
  $("signIn").disabled=true;$("signUp").disabled=true;
  try{
   const operation=type==="signUp"
-  ?client.auth.signUp({email,password,options:{emailRedirectTo:"https://nistordaniel06-cpu.github.io/barber-booking/professionals.html",data:{barbercraft_account_type:"professional"}}})
+  ?client.auth.signUp({email,password,options:{emailRedirectTo:window.BARBERCRAFT_AUTH_REDIRECT_PRO,data:{barbercraft_account_type:"professional"}}})
   :client.auth.signInWithPassword({email,password});
   const result=await Promise.race([operation,new Promise((_,reject)=>setTimeout(()=>reject(new Error("Conexiunea a expirat după 15 secunde. Verifică internetul și încearcă din Chrome.")),15000))]);
   if(result.error){status.textContent="Eroare PRO: "+result.error.message;return;}
