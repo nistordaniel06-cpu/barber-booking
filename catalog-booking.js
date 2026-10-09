@@ -43,13 +43,36 @@ $("catalogAccountLogin").onsubmit=async e=>{
 $("catalogRegister").onclick=async()=>{
  const email=$("catalogAuthEmail").value.trim(),password=$("catalogAuthPassword").value;
  if(!email||password.length<8){$("catalogAccountStatus").textContent="Introdu e-mailul și o parolă de minimum 8 caractere.";return;}
- const {data,error}=await sb.auth.signUp({email,password});
+ const {data,error}=await sb.auth.signUp({
+  email,password,
+  options:{
+   emailRedirectTo:window.BARBERCRAFT_AUTH_REDIRECT_CLIENT,
+   data:{barbercraft_account_type:"client"}
+  }
+ });
  if(error){$("catalogAccountStatus").textContent="Nu am putut crea contul: "+error.message;return;}
  if(data.session){
   await checkAccount();
  }else{
   $("catalogAccountStatus").textContent="Verifică e-mailul pentru confirmarea contului, apoi așteaptă aprobarea administratorului.";
  }
+};
+$("catalogResendEmail").onclick=async()=>{
+ const email=$("catalogAuthEmail").value.trim();
+ const status=$("catalogAccountStatus");
+ const button=$("catalogResendEmail");
+ if(!email||!email.includes("@")){status.textContent="Introdu adresa de e-mail în formular, apoi apasă Retrimite.";return;}
+ button.disabled=true;
+ try{
+  const {error}=await sb.auth.resend({
+   type:"signup",
+   email,
+   options:{emailRedirectTo:window.BARBERCRAFT_AUTH_REDIRECT_CLIENT}
+  });
+  status.textContent=error?"Nu am putut retrimite confirmarea: "+error.message:
+   "Dacă adresa este eligibilă, vei primi un mesaj nou de confirmare cu link spre BARBERCRAFT.";
+ }catch(e){status.textContent="Nu am putut retrimite mesajul: "+e.message;}
+ finally{button.disabled=false}
 };
 $("catalogLogout").onclick=async()=>{await sb.auth.signOut();await checkAccount();};
 $("catalogRecheck").onclick=checkAccount;
