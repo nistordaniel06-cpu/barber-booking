@@ -21,24 +21,8 @@ function passport(){
   nav.firstChild.classList.add("active");
  }
 }
-function pro(){
- const member=d.getElementById("member");
- if(member&&!member.querySelector(".bc-pro-scan")){
-  const scan=link("","./reward-redeem.html","bc-pro-scan");
-  const icon=node("span","▣","bc-scan-icon"),text=node("span");
-  text.append(node("strong","Scanează pașaportul unui client"),
-   node("small","Check-in și recompense · disponibil pentru toată echipa"));
-  scan.append(icon,text,node("span","→","arrow"));
-  const overview=member.querySelector("#proOverviewPanel");
-  overview?.prepend(scan);
- }
- const settings=member?.querySelector(".proQuickGrid");
- if(settings&&!settings.querySelector(".bc-pro-quickscan")){
-  const sc=link("","./reward-redeem.html","proQuick bc-pro-quickscan");
-  sc.append(node("span","▣","qi"),node("strong","Scanează QR"),node("small","Pașaport, check-in, recompense"));
-  settings.prepend(sc);
- }
-}
+// Scanning is available from the single PRO header link. Do not duplicate the CTA.
+function pro(){}
 function admin(){
  const dash=d.getElementById("dashboard");
  if(!dash||dash.querySelector(".bc-admin-tools"))return;
