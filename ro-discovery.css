@@ -1,0 +1,21 @@
+body.bc-client .bcDiscoverBar{display:grid;gap:9px;margin:6px 0 13px}
+.bcDiscoverActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bcDiscoverActions button{font:750 11px "DM Sans",system-ui;background:#1b1c20;color:#f7e2b2;
+ border:1px solid #5d4d30;border-radius:13px;padding:12px 5px;min-height:45px}
+.bcDiscoverActions button[aria-pressed=true]{background:#efc962;color:#15110a}
+#bcLocationNotice{margin:0;color:#aaa5a2;font-size:11px;line-height:1.5}
+body.bc-client .bcAdvancedFilters{border:1px solid #33363d;background:#14151a;border-radius:14px;margin-bottom:16px}
+body.bc-client .bcAdvancedFilters>summary{padding:14px 16px;font-size:12px;font-weight:800;color:#f0ce87;cursor:pointer}
+body.bc-client .bcAdvancedFilters>.locationFilters{margin:0!important;padding:4px 12px 13px}
+body.bc-client .bcAdvancedFilters:not([open])>.locationFilters{display:none}
+body.bc-client .bcCountryMap{background:#111219;border:1px solid #67512b;border-radius:21px;overflow:hidden;margin:13px 0 20px}
+body.bc-client .bcCountryMap[hidden]{display:none!important}
+.bcMapHeader{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px}
+.bcMapHeader strong{display:block;font-size:14px}
+.bcMapHeader small{display:block;margin-top:6px;font-size:11px;color:#afa99c}
+.bcMapHeader button{border:1px solid #665027;border-radius:9px;padding:9px 10px;color:#f1d182;background:#28221a}
+#bcMapRoot{height:min(54vh,460px);min-height:290px;background:#1b1c20}
+#bcMapLegend{padding:12px 15px;font-size:11px;color:#c2b9ac}
+body.bc-client .bcCountryMap .leaflet-container{font-family:"DM Sans",system-ui;background:#252931}
+@media(min-width:720px){.bcDiscoverActions{display:flex}.bcDiscoverActions button{padding:12px 18px}}
+@media(max-width:385px){.bcDiscoverActions button{font-size:10px;line-height:1.2}}
