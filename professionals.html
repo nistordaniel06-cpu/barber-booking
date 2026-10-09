@@ -166,7 +166,23 @@ body{background:#f6f6f8;color:#17181d}
 const $=id=>document.getElementById(id);
 const client=window.supabase&&window.BARBERCRAFT_SUPABASE_URL&&window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY?window.BCAuthClient("pro",{detectSessionInUrl:true}):null;
 let user=null;
-async function refresh(){if(!client)return;const {data,error}=await client.auth.getUser();user=error?null:data.user;document.body.classList.toggle("proSignedIn",!!user);$("guest").hidden=!!user;$("member").hidden=!user;$("identity").textContent=user?"Autentificat: "+(user.email||""):"";if(user){$("contactEmail").value=user.email||"";await loadApplications();await loadVerifiedAccess();await populateCalendarSalons();document.dispatchEvent(new Event("bc-pro-reload-lifecycle"));await loadMyInvitations();const info=$("proHomeAccess");if(info)info.textContent=$("verifiedAccess").textContent;proNavigate("overview");}}
+async function refresh(){
+ if(!client)return;
+ const {data,error}=await client.auth.getUser();
+ user=error?null:data.user;
+ if(user){
+  const {data:portal,error:portalError}=await client.rpc("bc_pro_portal_access");
+  if(portalError){
+   $("authStatus").textContent="Nu putem verifica rolul PRO: "+portalError.message;
+   return;
+  }
+  if(portal?.allowed!==true){
+   await client.auth.signOut({scope:"local"});
+   user=null;
+   $("authStatus").textContent="Acesta este un cont Client. Pentru PRO, folosește un cont profesional separat sau un cont cu acces aprobat la salon.";
+  }
+ }
+ document.body.classList.toggle("proSignedIn",!!user);$("guest").hidden=!!user;$("member").hidden=!user;$("identity").textContent=user?"Autentificat: "+(user.email||""):"";if(user){$("contactEmail").value=user.email||"";await loadApplications();await loadVerifiedAccess();await populateCalendarSalons();document.dispatchEvent(new Event("bc-pro-reload-lifecycle"));await loadMyInvitations();const info=$("proHomeAccess");if(info)info.textContent=$("verifiedAccess").textContent;proNavigate("overview");}}
 async function authenticate(type){
  const btn=type==="signUp"?$("signUp"):$("signIn");
  const status=$("authStatus");
