@@ -1,0 +1,47 @@
+:root{color-scheme:dark;--bg:#0d0e12;--surface:#191a21;--line:#383a43;--gold:#ffd16c;--text:#f5f5f7;--muted:#aeb1bb}
+*{box-sizing:border-box}html,body{max-width:100%;overflow-x:clip}body{margin:0;background:var(--bg);color:var(--text);font:14px "DM Sans",system-ui,sans-serif}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}[hidden]{display:none!important}
+.pilotWrap{max-width:760px;width:100%;margin:auto;padding:14px clamp(12px,3vw,23px) 90px}.pilotWrap *{min-width:0}
+.pilotHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 0 19px;border-bottom:1px solid var(--line)}
+.pilotHeader a{color:var(--gold);font-size:12px;font-weight:700;text-decoration:none}
+.pilotHeader strong{font-weight:900;letter-spacing:-.4px}.pilotHeader strong span{color:var(--gold)}.pilotHeader strong small{font-size:10px}
+.pilotGuest{font-size:10px;color:#f5cf86;letter-spacing:1px}
+.pilotHero{padding:clamp(22px,5vw,35px);background:linear-gradient(115deg,#382b19,#18191e 78%);border:1px solid #796138;border-radius:22px;margin:20px 0 15px}
+.pilotEyebrow{letter-spacing:1.4px;font-size:10px;font-weight:900;color:var(--gold)}
+.pilotHero h1{font-size:clamp(28px,6vw,41px);letter-spacing:-1.2px;line-height:1.12;margin:10px 0 13px;overflow-wrap:anywhere}
+.pilotHero p{font-size:13px;line-height:1.65;color:#e0d1b3;margin:0}
+.pilotStatus{border:1px solid #655339;background:#2b2418;border-radius:12px;padding:12px 14px;color:#ffdf9f;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.pilotCard{background:var(--surface);border:1px solid var(--line);padding:clamp(16px,4vw,24px);border-radius:19px;margin:14px 0;min-width:0;overflow-wrap:anywhere}
+.pilotCard h2{font-size:clamp(18px,4.5vw,24px);letter-spacing:-.5px;margin:0 0 14px}
+.pilotCard h3{font-size:15px;margin:20px 0 11px}
+.pilotCard p,.pilotSmall{font-size:12px;color:var(--muted);line-height:1.65}
+.pilotCard label{display:grid;gap:7px;font-weight:700;font-size:12px;margin:13px 0}
+.pilotCard input,.pilotCard select{background:#0f1015;color:#fafafa;border:1px solid #50525d;border-radius:11px;padding:13px 12px;width:100%;max-width:100%;font-size:16px}
+.pilotCard input:focus,.pilotCard select:focus{outline:2px solid #ffdb85;outline-offset:2px}
+.pilotCard button{white-space:normal;overflow-wrap:anywhere;min-height:44px;max-width:100%;border-radius:11px;padding:12px 15px;font-size:12px;font-weight:900;border:1px solid #dab974}
+.pilotPrimary{background:#f8cd70;color:#1f1709}
+.pilotSecondary{background:#2b2b32;color:#ffe0a3}
+.pilotDanger{background:#2f2227;color:#ffd0c7;border-color:#82535a!important}
+.pilotTwo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pilotActions{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.pilotToggle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px;background:#242229;border:1px solid #4a4134;border-radius:14px}
+.pilotToggle>div{flex:1}.pilotToggle strong{font-size:14px}
+.pilotToggle p{margin:5px 0 0}.pilotToggle input{flex:0 0 23px;width:23px;height:23px;accent-color:#eec16b}
+.pilotServiceRow{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto;gap:9px;align-items:end;padding:12px;border:1px solid #414148;border-radius:13px;margin:9px 0;background:#22232a}
+.pilotServiceRow label{margin:0}
+.pilotServiceRow button{padding:12px 10px}
+.pilotBookingRow{padding:13px 0;border-bottom:1px solid #37373f;display:grid;gap:5px}
+.pilotBookingRow strong{font-size:14px}.pilotBookingRow span{color:#adb0b9;font-size:12px;overflow-wrap:anywhere}
+.pilotCheck{padding:10px 0;color:#edd7ac;font-size:12px;border-bottom:1px solid #35343b;line-height:1.5}
+.pilotSlots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.pilotSlots button{padding:12px 5px;background:#29292f;color:#efd7a3;border:1px solid #68604b}
+.pilotSlots button[aria-pressed=true]{background:#ffce70;color:#1a160e;border-color:#ffce70}
+.pilotConsent{display:flex!important;align-items:flex-start;gap:10px!important;line-height:1.6;font-weight:500!important}
+.pilotConsent input{flex:0 0 20px;width:20px!important;margin-top:4px;accent-color:#ffcc70}
+.pilotBookingCode{display:inline-block;font-size:23px;color:#ffdb91;padding:13px;border:1px solid #8c6b3c;border-radius:10px;margin:10px 0;max-width:100%;overflow-wrap:anywhere}
+@media(max-width:600px){.pilotServiceRow{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pilotServiceRow label:first-child{grid-column:1/-1}.pilotServiceRow button{grid-column:1/-1}
+.pilotSlots{grid-template-columns:repeat(3,minmax(0,1fr))}.pilotHeader{gap:8px}
+.pilotHeader strong{font-size:12px}
+}
+@media(max-width:360px){.pilotSlots{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pilotTwo{grid-template-columns:1fr}.pilotActions button{width:100%}}
