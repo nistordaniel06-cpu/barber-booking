@@ -5,7 +5,16 @@ const $=id=>document.getElementById(id);
 const sb=window.BCAuthClient?.("pro",{detectSessionInUrl:false});
 const state={user:null,access:[],salon:null,staff:[],filter:"all",mode:"day",day:new Date(),events:[],sequence:0,selection:null,editId:null,editSource:null,kind:"confirmed",gesture:null};
 const scroller=$("calendarScroll"),timeline=$("timeline");
-const hourRows=96,pixelPerQuarter=19;
+const hourRows=96,zoomKey="barbercraft-pro-calendar-zoom-v1";
+const minimumQuarterHeight=9,maximumQuarterHeight=42,normalQuarterHeight=19;
+function restoreQuarterHeight(){
+ try{
+  const saved=Number(localStorage.getItem(zoomKey));
+  return Number.isFinite(saved)&&saved>=minimumQuarterHeight&&saved<=maximumQuarterHeight?saved:normalQuarterHeight;
+ }catch(_){return normalQuarterHeight}
+}
+let pixelPerQuarter=restoreQuarterHeight();
+timeline.style.setProperty("--quarter-height",pixelPerQuarter+"px");
 let toastTimer=null,reloadTimer=null,pollTimer=null;
 const pad=n=>String(n).padStart(2,"0");
 const iso=d=>[d.getFullYear(),pad(d.getMonth()+1),pad(d.getDate())].join("-");
@@ -88,8 +97,110 @@ function paintSelection(){
   cell.classList.toggle("selected",same&&idx>=s.from&&idx<s.to);
  });
 }
+// Two-finger pinch only changes the calendar's vertical time scale. The
+// browser page, horizontal barber columns and the booking durations stay fixed.
+const activeTouches=new Map();
+let pinch=null,ignoreCalendarClickUntil=0,zoomNoticeTimer=null,outerPan=null;
+const clampQuarterHeight=n=>Math.max(minimumQuarterHeight,Math.min(maximumQuarterHeight,n));
+const fingerDistance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function showZoomNotice(){
+ const label=$("calendarZoomLevel");
+ if(!label)return;
+ label.textContent="Zoom "+Math.round(pixelPerQuarter/normalQuarterHeight*100)+"%";
+ label.hidden=false;
+ clearTimeout(zoomNoticeTimer);
+ zoomNoticeTimer=setTimeout(()=>label.hidden=true,900);
+}
+function focalScrollTop(anchorQuarter,quarterHeight,clientY,viewportTop){
+ return Math.max(0,52+anchorQuarter*quarterHeight-(clientY-viewportTop));
+}
+function changeQuarterHeight(nextHeight,clientY,anchorQuarter){
+ const height=clampQuarterHeight(nextHeight);
+ if(Math.abs(height-pixelPerQuarter)<.01)return;
+ const visibleTop=scroller.getBoundingClientRect().top;
+ const anchor=anchorQuarter===undefined
+  ?(scroller.scrollTop+scroller.clientHeight/2-52)/pixelPerQuarter
+  :anchorQuarter;
+ pixelPerQuarter=height;
+ timeline.style.setProperty("--quarter-height",height+"px");
+ // Keep the exact time beneath the fingers instead of jumping to the day start.
+ const focusY=clientY===undefined?scroller.clientHeight/2:clientY-visibleTop;
+ scroller.scrollTop=focalScrollTop(anchor,height,focusY+visibleTop,visibleTop);
+ showZoomNotice();
+}
+function beginPinch(){
+ if(activeTouches.size!==2||!$("sheetBackdrop").hidden)return;
+ const fingers=[...activeTouches.values()];
+ const distance=fingerDistance(fingers[0],fingers[1]);
+ if(distance<12)return;
+ if(state.gesture){
+  clearTimeout(state.gesture.timer);
+  state.gesture=null;
+ }
+ outerPan=null;
+ state.selection=null;
+ timeline.querySelectorAll(".timeCell.selected").forEach(cell=>cell.classList.remove("selected"));
+ const midY=(fingers[0].y+fingers[1].y)/2;
+ const rect=scroller.getBoundingClientRect();
+ pinch={distance,initialHeight:pixelPerQuarter,
+  focalQuarter:(scroller.scrollTop+midY-rect.top-52)/pixelPerQuarter};
+ ignoreCalendarClickUntil=Date.now()+800;
+}
+function pointerDownOnCalendar(e){
+ if(e.pointerType!=="touch"||!$("sheetBackdrop").hidden)return;
+ activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(activeTouches.size===2)beginPinch();
+ else if(activeTouches.size===1&&!e.target.closest(".timeCell")){
+  outerPan={id:e.pointerId,y:e.clientY,x:e.clientX,lastTick:performance.now(),velocityY:0,moved:false};
+ }
+}
+scroller.addEventListener("pointerdown",pointerDownOnCalendar,true);
+scroller.addEventListener("click",event=>{
+ if(Date.now()<ignoreCalendarClickUntil){
+  event.preventDefault();event.stopImmediatePropagation();
+ }
+},true);
+function handlePointerMove(e){
+ if(activeTouches.has(e.pointerId)){
+  activeTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pinch&&activeTouches.size>=2){
+   e.preventDefault();
+   const touches=[...activeTouches.values()].slice(0,2);
+   const midY=(touches[0].y+touches[1].y)/2;
+   const distance=fingerDistance(touches[0],touches[1]);
+   changeQuarterHeight(pinch.initialHeight*distance/pinch.distance,midY,pinch.focalQuarter);
+   return;
+  }
+ }
+ if(outerPan&&outerPan.id===e.pointerId&&!pinch){
+  e.preventDefault();
+  const now=performance.now(),dy=e.clientY-outerPan.y,dt=Math.max(1,now-outerPan.lastTick);
+  scroller.scrollTop-=dy;scroller.scrollLeft-=e.clientX-outerPan.x;
+  outerPan.moved||=Math.abs(dy)>3;
+  outerPan.velocityY=dy/dt;outerPan.y=e.clientY;outerPan.x=e.clientX;outerPan.lastTick=now;
+  return;
+ }
+ if(!pinch&&activeTouches.size<2)moveSelection(e);
+}
+function finishPointer(e,cancel){
+ const wasPinching=!!pinch;
+ if(wasPinching)ignoreCalendarClickUntil=Date.now()+650;
+ if(!wasPinching&&outerPan&&outerPan.id===e.pointerId){
+  const g=outerPan;outerPan=null;
+  if(g.moved){
+   ignoreCalendarClickUntil=Date.now()+250;
+   if(!cancel)coastScroll({velocityY:g.velocityY});
+  }
+ }else if(!wasPinching)endSelection(e,cancel);
+ activeTouches.delete(e.pointerId);
+ if(wasPinching){
+  pinch=null;state.gesture=null;state.selection=null;
+  timeline.querySelectorAll(".timeCell.selected").forEach(cell=>cell.classList.remove("selected"));
+  try{localStorage.setItem(zoomKey,String(Math.round(pixelPerQuarter*100)/100))}catch(_){}
+ }
+}
 function startSelection(e,cell,column,q){
- if(e.button!==0||!$("sheetBackdrop").hidden)return;
+ if(e.button!==0||pinch||activeTouches.size>=2||!$("sheetBackdrop").hidden)return;
  e.preventDefault();
  const rect=scroller.getBoundingClientRect();
  const touch=e.pointerType==="touch"||e.pointerType==="pen";
@@ -140,7 +251,7 @@ function moveSelection(e){
 function coastScroll(g){
  let velocity=g.velocityY*15,frames=0;
  function frame(){
-  if(++frames>24||Math.abs(velocity)<.5||state.gesture)return;
+  if(++frames>24||Math.abs(velocity)<.5||state.gesture||pinch||activeTouches.size>=2)return;
   scroller.scrollTop-=velocity;velocity*=.82;requestAnimationFrame(frame);
  }
  requestAnimationFrame(frame);
@@ -158,9 +269,9 @@ function endSelection(e,cancel){
  $("selectionLabel").textContent=d.label;
  showSheet("quickSheet");
 }
-window.addEventListener("pointermove",moveSelection,{passive:false});
-window.addEventListener("pointerup",e=>endSelection(e,false));
-window.addEventListener("pointercancel",e=>endSelection(e,true));
+window.addEventListener("pointermove",handlePointerMove,{passive:false});
+window.addEventListener("pointerup",e=>finishPointer(e,false));
+window.addEventListener("pointercancel",e=>finishPointer(e,true));
 function dateTitle(){
  const a=days(),last=a.at(-1);
  $("dateLabel").textContent=a.length===1?a[0].toLocaleDateString("ro-RO",{day:"numeric",month:"short",year:"numeric"}):

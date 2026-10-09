@@ -29,6 +29,29 @@ assert.match(js,/pointermove/,"Drag updates");
 assert.match(js,/pointerup/,"Release opens action menu");
 assert.match(js,/scrollByTouch/,"One-finger swipe scrolls the timeline anywhere");
 assert.match(js,/coastScroll/,"Touch scrolling uses momentum");
+assert.match(js,/activeTouches=new Map\(\)/,"Touches tracked separately by pointer ID");
+assert.match(js,/function beginPinch/,"Pinch begins only with two fingers");
+assert.match(js,/activeTouches\.size!==2/,"Single-finger scroll never triggers pinch");
+assert.match(js,/fingerDistance/,"Pinch derives scaling from finger spacing");
+assert.match(js,/pinch\.initialHeight\*distance\/pinch\.distance/,"Both pinch directions smoothly change time scale");
+assert.match(js,/timeline\.style\.setProperty\("--quarter-height"/,"Only calendar grid zooms, never the entire page");
+assert.match(js,/minimumQuarterHeight=9,maximumQuarterHeight=42/,"Zoom bounded for readable 15-minute slots");
+assert.match(js,/localStorage\.setItem\(zoomKey/,"Zoom level persists across visits");
+assert.match(js,/clearTimeout\(state\.gesture\.timer\)/,"Starting pinch cancels pending long-press booking");
+assert.match(js,/ignoreCalendarClickUntil/,"Pinch cannot accidentally open an appointment");
+assert.match(html,/id="calendarZoomLevel"/,"Zoom feedback overlay present");
+assert.match(css,/\.timelineScroller\{[^}]*touch-action:none/,"Browser does not intercept two-finger calendar gestures");
+assert.match(css,/\.calendarEvent\{touch-action:none/,"Pinch works over existing appointments too");
+const focalFunction=js.match(/function focalScrollTop\([^)]*\)\{[\s\S]*?\n\}/)?.[0];
+assert.ok(focalFunction,"Pure focal point preserving calculation exists");
+const focalScrollTop=vm.runInNewContext(focalFunction+"\nfocalScrollTop");
+const anchorQuarter=40,viewTop=100,centerY=360;
+for(const size of [9,12,19,27,42]){
+ const scroll=focalScrollTop(anchorQuarter,size,centerY,viewTop);
+ assert.ok(Math.abs((scroll+centerY-viewTop-52)/size-anchorQuarter)<1e-7,
+  "Pinch keeps same calendar time under the fingers at "+size+" px");
+}
+
 assert.match(js,/setTimeout\(\(\)=>\{/,"Hold activates multi-hour selection without ON\/OFF");
 assert.match(js,/De atribuit/,"Unassigned client booking does not appear on every staff calendar");
 assert.match(js,/bc_pro_calendar_save/,"Manual appointments go through server conflict checks");
@@ -43,7 +66,7 @@ assert.match(pro,/window\.location\.assign\(new URL\("\.\/pro\/calendar\/"/,"PRO
 assert.match(standalone,/window\.location\.assign\(new URL\("\.\/pro\/calendar\/"/,"Standalone PRO tab navigates to calendar app");
 assert.match(css,/height:100dvh/,"Full mobile viewport rather than short page card");
 assert.match(css,/overflow:auto/,"Timeline allows vertical and horizontal scrolling");
-assert.match(css,/grid-template-rows:52px repeat\(96,19px\)/,"All 24 hours remain accessible");
+assert.match(css,/grid-template-rows:52px repeat\(96,var\(--quarter-height,19px\)\)/,"All 24 hours remain accessible at any pinch scale");
 assert.match(css,/\.bottomBar/,"App-like navigation retained");
 for(const id of ["gate","dateLabel","pickDate","today","prev","next","chooseBooking","chooseBusy","quickSheet","editSheet","syncSheet","saveEvent","removeEvent","eventStaff","syncNotice"]){
  assert.ok(html.includes('id="'+id+'"'),"Missing required accessible element: "+id);

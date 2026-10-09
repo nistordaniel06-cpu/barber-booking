@@ -17,21 +17,21 @@
 .staffBar button.active{border-color:#f4cb68;background:#473919;color:#f5d17a}
 .staffAvatar{display:grid;place-items:center;background:#f0c668;color:#2d2310;font-size:12px;font-weight:850;border-radius:50%;height:24px;width:24px}
 .calendarArea{position:relative;min-height:0;flex:1 1 0;overflow:hidden}
-.timelineScroller{height:100%;width:100%;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#14161c;scrollbar-color:#484c56 #1b1d25;scrollbar-width:thin}
-.timeline{display:grid;position:relative;grid-template-rows:52px repeat(96,19px);grid-auto-flow:row;align-content:start;min-height:max-content;background:#151820;isolation:isolate}
+ .timelineScroller{height:100%;width:100%;overflow:auto;touch-action:none;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#14161c;scrollbar-color:#484c56 #1b1d25;scrollbar-width:thin}
+.timeline{display:grid;position:relative;grid-template-rows:52px repeat(96,var(--quarter-height,19px));grid-auto-flow:row;align-content:start;min-height:max-content;background:#151820;isolation:isolate}
 .timeCorner,.staffColumnHeader{position:sticky;top:0;background:#22252d;z-index:20;border-bottom:2px solid var(--gold);border-right:1px solid #373b45;padding:6px 10px;display:flex;align-items:center;color:#f2f4f8}
 .timeCorner{justify-content:center;color:#a8acb7;font-size:11px;padding:3px}
 .staffColumnHeader{min-width:0;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px}
 .staffColumnHeader strong{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .staffColumnHeader small{font-size:10px;color:#b7bec9}
-.timeLabel{grid-column:1;justify-self:stretch;z-index:2;background:#171a21;border-bottom:1px solid #292d36;text-align:right;padding:0 5px;color:#a7aebb;font-size:10px;line-height:18px}
+.timeLabel{grid-column:1;justify-self:stretch;z-index:2;background:#171a21;border-bottom:1px solid #292d36;text-align:right;padding:0 5px;color:#a7aebb;font-size:10px;line-height:var(--quarter-height,19px)}
 .timeLabel.hour{color:#d4d7df;font-size:11px;font-weight:750}
-.timeCell{background:#15171e;min-height:19px;border-right:1px solid #2e323c;border-bottom:1px solid #252933;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;outline-offset:-2px}
+.timeCell{background:#15171e;min-height:var(--quarter-height,19px);border-right:1px solid #2e323c;border-bottom:1px solid #252933;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;outline-offset:-2px}
 .timeCell.hour{border-top:1px solid #474b57}
 .timeCell.half{border-top:1px solid #3c404b}
 .timeCell.selected{background:#75551c!important;box-shadow:inset 0 0 0 1px #ffd979;z-index:3}
 .timeCell:active{background:#574425}
-.calendarEvent{z-index:7;border:0;border-left:4px solid #67b8ff;border-radius:6px;background:#254b75;color:#fff;margin:1px 3px;padding:3px 5px;text-align:left;overflow:hidden;cursor:pointer;min-width:0;align-self:stretch;position:relative}
+ .calendarEvent{touch-action:none;z-index:7;border:0;border-left:4px solid #67b8ff;border-radius:6px;background:#254b75;color:#fff;margin:1px 3px;padding:3px 5px;text-align:left;overflow:hidden;cursor:pointer;min-width:0;align-self:stretch;position:relative}
 .calendarEvent strong{display:block;font-size:11px;line-height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .calendarEvent small{display:block;font-size:9px;color:#f1f3f7;line-height:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .calendarEvent.busy{background:repeating-linear-gradient(-45deg,#494750,#494750 8px,#37343d 8px,#37343d 16px);border-left-color:#dfa2ab}
@@ -62,5 +62,8 @@
 .gateBox{padding:28px 24px;background:#242731;border-radius:22px;max-width:380px;border:1px solid #46434a}
 .gateBox b{color:#eec965}.gateBox h1{font-size:23px}.gateBox p{font-size:13px;color:#c3c6d0;line-height:1.5}
 body.modalOpen{overflow:hidden}
-@media(min-width:850px){.calendarApp{max-width:none}.appHeader,.dateBar,.staffBar,.bottomBar{padding-left:28px;padding-right:28px}.timeline{grid-template-rows:52px repeat(96,21px)}.timeCell{min-height:21px}.timeLabel{line-height:20px}}
+@media(min-width:850px){.calendarApp{max-width:none}.appHeader,.dateBar,.staffBar,.bottomBar{padding-left:28px;padding-right:28px}}
 @media(max-width:360px){.viewModes button{padding:0 7px}.appHeader{gap:6px}.dateLabel{min-width:60px}.viewModes{gap:0}.dateBar{gap:3px}.staffBar{padding-left:7px}.staffBar button{padding:6px 8px}}
+
+/* Two-finger gesture adjusts the calendar time scale only, not the whole page. */
+.calendarZoomLevel{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:35;pointer-events:none;border:1px solid #bd9b51;border-radius:20px;background:#252119e8;color:#f8d47d;font-size:12px;font-weight:800;padding:7px 12px;box-shadow:0 5px 14px #0006}
