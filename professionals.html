@@ -246,15 +246,18 @@ async function populateCalendarSalons(){
 }
 
 let calendarMode="three";
+let calendarDragEnabled=false;
+let activeCalendarSelection=null;
+let suppressCalendarClickUntil=0;
 let calendarEvents=[];
 let editedCalendarId=null;
 function calendarDates(){if(calendarMode==="week")return weekDates();const count=calendarMode==="three"?3:1;return Array.from({length:count},(_,n)=>{const day=new Date(weekAnchor);day.setHours(12,0,0,0);day.setDate(day.getDate()+n);return day;});}
 function localStamp(date){const d=new Date(date);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")+"T"+[String(d.getHours()).padStart(2,"0"),String(d.getMinutes()).padStart(2,"0")].join(":");}
-function calendarOpen(startDate=null,event=null){
+function calendarOpen(startDate=null,event=null,endDate=null){
  if(!proCalendarEditable()){$("calStatus").textContent="Doar proprietarul sau managerul poate modifica acest calendar.";return;}
  editedCalendarId=event?.id||null;
  const start=startDate||new Date();if(!startDate&&!event){start.setMinutes(start.getMinutes()<30?30:0,0,0);if(start.getMinutes()===0)start.setHours(start.getHours()+1);}
- const end=event?new Date(event.ends_at):new Date(start.getTime()+30*60000);
+ const end=event?new Date(event.ends_at):endDate?new Date(endDate):new Date(start.getTime()+30*60000);
  $("calManualStart").value=localStamp(start);
  $("calManualEnd").value=localStamp(end);
  $("calEventKind").value=event?.status==="confirmed"?"confirmed":"busy";
@@ -266,30 +269,119 @@ function calendarOpen(startDate=null,event=null){
  $("calendarOverlay").hidden=false;$("calendarManualForm").hidden=false;
 }
 function calendarClose(){$("calendarManualForm").hidden=true;$("calendarOverlay").hidden=true;editedCalendarId=null;}
+
+function calendarDragPreview(selection){
+ const cells=$("calWeek").querySelectorAll(".calCell");
+ for(const cell of cells){
+  const same=cell.dataset.day===selection.day;
+  const index=Number(cell.dataset.quarterIndex);
+  cell.classList.toggle("calSelected",same && index<selection.last && index+2>selection.first);
+ }
+ const minutes=(selection.last-selection.first)*15;
+ const hourMinute=q=>{const mins=7*60+q*15;return String(Math.floor(mins/60)).padStart(2,"0")+":"+String(mins%60).padStart(2,"0")};
+ $("calStatus").textContent="Blocaj selectat: "+hourMinute(selection.first)+" – "+hourMinute(selection.last)+" ("+minutes+" minute). Eliberează pentru a confirma.";
+}
+function clearCalendarDragPreview(){
+ $("calWeek").querySelectorAll(".calSelected").forEach(cell=>cell.classList.remove("calSelected"));
+ activeCalendarSelection=null;
+}
+function calendarBeginDrag(e,day,index,cell){
+ if(!calendarDragEnabled||!proCalendarEditable()||e.button!==0)return;
+ e.preventDefault();
+ const rect=cell.getBoundingClientRect();
+ const originIndex=index*2,offset=e.clientY-rect.top;
+ const first=Math.max(0,Math.min(63,originIndex+(offset>=rect.height/2?1:0)));
+ activeCalendarSelection={pointerId:e.pointerId,day:isoDay(day),date:new Date(day),first,last:first+1,rect,index};
+ cell.setPointerCapture(e.pointerId);
+ calendarDragPreview(activeCalendarSelection);
+}
+function calendarMoveDrag(e){
+ const s=activeCalendarSelection;if(!s||s.pointerId!==e.pointerId)return;
+ e.preventDefault();
+ const absoluteQuarter=s.index*2+Math.ceil((e.clientY-s.rect.top)/(s.rect.height/2));
+ s.last=Math.min(64,Math.max(s.first+1,absoluteQuarter));
+ calendarDragPreview(s);
+}
+function calendarFinishDrag(e,cancel=false){
+ const s=activeCalendarSelection;if(!s||s.pointerId!==e.pointerId)return;
+ if(!cancel)calendarMoveDrag(e);
+ const start=new Date(s.date),end=new Date(s.date);
+ const startMins=420+s.first*15,endMins=420+s.last*15;
+ start.setHours(Math.floor(startMins/60),startMins%60,0,0);
+ end.setHours(Math.floor(endMins/60),endMins%60,0,0);
+ suppressCalendarClickUntil=Date.now()+600;
+ clearCalendarDragPreview();
+ if(cancel){$("calStatus").textContent="Selecție anulată.";return;}
+ calendarOpen(start,null,end);
+ $("calendarManualTitle").textContent="Confirmă blocajul de "+((end-start)/60000)+" min";
+ $("calEventKind").value="busy";
+ $("calManualService").value="Blocaj";
+}
 function renderCalendar(events){
  calendarEvents=events||[];
  const days=calendarDates(),grid=$("calWeek");grid.replaceChildren();
+ const visibleStart=new Date(days[0]);visibleStart.setHours(0,0,0,0);
  $("calWeekName").textContent=days.length===1?days[0].toLocaleDateString("ro-RO",{weekday:"long",day:"numeric",month:"long",year:"numeric"}):days[0].toLocaleDateString("ro-RO",{day:"numeric",month:"short"})+" – "+days.at(-1).toLocaleDateString("ro-RO",{day:"numeric",month:"short",year:"numeric"});
  const count=days.length;grid.style.gridTemplateColumns="52px repeat("+count+", minmax("+(count===7?"88":"0")+"px,1fr))";grid.style.gridTemplateRows="48px repeat(32,46px)";grid.style.minWidth=count===7?"705px":"0";
+ grid.classList.toggle("calDragActive",calendarDragEnabled);
  const corner=document.createElement("div");corner.className="calDay";corner.textContent="Ora";grid.append(corner);
  for(const d of days){const el=document.createElement("div");el.className="calDay"+(isoDay(d)===isoDay(new Date())?" calToday":"");el.textContent=d.toLocaleDateString("ro-RO",{weekday:"short",day:"numeric"});grid.append(el);}
  for(let hour=7;hour<23;hour++)for(let half=0;half<2;half++){
   const index=(hour-7)*2+half;const label=document.createElement("div");label.className="calTime";label.style.gridRow=String(index+2);label.textContent=half===0?String(hour).padStart(2,"0")+":00":":30";grid.append(label);
-  days.forEach((day,i)=>{const cell=document.createElement("button");cell.type="button";cell.className="calCell";cell.style.gridColumn=String(i+2);cell.style.gridRow=String(index+2);cell.setAttribute("aria-label","Adaugă interval "+day.toLocaleDateString("ro-RO")+" "+String(hour).padStart(2,"0")+":"+String(half*30).padStart(2,"0"));const d=new Date(day);d.setHours(hour,half*30,0,0);cell.onclick=()=>calendarOpen(d);grid.append(cell);});
+  days.forEach((day,i)=>{
+   const cell=document.createElement("button");cell.type="button";cell.className="calCell";
+   cell.style.gridColumn=String(i+2);cell.style.gridRow=String(index+2);
+   cell.dataset.day=isoDay(day);cell.dataset.quarterIndex=String(index*2);
+   cell.setAttribute("aria-label","Adaugă interval "+day.toLocaleDateString("ro-RO")+" "+String(hour).padStart(2,"0")+":"+String(half*30).padStart(2,"0"));
+   const d=new Date(day);d.setHours(hour,half*30,0,0);
+   cell.onclick=()=>{if(Date.now()<suppressCalendarClickUntil||calendarDragEnabled)return;calendarOpen(d)};
+   cell.onpointerdown=e=>calendarBeginDrag(e,day,index,cell);
+   cell.onpointermove=calendarMoveDrag;
+   cell.onpointerup=e=>calendarFinishDrag(e);
+   cell.onpointercancel=e=>calendarFinishDrag(e,true);
+   grid.append(cell);
+  });
  }
  for(const event of events||[]){
   if(event.status==="cancelled")continue;
   const start=new Date(event.starts_at),end=new Date(event.ends_at);
-  const index=days.findIndex(d=>isoDay(d)===isoDay(start));if(index<0)continue;
-  const mins=start.getHours()*60+start.getMinutes()-420;if(mins<0||mins>=960)continue;
-  const length=(end-start)/60000;const element=document.createElement("button");element.type="button";
-  element.className="calEvent "+(event.status==="busy"?"busy":"confirmed");
-  element.style.gridColumn=String(index+2);
-  element.style.gridRow=String(Math.floor(mins/30)+2)+" / span "+String(Math.max(1,Math.ceil(length/30)));
-  const title=document.createElement("strong");title.textContent=event.status==="busy"?"Ocupat":event.client_display_name||"Programare";
-  const detail=document.createElement("small");detail.textContent=start.toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"})+" · "+(event.service_label||"Interval");
-  element.append(title,detail);element.onclick=()=>event.source_provider==="manual"?calendarOpen(start,event):($("calStatus").textContent="Acest interval provine dintr-un calendar importat și nu poate fi editat manual.");
-  grid.append(element);
+  if(!Number.isFinite(start.getTime())||!Number.isFinite(end.getTime())||end<=start)continue;
+  const duration=(end-start)/60000;
+  const bulk=event.status==="busy" && duration>8*60;
+  for(let i=0;i<days.length;i++){
+   const date=new Date(days[i]);date.setHours(0,0,0,0);
+   const nextDay=new Date(date);nextDay.setDate(nextDay.getDate()+1);
+   if(start>=nextDay||end<=date)continue;
+   if(bulk){
+    const shade=document.createElement("div");shade.className="calBulkShade";
+    shade.style.gridColumn=String(i+2);shade.style.gridRow="2 / span 32";grid.append(shade);
+    const block=document.createElement("button");block.type="button";
+    block.className="calBulkBanner";
+    block.style.gridColumn=String(i+2);block.style.gridRow="2";
+    block.textContent=event.service_label||"Zi blocată";
+    block.title="Blocaj: "+start.toLocaleString("ro-RO")+" – "+end.toLocaleString("ro-RO");
+    block.onclick=()=>event.source_provider==="manual"?calendarOpen(start,event):($("calStatus").textContent="Blocajul importat nu poate fi modificat aici.");
+    grid.append(block);continue;
+   }
+   const dayStart=new Date(date);dayStart.setHours(7,0,0,0);
+   const dayEnd=new Date(date);dayEnd.setHours(23,0,0,0);
+   const begin=Math.max(start.getTime(),dayStart.getTime()),finish=Math.min(end.getTime(),dayEnd.getTime());
+   if(begin>=finish)continue;
+   const minutes=(begin-dayStart.getTime())/60000;
+   const length=(finish-begin)/60000;
+   const row=Math.floor(minutes/30)+2;
+   const offset=(minutes%30)/30*46;
+   const height=Math.max(14,Math.round(length/30*46)-3);
+   const element=document.createElement("button");element.type="button";
+   element.className="calEvent "+(event.status==="busy"?"busy":"confirmed");
+   element.style.gridColumn=String(i+2);element.style.gridRow=String(row);
+   element.style.height=height+"px";element.style.top=offset+"px";element.style.alignSelf="start";
+   const title=document.createElement("strong");title.textContent=event.status==="busy"?"Ocupat":event.client_display_name||"Programare";
+   const detail=document.createElement("small");detail.textContent=new Date(begin).toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"})+" · "+(event.service_label||"Interval");
+   element.append(title,detail);
+   element.onclick=()=>event.source_provider==="manual"?calendarOpen(start,event):($("calStatus").textContent="Acest interval provine dintr-un calendar importat și nu poate fi editat manual.");
+   grid.append(element);
+  }
  }
 }
 let calendarQuerySequence=0;
@@ -301,7 +393,7 @@ async function loadCalendar(){
  try{
   const days=calendarDates();const from=new Date(days[0]);from.setHours(0,0,0,0);
   const until=new Date(days.at(-1));until.setDate(until.getDate()+1);until.setHours(0,0,0,0);
-  const {data,error}=await client.from("bc_pro_calendar_events").select("id,starts_at,ends_at,client_display_name,service_label,status,source_provider").eq("salon_id",salonId).neq("status","cancelled").gte("starts_at",from.toISOString()).lt("starts_at",until.toISOString()).order("starts_at").limit(400);
+  const {data,error}=await client.from("bc_pro_calendar_events").select("id,starts_at,ends_at,client_display_name,service_label,status,source_provider").eq("salon_id",salonId).neq("status","cancelled").lt("starts_at",until.toISOString()).gt("ends_at",from.toISOString()).order("starts_at").limit(400);
   if(sequence!==calendarQuerySequence)return;
   if(error)throw error;
   renderCalendar(data||[]);
