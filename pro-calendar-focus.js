@@ -134,7 +134,7 @@ function startGesture(e,col,day,member,halfHourIndex){
  const rect=e.currentTarget.getBoundingClientRect();
  const rowHeight=rect.height;
  const q=normalize(halfHourIndex*2+Math.floor((e.clientY-rect.top)/(rowHeight/2)),0,63);
- gesture={id:e.pointerId,col,day,member,origin:q,startY:e.clientY,startRect:rect,halfHourIndex,rowHeight};
+ gesture={id:e.pointerId,col,day,member,origin:q,startY:e.clientY,startRect:rect,halfHourIndex,rowHeight,scrollStart:scroller.scrollTop};
  selection={day,col,user:member,first:q,last:q+2};
  e.currentTarget.setPointerCapture(e.pointerId);
  updateHighlight();
@@ -142,7 +142,7 @@ function startGesture(e,col,day,member,halfHourIndex){
 function moveGesture(e){
  const g=gesture;if(!g||g.id!==e.pointerId)return;
  e.preventDefault();
- const relative=(e.clientY-g.startRect.top)/(g.rowHeight/2);
+ const relative=(e.clientY-g.startRect.top+scroller.scrollTop-g.scrollStart)/(g.rowHeight/2);
  const q=normalize(g.halfHourIndex*2+Math.floor(relative),0,63);
  selection.first=Math.min(g.origin,q);
  selection.last=Math.max(g.origin,q)+1;
@@ -152,6 +152,11 @@ function moveGesture(e){
  const box=scroller.getBoundingClientRect();
  if(e.clientY>box.bottom-35)scroller.scrollTop+=14;
  if(e.clientY<box.top+55)scroller.scrollTop-=14;
+ if(e.clientY>box.bottom-35||e.clientY<box.top+55){
+  const adjusted=(e.clientY-g.startRect.top+scroller.scrollTop-g.scrollStart)/(g.rowHeight/2);
+  const nextQ=normalize(g.halfHourIndex*2+Math.floor(adjusted),0,63);
+  selection.first=Math.min(g.origin,nextQ);selection.last=Math.max(g.origin,nextQ)+1;updateHighlight();
+ }
 }
 function endGesture(e,cancel){
  if(!gesture||gesture.id!==e.pointerId)return;
