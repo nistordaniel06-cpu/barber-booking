@@ -2,7 +2,7 @@
 const $=id=>document.getElementById(id),status=$("status");
 const el=(tag,txt,cls)=>{const x=document.createElement(tag);if(txt!==undefined)x.textContent=String(txt);if(cls)x.className=cls;return x};
 if(!window.supabase||!window.BARBERCRAFT_SUPABASE_URL){status.textContent="Serviciul de autentificare nu este disponibil.";return}
-const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=await window.BCPassportSession();
 const {data:{user},error:userError}=await sb.auth.getUser();
 if(userError||!user){status.replaceChildren(document.createTextNode("Autentifică-te pentru a vedea pașaportul. "),Object.assign(el("a","Intră în cont →"),{href:"./#account"}));return}
 $("signedIn").hidden=false;status.textContent="Informațiile din pașaport sunt private și sincronizate între dispozitive.";
