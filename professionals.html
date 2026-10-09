@@ -1,4 +1,4 @@
-<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0c0f"><title>BARBERCRAFT PRO — Portal profesioniști</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script>if(location.pathname.endsWith("/barber-booking/professionals.html"))location.replace("./pro/"+location.search+location.hash);</script><script src="./auth-config.js"></script><script defer src="./appearance.js"></script><style>
+<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0c0f"><title>BARBERCRAFT PRO — Portal profesioniști</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script>if(location.pathname.endsWith("/barber-booking/professionals.html"))location.replace("./pro/"+location.search+location.hash);</script><script src="./auth-config.js"></script><script defer src="./appearance.js"></script><link rel="stylesheet" href="./pro-working-hours-modern.css"><style>
 :root{font-family:"DM Sans",system-ui,sans-serif;background:#0b0c0f;color:#f5f5f5}*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at 50% -20%,#483a13 0,transparent 45%),#0b0c0f}button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}[hidden]{display:none!important}.page{max-width:580px;margin:0 auto;padding:20px 20px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:19px;font-weight:800;letter-spacing:-.8px}.brand b{color:#ffcb35}.back{font-size:12px;color:#ffcb35;text-decoration:none}.eyebrow{letter-spacing:2px;color:#ffd24d;font-size:11px;font-weight:800;margin:65px 0 8px}.heading{font-size:34px;line-height:1.07;letter-spacing:-1.3px;margin:0 0 14px}.sub{color:#acb0ba;font-size:14px;line-height:1.65;margin-bottom:23px}.pane{padding:19px;border:1px solid #292c35;background:#191b22;border-radius:22px;margin:18px 0}.pane h2{font-size:17px;margin:0 0 15px}.field{display:grid;gap:6px;margin:12px 0;color:#e2e3e7;font-size:12px;font-weight:700}.input{width:100%;padding:13px 14px;border:1px solid #393d47;border-radius:12px;background:#111318;color:#fff;font-size:14px}.primary{border:0;background:#ffd03d;color:#1a1608;font-weight:800;border-radius:13px;padding:14px 17px;width:100%;margin-top:10px}.outline{border:1px solid #52515a;background:#282b33;color:#fff;font-weight:700;border-radius:13px;padding:13px;width:100%;margin-top:9px}.notice{padding:12px;border-radius:12px;background:#262922;color:#dbdfd3;font-size:12px;line-height:1.55;margin:14px 0}.status{font-size:12px;line-height:1.5;color:#ffdb72;margin:10px 0;overflow-wrap:anywhere}.tag{display:inline-flex;border-radius:20px;padding:5px 10px;background:#403512;color:#ffe38b;font-size:10px;font-weight:800}.muted{font-size:12px;color:#b8bdc6}.list{display:grid;gap:8px}.item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:#242831;font-size:12px;gap:10px}.item small{color:#ffcf51;text-transform:uppercase;font-weight:800}.divider{border-top:1px solid #353943;margin:15px 0}
 .passwordWrap{display:block;position:relative}.passwordWrap .input{padding-right:54px}.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:#282a33;border-radius:10px;color:#f8f8fa;width:42px;height:38px;font-size:17px}.calendarHead{display:flex;justify-content:space-between;align-items:start;gap:10px;flex-wrap:wrap}.calActions{display:flex;gap:5px}.calActions .outline{width:auto;padding:9px 12px;margin:0}.calWeekName{color:#ffdb78;font-weight:800;font-size:14px;margin:16px 0}.calScroll{overflow:auto;border-radius:14px;border:1px solid #333842;background:#14161c;max-height:650px}.calWeek{min-width:640px;display:grid;grid-template-columns:55px repeat(7,minmax(83px,1fr));grid-template-rows:48px repeat(32,44px);position:relative}.calDay{position:sticky;top:0;z-index:5;background:#20232b;text-align:center;padding:8px 3px;border-left:1px solid #353943;font-size:12px;font-weight:700}.calTime{grid-column:1;color:#a1a7b2;text-align:right;padding:3px 8px 0 0;font-size:11px}.calCell{border-left:1px solid #343742;border-top:1px solid #30323a;min-height:44px}.calEvent{border-radius:7px;padding:5px;background:#b8debf;color:#142318;overflow:hidden;font-size:11px;z-index:2;margin:2px;box-shadow:0 2px 4px #0003}.calEvent strong{display:block;font-size:11px}.calEvent.cancelled{background:#5c626b;color:white}.calEvent.pending{background:#f7d9b5;color:#392317}.calEvent small{display:block;font-size:10px}.calToday{background:#efd264!important;color:#1b1607}.weekEmpty{padding:10px;color:#afb1b9;font-size:12px}.calScroll::-webkit-scrollbar{height:7px;width:7px}.calScroll::-webkit-scrollbar-thumb{background:#494e5a;border-radius:10px}
 /* BARBERCRAFT PRO: accessible, app-style salon management */
@@ -67,6 +67,13 @@ body{background:#f6f6f8;color:#17181d}
 .staffRepeatChoice input{accent-color:#e7bc53;height:17px;width:17px;flex-shrink:0}
 .staffRepeatChoice small{color:#dab979;font-size:10px;margin-left:auto}
 @media(max-width:420px){.staffRepeatChoice{flex-wrap:wrap}.staffRepeatChoice small{padding-left:24px;width:100%}}
+
+.bcExternalSiteSetting{display:flex!important;flex-direction:row!important;gap:12px;align-items:flex-start;line-height:1.55;font-size:12px;color:#ddd5c1}
+.bcExternalSiteSetting input{width:20px;height:20px;flex:0 0 20px;accent-color:#edc766}
+.bcSalonGPS{display:grid;gap:9px;padding:14px;border-radius:14px;border:1px solid #74603c;background:#282627}
+.bcSalonGPS>strong{color:#f4ce79;font-size:13px}
+.bcSalonGPS .muted{font-size:12px;margin:0}
+.bcSalonGPS>button{width:100%;min-height:48px}
 .hoursRepeatButton{grid-column:1/-1;justify-self:start;background:transparent;border:1px solid #6f5b31;border-radius:11px;color:#f1c767;font-size:12px;font-weight:750;padding:10px 13px;min-height:40px;cursor:pointer}
 .hoursRepeatButton:disabled{opacity:.38;cursor:not-allowed}
 .hoursRepeatPanel{display:grid;gap:11px;margin:12px 0 20px;padding:17px;background:#222329;border:1px solid #75603d;border-radius:15px;color:#f5f1e9;min-width:0}
@@ -1075,7 +1082,32 @@ async function renderSalonProfileEditor(body){
  const name=field("Numele salonului",data?.name);name.maxLength=120;const address=field("Adresa",data?.address);address.maxLength=300;
  const description=field("Descriere salon",data?.description,true);description.maxLength=2000;
  const phone=field("Telefon",data?.phone);phone.maxLength=35;
- const website=field("Website (https://)",data?.website);website.maxLength=300;
+ const website=field("Website extern (opțional · https://)",data?.website);website.maxLength=300;
+ const websiteToggle=document.createElement("label");websiteToggle.className="bcExternalSiteSetting";
+ const showWebsite=document.createElement("input");showWebsite.type="checkbox";showWebsite.checked=!!data?.website;
+ const websiteText=document.createElement("span");websiteText.textContent="Afișează website-ul extern. Dacă dezactivezi, profilul BARBERCRAFT devine pagina principală a salonului.";
+ websiteToggle.append(showWebsite,websiteText);form.append(websiteToggle);
+ const locGroup=document.createElement("section");locGroup.className="bcSalonGPS";
+ const locTitle=document.createElement("strong");locTitle.textContent="📍 Poziția salonului pe hartă";
+ const locText=document.createElement("p");locText.className="muted";locText.textContent="Pentru căutare în raza de 2 km, confirmă poziția când te afli fizic la salon. Nu memorăm locația clientului.";
+ const gpsButton=document.createElement("button");gpsButton.type="button";gpsButton.className="outline";gpsButton.textContent="⌖ Confirmă poziția salonului";
+ const gpsStatus=document.createElement("p");gpsStatus.className="status";gpsStatus.setAttribute("role","status");
+ gpsButton.onclick=()=>{
+  if(!navigator.geolocation){gpsStatus.textContent="Browserul nu permite localizarea.";return;}
+  gpsButton.disabled=true;gpsStatus.textContent="Așteptăm permisiunea GPS și precizia telefonului…";
+  navigator.geolocation.getCurrentPosition(async position=>{
+   const {latitude,longitude,accuracy}=position.coords;
+   if(accuracy>350){gpsStatus.textContent="Precizia este de "+Math.round(accuracy)+" metri. Încearcă din nou lângă salon.";gpsButton.disabled=false;return;}
+   try{
+    const {data:updated,error:saveError}=await client.rpc("bc_pro_save_salon_location",{p_salon:salon,p_lat:latitude,p_lng:longitude});
+    if(saveError)throw saveError;
+    gpsStatus.textContent=updated?.ok?"Poziția a fost confirmată pentru hartă · precizie ~"+Math.round(accuracy)+" m.":"Poziția nu a putut fi salvată.";
+   }catch(e){gpsStatus.textContent="Eroare GPS: "+e.message}
+   finally{gpsButton.disabled=false}
+  },e=>{gpsStatus.textContent="Locația nu este disponibilă: "+e.message;gpsButton.disabled=false;},
+   {enableHighAccuracy:true,timeout:20000,maximumAge:0});
+ };
+ locGroup.append(locTitle,locText,gpsButton,gpsStatus);form.append(locGroup);
  const save=document.createElement("button");save.type="button";save.className="primary";save.textContent="Salvează profilul";
  const status=document.createElement("p");status.className="status";status.setAttribute("role","status");
  form.append(save,status);holder.append(form);
@@ -1087,7 +1119,7 @@ async function renderSalonProfileEditor(body){
    const selected=file.files?.[0];if(selected){if(selected.size>5242880||!["image/jpeg","image/png","image/webp"].includes(selected.type))throw Error("Imagine invalidă.");const ext=selected.type==="image/png"?"png":selected.type==="image/webp"?"webp":"jpg";const path=salon+"/"+crypto.randomUUID()+"."+ext;
     const upload=await client.storage.from("bc-salon-covers").upload(path,selected,{contentType:selected.type,upsert:false});if(upload.error)throw upload.error;
     url=client.storage.from("bc-salon-covers").getPublicUrl(path).data.publicUrl;}
-   const {error}=await client.rpc("bc_pro_save_salon",{p_salon:salon,p_name:name.value,p_address:address.value,p_description:description.value,p_phone:phone.value,p_website:website.value,p_cover:url});
+   const {error}=await client.rpc("bc_pro_save_salon",{p_salon:salon,p_name:name.value,p_address:address.value,p_description:description.value,p_phone:phone.value,p_website:showWebsite.checked?website.value.trim():"",p_cover:url});
    if(error)throw error;status.textContent="Profil salvat. Dacă nu se vede în aplicația clienților, asociază profilul public din Admin → Catalog saloane.";
   }catch(e){status.textContent="Eroare: "+(e.message||"Nu s-a salvat.");}
   finally{save.disabled=false;}
@@ -1119,4 +1151,4 @@ $("proResendConfirmation").onclick=async()=>{
  }finally{button.disabled=false}
 };
 if(client){client.auth.onAuthStateChange(()=>setTimeout(()=>refresh().catch(err=>{$("authStatus").textContent="Eroare sesiune: "+err.message;}),0));refresh().catch(err=>{$("authStatus").textContent="Eroare la verificarea sesiunii: "+err.message;});}else{$("authStatus").textContent="Supabase nu este disponibil în acest browser. Deschide pagina în Chrome și reîncarcă.";}
-</script><script src="./pro-calendar-focus.js"></script><script defer src="./premium-ui.js"></script><script defer src="./pro-lifecycle.js"></script></body></html>
+</script><script src="./pro-working-hours-modern.js"></script><script src="./pro-calendar-focus.js"></script><script defer src="./premium-ui.js"></script><script defer src="./pro-lifecycle.js"></script></body></html>

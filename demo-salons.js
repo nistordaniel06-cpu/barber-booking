@@ -36,8 +36,11 @@ function ensureOptions(){
 }
 function draw(){
  const query=norm($("search")?.value),c=city?.value||"",s=sector?.value||"",q=county?.value||"";
+ const rare=window.BCDiscoveryRareServices||[];
  const shown=data.filter(x=>(!c||x.city===c)&&(!q||x.county===q)&&(!s||x.sector===s)&&
- (!query||norm([x.name,x.address,x.sector,...(x.services||[]).map(i=>i.name)].join(" ")).includes(query)));
+ !window.BCLocationRadius?.state?.().enabled&&
+ rare.every(term=>(x.services||[]).some(svc=>norm(svc.name).includes(norm(term))))&&
+ (!query||query.split(/\s+/).every(term=>norm([x.name,x.address,x.city,x.county,x.sector,...(x.services||[]).map(i=>i.name)].join(" ")).includes(term))));
  grid.replaceChildren();
  if(!shown.length){grid.append(n("p","Nu există saloane de explorat pentru filtrele selectate."));return}
  for(const salon of shown){
@@ -51,6 +54,7 @@ function draw(){
   b.append(img,body);b.onclick=()=>detail(salon);grid.append(b);
  }
 }
+window.BCUpdateDemoSearch=draw;
 function detail(s){
  const url=new URL("./client/",document.baseURI);
  url.searchParams.set("previewSalon",s.id);
@@ -83,18 +87,27 @@ function detail(s){
 async function load(){
  const t=++token;
  try{
-  const {data:items,error}=await sb.from("bc_discovery_salon_samples")
-   .select("id,name,address,city,county,sector,services,publicly_listed_team,photo_permission,cover_path,gallery_paths,data_status")
-   .limit(150);
-  if(error)throw error;if(t!==token)return;
-  data=items||[];window.BCDemoCatalog=data;ensureOptions();
+  const [samples,published]=await Promise.all([
+   sb.from("bc_discovery_salon_samples").select("id,name,address,city,county,sector,services,publicly_listed_team,photo_permission,cover_path,gallery_paths,data_status").limit(150),
+   sb.from("bc_public_salon_catalog").select("id,name,address,city,explore_sample_id").eq("visibility","listed").limit(500)
+  ]);
+  if(samples.error)throw samples.error;if(t!==token)return;
+  // A published salon replaces its discovery sample. Never display 4MEN twice.
+  // Hide by explicit linked sample ID; fallback to same name + address for legacy rows.
+  const normKey=x=>norm(x.name)+"|"+norm(x.address);
+  const linked=new Set((published.data||[]).map(x=>x.explore_sample_id).filter(Boolean));
+  const liveKeys=new Set((published.data||[]).map(normKey));
+  data=(samples.data||[]).filter(x=>!linked.has(x.id)&&!liveKeys.has(normKey(x)));
+  window.BCDemoCatalog=data;
+  window.dispatchEvent(new Event("bc-demo-catalog-ready"));
+  ensureOptions();
   const wanted=new URL(window.location.href).searchParams.get("previewSalon");
   if(wanted){
    const match=data.find(s=>String(s.id)===wanted);
    if(match)detail(match);
   }
   for(const sel of [city,county,sector])if(sel)new MutationObserver(ensureOptions).observe(sel,{childList:true});
-  title.textContent="Saloane de explorat · "+data.length+" profiluri";
+  title.textContent=data.length?"Saloane de explorat · "+data.length+" profiluri":"Toate saloanele disponibile sunt deja în catalogul oficial";
   draw();window.BCLocationMap?.updatePins();
  }catch(e){description.textContent="Catalogul demonstrativ nu este disponibil momentan.";console.warn(e)}
 }
