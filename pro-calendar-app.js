@@ -73,11 +73,11 @@ function showSheet(name){
  document.body.classList.add("modalOpen");
  updatePopupLinks();
 }
-function closeSheet(){
+function closeSheet(preserveRoute=false){
  $("sheetBackdrop").hidden=true;document.body.classList.remove("modalOpen");
  for(const id of ["quickSheet","editSheet","syncSheet"])$(id).hidden=true;
  state.selection=null;timeline.querySelectorAll(".timeCell.selected").forEach(x=>x.classList.remove("selected"));
- discardPopupQuery();
+ if(preserveRoute!==true)discardPopupQuery();
 }
 $("closeQuick").onclick=closeSheet;$("closeEdit").onclick=closeSheet;$("closeSync").onclick=closeSheet;
 $("sheetBackdrop").addEventListener("click",e=>{if(e.target===$("sheetBackdrop"))closeSheet()});
@@ -489,7 +489,8 @@ async function selectSalon(){
 }
 function openEditor(kind,event=null){
  state.kind=kind;state.editId=event?.id||null;
- closeSheet();showSheet("editSheet");
+ closeSheet(new URL(window.location.href).searchParams.get("popup")==="edit");
+ showSheet("editSheet");
  $("editTitle").textContent=event?"Modifică intervalul":kind==="busy"?"Blochează timpul":"Programare nouă";
  $("clientField").hidden=kind==="busy";
  $("serviceField").querySelector("input").placeholder=kind==="busy"?"Ex. Pauză, training, concediu":"Ex. Tuns + barbă";
