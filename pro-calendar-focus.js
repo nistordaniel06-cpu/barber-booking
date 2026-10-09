@@ -24,7 +24,7 @@ $("bcCalendarMore").onclick=()=>{
  $("bcCalendarMore").setAttribute("aria-expanded",String(!advanced.hidden));
 };
 const quick=document.createElement("div");quick.className="bcCalendarQuick";quick.hidden=true;
-quick.innerHTML='<div class="bcCalendarQuickCard" role="dialog" aria-modal="true" aria-label="Alege acțiunea"><div class="bcQuickTop"><span id="bcQuickSelection"></span><button id="bcQuickClose" type="button" aria-label="Închide">✕</button></div><button id="bcQuickBook" class="bcQuickPrimary" type="button">＋ Programare nouă</button><button id="bcQuickBlock" type="button">▧ Blochează timp</button></div>';
+quick.innerHTML='<div class="bcCalendarQuickCard" role="dialog" aria-modal="true" aria-label="Alege acțiunea"><div class="bcQuickTop"><span id="bcQuickSelection"></span><span class="bcPopupActions"><a id="bcQuickNewTab" href="./pro/calendar/" target="_blank" rel="noopener noreferrer" aria-label="Deschide selecția în tab nou" title="Deschide în tab nou">↗</a><button id="bcQuickClose" type="button" aria-label="Închide" title="Închide">✕</button></span></div><button id="bcQuickBook" class="bcQuickPrimary" type="button">＋ Programare nouă</button><button id="bcQuickBlock" type="button">▧ Blochează timp</button></div>';
 panel.append(quick);
 const gridMask=document.createElement("div");gridMask.className="bcGridDragTip";gridMask.textContent="";
 scroller.append(gridMask);
@@ -108,6 +108,11 @@ function openQuick(s){
  actionSpecialist=s.user;selectionDay=s.day;
  const who=team.find(t=>t.id===s.user)?.name||(s.user?"Specialist":"Salon");
  $("bcQuickSelection").textContent=who+" · "+actionStart.toLocaleDateString("ro-RO",{day:"numeric",month:"short"})+" · "+hhmm(actionStart)+"–"+hhmm(actionEnd);
+ const stamp=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")+"T"+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+ const url=new URL("./pro/calendar/",document.baseURI);
+ url.searchParams.set("popup","quick");url.searchParams.set("from",stamp(actionStart));url.searchParams.set("to",stamp(actionEnd));
+ if(actionSpecialist)url.searchParams.set("staff",actionSpecialist);
+ $("bcQuickNewTab").href=url.href;
  quick.hidden=false;
  $("bcQuickBook").focus({preventScroll:true});
 }
