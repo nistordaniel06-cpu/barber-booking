@@ -202,7 +202,82 @@ async function renderClientImport(){
  const records=lines.map(line=>{const cells=line.split(",");const val=key=>cells[headings.indexOf(key)]?.trim()||"";return{salon_id:salon,display_name:val("nume"),phone:val("telefon")||null,email:val("email")||null}});if(records.some(x=>!x.display_name)){status.textContent="Un client nu are nume.";return;}
  const {error}=await client.from("bc_pro_clients").insert(records);status.textContent=error?"Eroare: "+error.message:"Au fost importați "+records.length+" clienți în agenda privată a salonului.";};
 }
-async function renderStaffEditor(body){const salon=$("calSalon").value;if(!salon){body.textContent="Selectează întâi salonul din calendar.";return;}const {data}=await client.rpc("bc_my_professional_access");if(!data?.some(s=>s.salon_id===salon&&s.member_role==="owner")){body.textContent="Doar proprietarul salonului poate atribui roluri.";return;}const text=document.createElement("p");text.className="muted";text.textContent="Adaugă personal prin adresa unui cont BARBERCRAFT existent și confirmat. Moderatorul, managerul și staff-ul primesc acces numai conform politicilor de securitate.";const email=document.createElement("input");email.className="input";email.type="email";email.placeholder="staff@example.com";const role=document.createElement("select");role.className="input";for(const v of ["staff","moderator","manager"])role.add(new Option(v,v));const btn=document.createElement("button");btn.className="primary";btn.textContent="Atribuie rol";const status=document.createElement("p");status.className="status";body.append(text,email,role,btn,status);btn.onclick=async()=>{if(!email.value.includes("@")){status.textContent="Introdu un e-mail valid.";return;}btn.disabled=true;const {error}=await client.rpc("bc_owner_assign_staff",{p_salon:salon,p_email:email.value.trim(),p_role:role.value});status.textContent=error?"Eroare: "+error.message:"Rol atribuit.";btn.disabled=false;};}
+
+async function renderStaffEditor(body){
+ const salon=$("calSalon").value;
+ if(!salon){body.textContent="Selectează salonul în Calendar.";return;}
+ const {data:access,error:accessError}=await client.rpc("bc_my_professional_access");
+ if(accessError||!access?.some(s=>s.salon_id===salon&&s.member_role==="owner")){body.textContent="Doar proprietarul salonului poate invita persoane în echipă.";return;}
+ const info=document.createElement("p");info.className="muted";info.textContent="Invită persoane prin e-mail. Invitația expiră în 14 zile. Angajatul se autentifică și acceptă rolul înainte de a primi acces.";
+ const email=document.createElement("input");email.className="input";email.type="email";email.placeholder="angajat@example.com";
+ const role=document.createElement("select");role.className="input";
+ for(const [value,label] of [["staff","Angajat"],["moderator","Moderator"],["manager","Manager"]])role.add(new Option(label,value));
+ const btn=document.createElement("button");btn.className="primary";btn.type="button";btn.textContent="Trimite invitație prin e-mail";
+ const status=document.createElement("p");status.className="status";status.setAttribute("role","status");
+ body.append(info,email,role,btn,status);
+ btn.onclick=async()=>{
+  if(!/^[^ @]+@[^ @]+\.[^ @]+$/.test(email.value.trim())){status.textContent="Introdu o adresă de e-mail validă.";return;}
+  btn.disabled=true;status.textContent="Se creează invitația...";
+  try{
+   const {data:{session}}=await client.auth.getSession();
+   if(!session)throw Error("Sesiune expirată. Conectează-te din nou.");
+   const res=await fetch(window.BARBERCRAFT_SUPABASE_URL+"/functions/v1/barbercraft-team-invite",{
+     method:"POST",headers:{"Content-Type":"application/json","apikey":window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY,"Authorization":"Bearer "+session.access_token},
+     body:JSON.stringify({salon_id:salon,email:email.value.trim(),role:role.value})
+   });
+   const result=await res.json();
+   if(!res.ok||!result.ok)throw Error(result.error||"Invitația nu a putut fi creată.");
+   status.textContent=result.email_sent?"Invitația a fost trimisă. Angajatul trebuie să o accepte după autentificare.":"Invitație salvată, dar e-mailul nu a fost trimis: "+(result.info||"verifică serviciul de e-mail Supabase");
+  }catch(e){status.textContent="Eroare: "+(e.message||"Conexiune indisponibilă");}
+  finally{btn.disabled=false;}
+ };
+}
+async function loadMyInvitations(){
+ const box=$("proPendingInvitations");if(!box)return;box.replaceChildren();
+ const {data,error}=await client.rpc("bc_my_invitations");if(error||!data?.length)return;
+ const heading=document.createElement("strong");heading.textContent="Invitații primite";box.append(heading);
+ for(const i of data){const row=document.createElement("div");row.className="inviteItem";
+ const label=document.createElement("span");label.textContent=i.salon_name+" · "+i.role;
+ const btn=document.createElement("button");btn.className="outline";btn.type="button";btn.textContent="Acceptă";
+ btn.onclick=async()=>{btn.disabled=true;const {error}=await client.rpc("bc_accept_staff_invitation",{p_id:i.id});if(error){btn.disabled=false;btn.textContent="Eroare: "+error.message;return;}await populateCalendarSalons();await loadVerifiedAccess();$("proHomeAccess").textContent=$("verifiedAccess").textContent;await loadMyInvitations();};
+ row.append(label,btn);box.append(row);}
+}
+async function renderSalonProfileEditor(body){
+ const salon=$("calSalon").value;
+ const holder=document.createElement("section");holder.className="pane";
+ const title=document.createElement("h2");title.textContent="Profilul salonului";holder.append(title);body.append(holder);
+ if(!salon){holder.append(document.createTextNode("Selectează un salon aprobat în Calendar."));return;}
+ const {data:access}=await client.rpc("bc_my_professional_access");
+ if(!access?.some(s=>s.salon_id===salon&&["owner","manager"].includes(s.member_role))){holder.append(document.createTextNode("Doar proprietarul sau managerul poate edita profilul."));return;}
+ const {data,error}=await client.rpc("bc_pro_get_salon",{p_salon:salon});
+ if(error){holder.append(document.createTextNode("Eroare: "+error.message));return;}
+ const form=document.createElement("div");form.className="profileForm";
+ const heading=document.createElement("p");heading.className="muted";heading.textContent=(data?.name||"Salon")+" · Copertă, descriere, telefon și website. Modificările apar public după asocierea profilului din Admin.";
+ const cover=document.createElement("img");cover.className="profileCoverPreview";cover.alt="Previzualizare copertă";cover.hidden=!data?.cover_image_url;if(data?.cover_image_url)cover.src=data.cover_image_url;
+ const fileLabel=document.createElement("label");fileLabel.textContent="Copertă (JPG, PNG, WebP · maximum 5 MB)";
+ const file=document.createElement("input");file.type="file";file.accept="image/jpeg,image/png,image/webp";fileLabel.append(file);
+ function field(label,value,multiline=false){const holder=document.createElement("label");holder.textContent=label;const control=document.createElement(multiline?"textarea":"input");control.className="input";control.value=value||"";holder.append(control);form.append(holder);return control;}
+ form.append(heading,cover,fileLabel);
+ const description=field("Descriere salon",data?.description,true);description.maxLength=2000;
+ const phone=field("Telefon",data?.phone);phone.maxLength=35;
+ const website=field("Website (https://)",data?.website);website.maxLength=300;
+ const save=document.createElement("button");save.type="button";save.className="primary";save.textContent="Salvează profilul";
+ const status=document.createElement("p");status.className="status";status.setAttribute("role","status");
+ form.append(save,status);holder.append(form);
+ file.onchange=()=>{const current=file.files?.[0];if(!current)return;if(current.size>5*1024*1024||!["image/jpeg","image/png","image/webp"].includes(current.type)){file.value="";status.textContent="Selectează o imagine JPG, PNG sau WebP de maximum 5 MB.";return;}cover.src=URL.createObjectURL(current);cover.hidden=false;};
+ save.onclick=async()=>{
+  save.disabled=true;status.textContent="Se salvează...";
+  try{
+   let url=data?.cover_image_url||"";
+   const selected=file.files?.[0];if(selected){if(selected.size>5242880||!["image/jpeg","image/png","image/webp"].includes(selected.type))throw Error("Imagine invalidă.");const ext=selected.type==="image/png"?"png":selected.type==="image/webp"?"webp":"jpg";const path=salon+"/"+crypto.randomUUID()+"."+ext;
+    const upload=await client.storage.from("bc-salon-covers").upload(path,selected,{contentType:selected.type,upsert:false});if(upload.error)throw upload.error;
+    url=client.storage.from("bc-salon-covers").getPublicUrl(path).data.publicUrl;}
+   const {error}=await client.rpc("bc_pro_save_salon",{p_salon:salon,p_description:description.value,p_phone:phone.value,p_website:website.value,p_cover:url});
+   if(error)throw error;status.textContent="Profil salvat. Dacă nu se vede în aplicația clienților, asociază profilul public din Admin → Catalog saloane.";
+  }catch(e){status.textContent="Eroare: "+(e.message||"Nu s-a salvat.");}
+  finally{save.disabled=false;}
+ };
+}
 const meroImportPanel=$("meroImport");
 const proDetailTitles={services:"Servicii",team:"Echipă",packages:"Abonamente și pachete",products:"Produse și gestiune",profile:"Profil online",hours:"Program de lucru",messages:"Mesaje programări",reviews:"Recenzii",applications:"Verificare și cereri"};
 function showProSettings(key){
