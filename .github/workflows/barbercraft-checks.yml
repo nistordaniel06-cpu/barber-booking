@@ -15,4 +15,6 @@ jobs:
         with:
           node-version: '22'
       - name: Validate JS, HTML and feature wiring
-        run: node tests/barbercraft-smoke.mjs
+        run: |
+          node tests/barbercraft-smoke.mjs
+          node tests/barbercraft-rewards-smoke.mjs
