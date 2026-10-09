@@ -246,6 +246,15 @@ renderCalendar=function(events){
 };
 loadCalendar=async function(){await refreshTeam();return originalLoad()};
 calendarDragEnabled=true;
+// A full salon overview works for one day. Multi-day views stay readable by
+// automatically choosing a single specialist rather than overlapping everyone.
+const originalSetCalendarMode=setCalendarMode;
+setCalendarMode=function(mode){
+ if(mode==="day")selected="all";
+ else if(selected==="all")selected=(team.find(x=>x.id===user?.id)||team[0])?.id||"all";
+ filterRender();
+ return originalSetCalendarMode(mode);
+};
 const oldNavigate=proNavigate;
 proNavigate=function(route){
  oldNavigate(route);
