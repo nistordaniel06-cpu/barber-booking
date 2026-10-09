@@ -8,7 +8,7 @@ const line=(msg)=>$("socialStatus").textContent=String(msg);
 const rpc=async(name,args={})=>{const {data,error}=await sb.rpc(name,args);if(error)throw new Error(error.message);return data};
 const api=window.supabase;
 if(!api||!window.BARBERCRAFT_SUPABASE_URL){line("Comunitatea nu este disponibilă.");return}
-const sb=api.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const sb=await window.BCPassportSession();
 const {data:{user},error}=await sb.auth.getUser();
 const profileForm=$("socialProfileForm"),self=$("socialMyProfile"),barber=$("socialBarber");
 let me=null,own=null,selected=null,chatWith=null,staff=[],mutuals=[],chatTimer=null;
@@ -48,7 +48,7 @@ profileForm.onsubmit=async e=>{
   await rpc("bc_social_profile_save",{p_handle:profileForm.elements.handle.value.trim(),
    p_name:profileForm.elements.name.value.trim(),p_bio:profileForm.elements.bio.value.trim(),
    p_public:profileForm.elements.public.checked,p_messages:profileForm.elements.messages.checked});
-  line("Profilul a fost actualizat.");await loadMyProfile();await discover();
+  line("Profilul a fost actualizat.");await loadMyProfile();await discover();window.dispatchEvent(new Event("bc-social-profile-updated"));
  }catch(e){msgErr(e)}finally{b.disabled=false}
 };
 async function discover(){
