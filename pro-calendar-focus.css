@@ -192,3 +192,7 @@ body.bcCalendarFocus #member .proBottom,body.bcCalendarFocus #member>.proBottom{
  body.bcCalendarFocus #proCalendar .calWeek{max-width:none}
  body.bcCalendarFocus #proCalendar .calEvent strong{font-size:13px}
 }
+
+body.bcCalendarFocus #proCalendar .bcQuickTop .bcPopupActions{display:inline-flex;align-items:center;gap:8px}
+body.bcCalendarFocus #proCalendar .bcQuickTop .bcPopupActions>a,body.bcCalendarFocus #proCalendar .bcQuickTop .bcPopupActions>button{display:grid;place-items:center;width:44px;height:44px;min-height:44px;border:1px solid #625d58;border-radius:11px;background:#353640;color:#f6d276;font-size:23px;font-weight:750;text-decoration:none;padding:0}
+body.bcCalendarFocus #proCalendar .bcQuickTop .bcPopupActions>button{color:white}
