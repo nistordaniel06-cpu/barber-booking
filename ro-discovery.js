@@ -35,6 +35,7 @@ let map=null,markers=null,lastCity=null,pendingCity=null,manualSelection=false;
 const notice=$("bcLocationNotice");
 function refreshSearch(){window.BCRefreshSearch?.();}
 function setAll(){
+ window.BCLocationRadius?.clear?.();
  county.value="";city.value="";sector.value="";
  for(const select of [county,city,sector])select.dispatchEvent(new Event("change",{bubbles:true}));
  try{sessionStorage.setItem("bc-location-mode","all")}catch{}
@@ -65,6 +66,14 @@ async function usePosition(ask){
  }else if(!ask)return;
  notice.textContent="Determinăm cel mai apropiat oraș, fără să salvăm coordonatele tale.";
  navigator.geolocation.getCurrentPosition(({coords})=>{
+  if(manualSelection)return;
+  // The radius is measured from this actual GPS fix, never a city center.
+  window.BCLocationRadius?.setPosition?.(coords.latitude,coords.longitude);
+  county.value="";city.value="";sector.value="";
+  for(const select of [county,city,sector])select.dispatchEvent(new Event("change",{bubbles:true}));
+  notice.textContent="Lângă mine · 2 km implicit. Reglează raza mai jos. Doar saloanele cu poziție confirmată apar la căutarea GPS.";
+  window.BCRefreshSearch?.();
+  return;
   const nearby=locations.map(x=>({name:x[0],d:dist(coords.latitude,coords.longitude,x[1],x[2])})).sort((a,b)=>a.d-b.d)[0];
   if(!nearby||nearby.d>65){setAll();notice.textContent="Nu am identificat un oraș apropiat dintre cele indexate. Rămâne activă toată România.";return}
   if(manualSelection)return;
@@ -90,11 +99,26 @@ async function updatePins(){
  // Only public source-defined city-level aggregates; locations without known centers stay in search results.
  try{
   const client=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
-  const {data,error}=await client.from("bc_public_salon_catalog").select("city,visibility").eq("visibility","listed").limit(300);
+  const {data,error}=await client.from("bc_public_salon_catalog").select("id,name,city,visibility,geo_lat,geo_lng").eq("visibility","listed").limit(500);
   if(error)throw error;
-  const count={};
-  for(const row of data||[]){const key=norm(row.city);count[key]=(count[key]||0)+1}
-  if(window.BCDemoCatalog?.length)for(const row of window.BCDemoCatalog){const key=norm(row.city);count[key]=(count[key]||0)+1}
+  const count={},visible=window.BCVisibleSalons;
+  const published=visible?.length||document.getElementById("search")?.value||window.BCDiscoveryRareServices?.length?
+   (data||[]).filter(s=>(visible||[]).some(v=>v.id===s.id)):(data||[]);
+  for(const row of published){
+   const lat=Number(row.geo_lat),lon=Number(row.geo_lng);
+   if(row.geo_lat!=null&&row.geo_lng!=null&&Number.isFinite(lat)&&Number.isFinite(lon)){
+    const pin=window.L.circleMarker([lat,lon],{radius:11,color:"#171719",fillColor:"#f4ca61",fillOpacity:1,weight:3});
+    const tooltip=document.createElement("div"),name=document.createElement("strong"),description=document.createElement("p"),open=document.createElement("button");
+    name.textContent=row.name;description.textContent="Poziție confirmată · BARBERCRAFT";
+    open.textContent="Vezi salonul →";open.type="button";
+    open.onclick=()=>{window.BCOpenCatalogSalon?.(row.id);mapCard.hidden=true;$("bcShowMap").setAttribute("aria-pressed","false")};
+    tooltip.append(name,description,open);pin.bindPopup(tooltip);pin.addTo(markers);
+    continue;
+   }
+   const key=norm(row.city);count[key]=(count[key]||0)+1;
+  }
+  if(!document.getElementById("search")?.value&&!window.BCDiscoveryRareServices?.length)
+   for(const row of window.BCDemoCatalog||[]){const key=norm(row.city);count[key]=(count[key]||0)+1}
   for(const [name,lat,lon] of locations){
    const n=count[norm(name)]||0;if(!n)continue;
    const marker=window.L.circleMarker([lat,lon],{radius:Math.min(24,9+Math.sqrt(n)*3),
@@ -103,7 +127,7 @@ async function updatePins(){
    marker.on("click",()=>{setNearest(name);mapCard.hidden=true;$("bcShowMap").setAttribute("aria-pressed","false");});
    marker.addTo(markers);
   }
-  $("bcMapLegend").textContent="Cercurile indică numărul de saloane afișate la nivel de oraș, nu adrese GPS exacte.";
+  $("bcMapLegend").textContent="● Auriu: salon cu poziție GPS confirmată · ⭕ Cerc: saloane fără coordonate, grupate la nivelul orașului. Căutarea și filtrele se aplică și pe hartă.";
  }catch(e){$("bcMapLegend").textContent="Saloanele nu pot fi încărcate pe hartă momentan. Folosește căutarea.";console.warn(e)}
 }
 $("bcShowMap").onclick=()=>{
@@ -136,9 +160,8 @@ if(mode==="all"){manualSelection=true;setAll();}
 else if(mode==="manual"&&remembered){manualSelection=true;setNearest(remembered,"manual");}
 else if(mode==="nearby"&&remembered){setNearest(remembered,"gps");}
 else {
- notice.textContent="Detectăm orașul tău (dacă permiți localizarea)…";
- // Browser consent is required; failure never blocks the national catalog.
- usePosition(true);
+ notice.textContent="Apasă „Lângă mine” pentru a căuta inițial în raza de 2 km. Accesul GPS este cerut numai când alegi acest mod.";
 }
+window.addEventListener("bc-discovery-results",()=>{if(!mapCard.hidden)void updatePins()});
 window.BCLocationMap={updatePins,showAll:setAll};
 })();
