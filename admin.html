@@ -43,7 +43,7 @@ function elt(tag,text,cls){const e=document.createElement(tag);if(text!=null)e.t
 function show(name){for(const s of ["loading","denied","dashboard"])$(s).hidden=s!==name}
 async function init(){if(!sb){show("denied");$("loginStatus").textContent="Supabase indisponibil.";return;}const {data}=await sb.auth.getUser();if(!data.user){show("denied");return;}const {data:isAdmin,error}=await sb.rpc("bc_is_platform_admin");if(error||isAdmin!==true){await sb.auth.signOut({scope:"local"});show("denied");$("loginStatus").textContent="Acest cont nu aparține portalului Admin. Accesul nu a fost acordat.";return;}const requested=(location.hash||"").match(/^#admin-(overview|storefront|partners|imports|catalog|sales|rewards|zones|explore|referrals|community|clients|moderation|audit)$/);
  if(requested)active=requested[1];
- show("dashboard");await reload();setInterval(()=>{if(!document.hidden&&$("dashboard").hidden===false)void reload()},90000)}
+ show("dashboard");await reload();setInterval(()=>{if(!document.hidden&&$("dashboard").hidden===false&&active==="overview")void reload()},90000)}
 async function reload(){
  const btn=$("refresh");if(btn)btn.disabled=true;
  $("actionStatus").textContent="Se actualizează datele...";
