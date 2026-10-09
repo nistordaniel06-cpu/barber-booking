@@ -1,0 +1,8 @@
+.bcCookieNotice{position:fixed;z-index:10009;bottom:calc(13px + env(safe-area-inset-bottom));left:12px;right:12px;max-width:550px;margin:0 auto;padding:14px;background:#23262d;color:#f7f7f7;border:1px solid #b19150;border-radius:17px;box-shadow:0 10px 40px #000b;font-family:"DM Sans",system-ui}
+.bcCookieNotice p{font-size:12px;line-height:1.6;margin:0 0 10px}
+.bcCookieNotice>div{display:flex;gap:9px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bcCookieNotice a{color:#eacc7b;font-size:11px;text-decoration:underline}
+.bcCookieNotice button{border:0;background:#f5d27a;color:#201b12;font-weight:900;border-radius:10px;padding:10px 17px}
+.bcLanguageSelect{display:flex;gap:10px;align-items:center;justify-content:flex-start;flex-wrap:wrap;padding:12px;margin:12px 0;font-size:12px;font-weight:800}
+.bcLanguageSelect select{border:1px solid #988258;background:var(--surface,#25272b);color:inherit;padding:9px;border-radius:9px;min-height:40px}
+:root[data-theme=light] .bcCookieNotice{background:#fff;color:#24272e}
