@@ -656,7 +656,7 @@ $("calendarFeedButton").onclick=async()=>{
  }catch(e){$("calStatus").textContent="Eroare la abonare: "+(e.message||"Necunoscută");}finally{btn.disabled=false;}
 };
 
-const proPanelIds={overview:"proOverviewPanel",calendar:"proCalendar",clients:"proClientsPanel",sales:"proSalesPanel",notifications:"proNotificationsPanel",settings:"proSettingsPanel",detail:"proDetailPanel"};
+const proPanelIds={overview:"proOverviewPanel",calendar:"proCalendar",clients:"proClientsPanel",sales:"proSalesPanel",notifications:"proNotificationsPanel",lifecycle:"proLifecyclePanel",settings:"proSettingsPanel",detail:"proDetailPanel"};
 function proNavigate(route){
  Object.values(proPanelIds).forEach(id=>{const el=document.getElementById(id);if(el){el.classList.add("proPanel");el.classList.toggle("active",id===proPanelIds[route]);}});
  document.querySelectorAll("[data-pro-route]").forEach(el=>el.classList.toggle("active",el.dataset.proRoute===route));
