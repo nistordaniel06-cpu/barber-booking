@@ -50,3 +50,7 @@ body.bc-war .battleMapStage{margin:23px 0 32px}
  .battleSectorNav{gap:6px}.battleSectorChip{font-size:11px}
  #battleMap{height:350px}}
 @media(prefers-reduced-motion:reduce){.battleSchematicPath{transition:none}}
+
+/* One primary team-join CTA, full-width on mobile; map selector is the only six-sector picker. */
+.bc-war .battleTeamBlock #sectorActions>button{grid-column:1/-1;width:100%;white-space:normal;min-height:46px;font-size:13px;padding:12px}
+.bc-war #battleMapReset:focus-visible,.bc-war .battleSectorChip:focus-visible{outline:3px solid #ffe19c;outline-offset:2px}
