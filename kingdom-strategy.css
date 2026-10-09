@@ -1,49 +1,160 @@
-*{box-sizing:border-box}body{margin:0;background:#0b100f;color:#f5f0e5;font-family:"DM Sans",system-ui,sans-serif}
-.kingWrap{max-width:900px;margin:auto;padding:18px 16px 100px}
-.kingWrap header{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #4a4231;padding-bottom:19px}
-.kingWrap a{color:#efca7b;text-decoration:none;font-size:12px;font-weight:800}
-.kingWrap header strong{font-size:13px}.kingWrap header strong span{color:#e3ba68}
-.kingHero{border:1px solid #887041;background:linear-gradient(115deg,#342a1c,#17211d 78%);border-radius:22px;padding:27px;margin:23px 0 12px}
-.kingEyebrow{color:#f3d893;letter-spacing:1.5px;font-size:11px;font-weight:900}
-.kingHero h1{font-size:clamp(29px,6vw,49px);letter-spacing:-1.5px;margin:11px 0}
-.kingHero p,.kingPanel p{font-size:13px;line-height:1.55;color:#d0c6ad}
-.kingDisclaimer{padding:11px;border-radius:12px;border:1px solid #977947;color:#e6d7b5;font-size:11px;background:#30291b}
-.kingAlert{padding:14px 16px;background:#22251d;border-radius:12px;border:1px solid #6d633c;color:#f1dcaf;font-size:12px;line-height:1.5}
-.kingScene{border:1px solid #8a7141;border-radius:22px;overflow:hidden;margin:19px 0;background:#232f23}
-.kingVillage{height:270px;position:relative;overflow:hidden;background:
- linear-gradient(0deg,#334b36 0%,#526e46 44%,#86966d 45%,#263b40 75%,#16272e)}
-.kingSky{position:absolute;top:0;width:100%;height:37%;background:linear-gradient(#1b363f,#8d8b55)}
-.kingSun{position:absolute;right:21%;top:25px;width:46px;height:46px;border-radius:50%;background:#f6c675;box-shadow:0 0 52px 20px #ebc87688}
-.kingField{position:absolute;width:25%;height:28%;font-size:45px;text-align:center;padding-top:10px;filter:drop-shadow(0 8px 8px #14251d)}
-.kingField.f1{left:10%;top:35%}.kingField.f2{right:13%;top:28%}.kingField.f3{right:14%;bottom:7%}.kingField.f4{left:15%;bottom:2%}
-.kingCastle{position:absolute;left:39%;top:30%;background:linear-gradient(#b1a284,#5c5142);border:5px solid #504533;border-radius:12px 12px 3px 3px;font-size:100px;line-height:1;width:25%;height:42%;min-width:104px;text-align:center;box-shadow:0 12px 17px #14241eaa;color:#30291c}
-.kingRoad{position:absolute;left:49%;top:74%;height:36%;width:16%;transform:perspective(110px) rotateX(35deg);background:#9d9476}
-.kingVillageTitle{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;background:#161d19;gap:12px}
-.kingVillageTitle strong{font-size:16px}.kingVillageTitle span{color:#cdbb84;font-size:12px}
+:root{--bg:#0b0c10;--surface:#17191f;--surface2:#202229;--line:#383a42;--gold:#ffd16c;
+--muted:#a9abb5;--text:#f8f8fa;color-scheme:dark}
+*{box-sizing:border-box}html{max-width:100%;overflow-x:clip;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:14px "DM Sans",system-ui,sans-serif;max-width:100%;overflow-x:clip}
+button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.47;cursor:not-allowed}
+a{color:inherit;text-decoration:none}[hidden]{display:none!important}
+.kingWrap{width:min(100%,920px);margin:auto;padding:18px clamp(12px,4vw,25px) 100px}
+.kingWrap *{min-width:0}
+.kingTop{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0 19px;border-bottom:1px solid #292a31}
+.kingBack{color:var(--gold);font-size:12px;font-weight:800;white-space:normal}
+.kingLogo{font-size:15px;font-weight:900;letter-spacing:-.6px}.kingLogo span{color:var(--gold)}
+.kingLive{color:#d7caa9;background:#28231a;border:1px solid #5b4b2d;border-radius:99px;padding:7px 10px;font-size:10px;font-weight:800}
+.kingHero{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;
+ margin:20px 0 13px;padding:clamp(22px,5vw,40px);min-height:230px;overflow:hidden;
+ border:1px solid #685435;border-radius:24px;
+ background:radial-gradient(ellipse at 83% 35%,#8f642c35,transparent 45%),linear-gradient(135deg,#25211b,#17181d 75%)}
+.kingHeroText{position:relative;z-index:1;max-width:580px}
+.kingEyebrow,.kingOverline{color:var(--gold);font-size:10px;font-weight:900;letter-spacing:1.5px}
+.kingHero h1{font-size:clamp(34px,7vw,56px);letter-spacing:-2px;line-height:1.05;margin:11px 0 12px}
+.kingHero h1 em{font-style:normal;color:var(--gold)}
+.kingHero p{max-width:445px;color:#c3bfb4;font-size:13px;line-height:1.65;margin:0 0 15px}
+.kingHeroTags{display:flex;flex-wrap:wrap;gap:7px}
+.kingHeroTags span{border:1px solid #665131;background:#372c1b99;border-radius:99px;color:#f5d99a;padding:6px 9px;font-size:10px}
+.kingCrest{flex:0 0 clamp(87px,24vw,180px);width:clamp(87px,24vw,180px);aspect-ratio:1;
+ display:grid;place-items:center;align-content:center;position:relative;
+ background:linear-gradient(155deg,#614728,#251f1c);border:3px solid #ad8443;
+ border-radius:22% 22% 35% 35%;box-shadow:0 0 0 8px #c89c2e0b,inset 0 0 30px #090a0b99;transform:rotate(6deg)}
+.kingCrest span{font-size:clamp(48px,9vw,98px);line-height:.9;color:#ffd98a;text-shadow:0 5px 17px #000a}
+.kingCrest small{letter-spacing:4px;color:#ffe7b6;font-weight:900}
+.kingAlert{border:1px solid #54462f;background:#241f18;color:#f2d99d;padding:11px 15px;
+ border-radius:13px;line-height:1.5;font-size:12px;margin:13px 0}
+.kingOverview{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:20px 0 12px}
+.kingOverview>div{display:grid;gap:4px}
+.kingOverview strong{font-size:clamp(17px,5vw,25px);letter-spacing:-.5px}
+.kingOverview small{color:#b6ae9d;font-size:11px}
+.kingRefresh{border:1px solid #514739;border-radius:11px;background:#202128;color:#e3d4aa;
+ padding:11px 12px;font-size:11px;font-weight:800;white-space:nowrap}
 .kingResources{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:15px 0}
-.kingResources div{display:grid;gap:5px;justify-items:center;border:1px solid #5a543d;border-radius:15px;padding:13px 6px;background:#18221d}
-.kingResources span{font-size:24px}.kingResources b{font-size:23px}.kingResources small{color:#cbbd95;font-size:11px}
-.kingWrap h2{font-size:20px;letter-spacing:-.5px;margin:26px 0 13px}
+.kingResources>div{display:grid;gap:4px;justify-items:center;padding:13px 5px;border-radius:16px;
+ background:var(--surface);border:1px solid #3f3930}
+.kingResources span{font-size:23px;line-height:1.3}
+.kingResources strong{font-size:clamp(16px,4.2vw,26px);font-weight:900;font-variant-numeric:tabular-nums}
+.kingResources small{font-size:10px;color:#b8aa91}
+.kingGuide{display:flex;align-items:center;justify-content:space-between;gap:13px;flex-wrap:wrap;
+ border:1px solid #af8440;border-radius:19px;padding:17px;
+ background:linear-gradient(105deg,#40301c,#201d18 80%);margin:16px 0 22px}
+.kingGuideHeader{display:flex;align-items:center;gap:12px;flex:1 1 210px}
+.kingGuideIcon{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;background:#efc56c;
+ color:#211508;border-radius:13px;font-size:23px}
+.kingGuideHeader>div{display:grid;gap:5px}
+.kingGuide small{font-size:10px;color:#f4db9f;letter-spacing:.5px}
+.kingGuide strong{font-size:clamp(14px,3.5vw,18px)}
+.kingGuide p{font-size:11px;color:#d9c6a6;line-height:1.45;margin:0}
+.kingGuide button{background:#ffce6a;border:1px solid #ffdf9d;color:#21170a;
+ border-radius:11px;padding:12px 18px;font-weight:900;font-size:12px}
+.kingNav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;background:#1b1c22;
+ border:1px solid #323138;border-radius:15px;padding:5px;margin:22px 0 21px;position:sticky;top:0;z-index:5}
+.kingNav button{border:0;border-radius:11px;background:transparent;color:#bcbec6;
+ padding:13px 5px;display:flex;gap:7px;align-items:center;justify-content:center;
+ font-weight:850;font-size:clamp(11px,2.8vw,13px);min-width:0}
+.kingNav button.active,.kingNav button[aria-selected=true]{background:#ffd16c;color:#1e170a;box-shadow:0 2px 9px #0005}
+.kingTabPanel{min-width:0;max-width:100%}
+.kingSectionTop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0 13px}
+.kingSectionTop>div{flex:1 1 190px}
+.kingSectionTop h2{font-size:clamp(19px,5vw,27px);letter-spacing:-.7px;margin:6px 0}
+.kingSectionTop p{color:var(--muted);font-size:12px;line-height:1.55;margin:0}
+.kingPill{font-size:10px!important;background:#27241e;border:1px solid #685535;border-radius:99px;
+ padding:8px 11px;color:#f6d691!important;white-space:normal}
+.kingScene{border-radius:22px;border:1px solid #625236;overflow:hidden;background:#20241f;box-shadow:0 8px 26px #0004}
+.kingMap{position:relative;height:clamp(245px,50vw,360px);overflow:hidden;
+ background:radial-gradient(ellipse at 60% 40%,#68806380,transparent 48%),
+ repeating-linear-gradient(35deg,#516b53 0 28px,#4c614b 29px 46px,#566e54 47px 54px)}
+.kingMap:after{content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(180deg,#f2d59411,transparent 25%,#05090545),radial-gradient(circle at 46% 45%,transparent 42%,#14201761)}
+.kingMapSun{position:absolute;width:140px;height:140px;right:5%;top:-67px;border-radius:50%;
+ background:#eed4a259;filter:blur(12px)}
+.kingMapRoad{position:absolute;left:19%;top:17%;width:58%;height:80%;transform:rotate(-28deg);
+ border-radius:50%;border:20px solid #b5a17e55}
+.kingMapForest{position:absolute;left:-30px;bottom:-30px;width:190px;height:170px;
+ border-radius:50%;background:radial-gradient(circle,#244b3150,#183d2099 60%,transparent 70%)}
+.kingMapBuilding{position:absolute;z-index:1;display:grid;place-items:center;gap:2px;
+ padding:8px 12px;min-width:75px;max-width:110px;background:linear-gradient(#332f25,#1c211e);
+ border:1px solid #e1bc76aa;color:#ffecbf;border-radius:12px;
+ box-shadow:0 9px 0 #242b27,0 13px 20px #0c150e99;cursor:pointer}
+.kingMapBuilding span{font-size:clamp(23px,6vw,44px);line-height:1.1;text-shadow:0 2px 8px #000}
+.kingMapBuilding strong{font-size:10px;white-space:nowrap}
+.kingMapBuilding.keep{left:41%;top:25%;min-width:105px;border:2px solid #f3d690}
+.kingMapBuilding.keep span{font-size:69px;color:#f1d68c;line-height:1}
+.kingMapBuilding.lumber{left:8%;top:12%}
+.kingMapBuilding.farm{left:18%;bottom:15%}
+.kingMapBuilding.quarry{right:8%;top:12%}
+.kingMapBuilding.barracks{right:9%;bottom:14%}
+.kingMapBuilding:focus-visible,.kingMapBuilding:hover{outline:2px solid #fff3c8;outline-offset:3px}
+.kingSceneFooter{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:14px 16px;
+ background:#181e1b;color:#f2dbac;font-size:11px;font-weight:800}
+.kingSceneFooter small{color:#bcb9ad;font-weight:500}
+.kingPanel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(15px,4vw,22px);margin:15px 0}
+.kingPanel h2,.kingPanel h3{font-size:20px;margin:0 0 8px;letter-spacing:-.4px}
+.kingPanel p{font-size:12px;color:#b6b5bd;line-height:1.6}
+.kingDaily{display:flex;gap:15px;align-items:flex-start}
+.kingDailyIcon{width:50px;height:50px;border-radius:15px;background:#362d1d;display:grid;place-items:center;
+ flex:0 0 50px;font-size:29px}
+.kingDailyText{flex:1}.kingDailyText button{margin-top:5px}
+.kingPanel button,.kingBuilding button{background:#f6cd71;border:1px solid #eac27b;color:#1b1710;
+ border-radius:11px;padding:12px 15px;font-weight:900;font-size:12px;max-width:100%;
+ white-space:normal;line-height:1.4}
+.kingPanel button:focus-visible,.kingBuilding button:focus-visible,.kingNav button:focus-visible{outline:3px solid #fff4ca;outline-offset:2px}
 .kingBuildings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-.kingBuilding{background:#19231e;border:1px solid #53513e;border-radius:16px;padding:15px;display:grid;gap:10px}
-.kingBuilding strong{font-size:14px}.kingBuilding small{color:#c0b493;font-size:11px;line-height:1.5}
-.kingBuilding button,.kingActions button,.kingPanel button{border:1px solid #d4b16d;background:#ebc779;color:#161a12;
- font:800 12px "DM Sans",system-ui;padding:11px 13px;border-radius:10px;cursor:pointer}
-.kingBuilding button:disabled,.kingPanel button:disabled{opacity:.5;cursor:not-allowed}
-.kingPanel{background:#18231d;border:1px solid #65583d;border-radius:19px;padding:20px;margin:18px 0}
-.kingPanel h2{margin:0 0 9px}.kingPanel strong{color:#ebd191}.kingActions{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}
-.kingHelp{font-size:11px!important}.kingFuture{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.kingFuture div{padding:13px;border:1px solid #454736;background:#22281e;border-radius:12px;font-size:15px}
-.kingFuture strong{display:block;font-size:12px;margin:5px 0}.kingFuture small{display:block;font-size:11px;color:#b9b5a6;line-height:1.5}
-.kingSecondary{padding:11px 16px;border-radius:11px;border:1px solid #9c8351;color:#eddbb2;background:#211f19}
-@media(max-width:460px){.kingWrap{padding:13px}.kingVillage{height:225px}.kingCastle{font-size:75px}.kingField{font-size:36px}
- .kingResources b{font-size:19px}.kingBuildings{grid-template-columns:1fr}.kingFuture{grid-template-columns:1fr}}
-[hidden]{display:none!important}
+.kingBuilding{background:var(--surface);border:1px solid #3b3d44;border-radius:17px;padding:17px;
+ display:grid;gap:9px;align-content:start;min-width:0}
+.kingBuilding strong{font-size:15px;overflow-wrap:anywhere}
+.kingBuilding small{font-size:11px;color:#acaeb8;line-height:1.6}
+.kingBuilding button{margin-top:auto;justify-self:stretch}
+.kingBuilding button:disabled{background:#323039;color:#b4aeb1;border-color:#43434a}
+.kingActions{display:flex;flex-wrap:wrap;gap:10px;margin:13px 0}
+.kingActions button{flex:1 1 155px}
+.kingActions .kingOutline{background:#26272b;color:#eecb86;border-color:#685335}
+.kingHelp{font-size:11px!important;line-height:1.6!important;color:#c1b89f!important;overflow-wrap:anywhere}
 .kingAlliances{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:12px 0}
-.kingAllianceCard{background:#232b22;border:1px solid #514d3c;border-radius:14px;display:grid;gap:9px;padding:12px}
-.kingAllianceCard.selected{border-color:#e3c479;box-shadow:inset 0 0 0 1px #b99a50;background:#393322}
-.kingAllianceCard strong{font-size:12px;color:#f0d38c}
-.kingAllianceCard small{font-size:11px;color:#cabfa8;line-height:1.4}
-.kingFieldSelect{display:grid;gap:8px;color:#e2d6bd;font-size:12px;margin:15px 0}
-.kingFieldSelect select{padding:12px;background:#141a17;border:1px solid #6c603b;color:#fff;border-radius:11px}
-@media(max-width:520px){.kingAlliances{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kingAllianceCard{background:#202228;border:1px solid #414049;border-radius:13px;padding:13px;
+ display:grid;gap:7px;overflow-wrap:anywhere}
+.kingAllianceCard.selected{background:#3b3020;border-color:#d2aa61}
+.kingAllianceCard strong{color:#f8da96;font-size:12px;line-height:1.45}
+.kingAllianceCard small{font-size:11px;color:#b9b4a8;line-height:1.4}
+.kingInfo{padding:13px;border:1px solid #493f31;background:#24221f;border-radius:12px;
+ font-size:11px;color:#d6c9ab;line-height:1.6}
+.kingExpeditionCard{position:relative;overflow:hidden}
+.kingExpeditionArt{font-size:80px;width:125px;height:125px;display:grid;place-items:center;
+ border-radius:24px;background:radial-gradient(#6b5833,#251f19);margin:0 auto 12px;color:#ffe09c}
+.kingFieldSelect{display:grid;gap:8px;font-weight:800;font-size:12px;color:#d6c9ac;margin:18px 0}
+.kingFieldSelect select{width:100%;max-width:100%;background:#101114;border:1px solid #655539;border-radius:12px;
+ padding:13px;color:#fff;font-size:14px}
+.kingFooter{padding:25px 0;text-align:center;border-top:1px solid #37343b;margin-top:30px}
+.kingFooter span{font-size:11px;font-weight:800;color:#ffd18a;letter-spacing:1px}
+.kingFooter p{font-size:11px;line-height:1.6;color:#aaa4a4;max-width:600px;margin:10px auto}
+.kingFooter a{display:inline-block;margin-top:10px;color:var(--gold);font-weight:800;font-size:12px}
+@media(max-width:680px){
+ .kingWrap{padding:12px 12px 100px}
+ .kingHero{padding:22px 16px;min-height:195px}
+ .kingCrest{flex:0 0 80px;width:80px;border-radius:25%}
+ .kingCrest span{font-size:48px}
+ .kingResources{gap:6px}.kingResources>div{padding:12px 3px}
+ .kingResources span{font-size:20px}
+ .kingResources strong{font-size:17px}
+ .kingBuildings{grid-template-columns:1fr}
+ .kingNav button{padding:12px 2px}
+ .kingAlliances{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .kingMapBuilding.keep{left:39%;top:28%;min-width:86px}
+ .kingMapBuilding.keep span{font-size:52px}
+ .kingMapBuilding{min-width:65px;padding:7px 6px}
+ .kingMapBuilding span{font-size:26px}
+}
+@media(max-width:360px){
+ .kingTop{flex-wrap:wrap}.kingLive{display:none}
+ .kingHeroTags span{font-size:9px}
+ .kingCrest{display:none}
+ .kingNav button{font-size:10px;gap:3px}
+ .kingMapBuilding.keep{left:35%}
+ .kingGuide button{width:100%}
+}

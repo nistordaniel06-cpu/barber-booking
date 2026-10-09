@@ -1,79 +1,87 @@
-/* BARBERCRAFT demonstration directory.
-  External MERO listings are source-referenced and NOT bookable BARBERCRAFT salons.
-  Salon-specific images are deliberately NOT copied or fabricated. */
+/* BARBERCRAFT Explore: non-bookable preview cards edited directly in Admin.
+   No third-party booking links. Real photos only if rights are explicitly confirmed. */
 (()=>{"use strict";
-const $=id=>document.getElementById(id),home=$("home");
-if(!home)return;
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const n=(tag,text,cls)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=String(text);if(cls)el.className=cls;return el};
-const section=n("section",undefined,"bcSampleArea"),title=n("h3","Saloane de explorat · București"),
- description=n("p","20 de profiluri demonstrative cu date publice și sursa indicată. Nu sunt parteneri BARBERCRAFT, iar fotografiile reale sunt disponibile la sursă. Prețurile se pot modifica."),
+const $=id=>document.getElementById(id),home=$("home");if(!home)return;
+const n=(tag,text,cls)=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=String(text);if(cls)x.className=cls;return x};
+const section=n("section",undefined,"bcSampleArea"),title=n("h3","Saloane de explorat"),
+ description=n("p","Descoperă profiluri demonstrative. Prețurile și serviciile se pot modifica; rezervările sunt disponibile numai la saloanele partenere."),
  grid=n("div",undefined,"bcSampleGrid");
-section.append(title,description,grid);
-const salonGrid=$("salongrid");salonGrid?.insertAdjacentElement("afterend",section);
+section.append(title,description,grid);$("salongrid")?.insertAdjacentElement("afterend",section);
 const dialog=n("dialog",undefined,"bcSampleDialog");
-dialog.innerHTML='<img class="bcSampleModalCover" src="./assets/salon-placeholder.svg" alt="Ilustrație generică, nu fotografia salonului"><div class="bcSampleBody" id="bcSampleDialogBody"></div>';
+dialog.innerHTML='<img class="bcSampleModalCover" src="./assets/salon-placeholder.svg" alt="Copertă salon"><div class="bcSampleBody" id="bcSampleDialogBody"></div>';
 document.body.append(dialog);
-const filters=[$("search"),$("countyFilter"),$("cityFilter"),$("sectorFilter")];
-let data=[],token=0;
-const city=$("cityFilter"),county=$("countyFilter"),sector=$("sectorFilter");
 const norm=v=>String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+const city=$("cityFilter"),county=$("countyFilter"),sector=$("sectorFilter");
+const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
+const placeholder="./assets/salon-placeholder.svg";
+const photo=(item,path)=>{
+ if(!item.photo_permission||!path||!path.startsWith(item.id+"/")||
+ !/^[a-f0-9-]{36}\/[a-f0-9-]{36}\.(jpg|png|webp)$/i.test(path))return placeholder;
+ return sb.storage.from("bc-explore-images").getPublicUrl(path).data.publicUrl;
+};
+let data=[],token=0;
 function ensureOptions(){
- for(const [select,value,label] of [[city,"București","București"],[county,"București","București"],...Array.from({length:6},(_,i)=>[sector,"Sector "+(i+1),"Sector "+(i+1)])]){
+ for(const [select,value,label] of [[city,"București","București"],[county,"București","București"],
+ ...Array.from({length:6},(_,i)=>[sector,"Sector "+(i+1),"Sector "+(i+1)])]){
   if(select&&![...select.options].some(o=>o.value===value))select.add(new Option(label,value));
  }
 }
 function draw(){
- const query=norm($("search")?.value);
- const c=city?.value||"",s=sector?.value||"",q=county?.value||"";
- const shown=data.filter(x=>(!c||x.city===c)&&(!q||x.county===q)&&(!s||x.sector===s)
- &&(!query||norm([x.name,x.address,x.sector,...(x.services||[]).map(i=>i.name)].join(" ")).includes(query)));
+ const query=norm($("search")?.value),c=city?.value||"",s=sector?.value||"",q=county?.value||"";
+ const shown=data.filter(x=>(!c||x.city===c)&&(!q||x.county===q)&&(!s||x.sector===s)&&
+ (!query||norm([x.name,x.address,x.sector,...(x.services||[]).map(i=>i.name)].join(" ")).includes(query)));
  grid.replaceChildren();
- if(!shown.length){grid.append(n("p","Nu există saloane demonstrative pentru filtrele selectate."));return}
+ if(!shown.length){grid.append(n("p","Nu există saloane de explorat pentru filtrele selectate."));return}
  for(const salon of shown){
   const b=n("button",undefined,"bcSampleCard");b.type="button";
-  const img=n("img");img.src="./assets/salon-placeholder.svg";img.alt="Grafică generică BARBERCRAFT, nu fotografia "+salon.name;
-  const body=n("span",undefined,"bcSampleText"),badge=n("span","SURSĂ EXTERNĂ · "+salon.sector,"bcSampleBadge");
-  body.append(badge,n("strong",salon.name),n("small",salon.address),n("small",salon.services.length+" servicii în extras · Vezi detalii →"));
+  const img=n("img");img.src=photo(salon,salon.cover_path);img.loading="lazy";
+  img.alt=salon.photo_permission&&salon.cover_path?"Copertă "+salon.name:"Ilustrație BARBERCRAFT";
+  const body=n("span",undefined,"bcSampleText");
+  body.append(n("span","DE EXPLORAT · "+salon.sector,"bcSampleBadge"),
+   n("strong",salon.name),n("small",salon.address),
+   n("small",(salon.services?.length||0)+" servicii · Vezi prezentarea →"));
   b.append(img,body);b.onclick=()=>detail(salon);grid.append(b);
  }
 }
 function detail(s){
  const root=dialog.querySelector("#bcSampleDialogBody");root.replaceChildren();
- const eyebrow=n("span","SURSĂ EXTERNĂ · "+s.sector,"bcSampleBadge"),h=n("h2",s.name),addr=n("p",s.address);
- const notice=n("p","Profil pentru explorare și testare. Informații preluate din listări publice, care se pot modifica. Salonul nu este înscris ca partener BARBERCRAFT și nu se pot face rezervări aici. Ilustrația nu reprezintă interiorul acestui salon.");
- root.append(eyebrow,h,addr,notice,n("h3","Servicii și prețuri afișate public"));
- if(!s.services?.length)root.append(n("p","Serviciile nu au fost confirmate. Vezi sursa."));
+ const cover=dialog.querySelector(".bcSampleModalCover");cover.src=photo(s,s.cover_path);
+ cover.alt=s.photo_permission&&s.cover_path?"Copertă "+s.name:"Ilustrație generică BARBERCRAFT";
+ root.append(n("span","DE EXPLORAT · "+s.sector,"bcSampleBadge"),n("h2",s.name),n("p",s.address));
+ const p=s.data_status==="admin_updated"?
+ "Datele au fost actualizate în BARBERCRAFT. Profilul nu acceptă încă rezervări și nu reprezintă un cont PRO activ.":
+ "Profil demonstrativ. Informațiile pot necesita confirmare; nu poți face rezervări prin BARBERCRAFT la acest salon.";
+ root.append(n("p",p),n("h3","Servicii și prețuri"));
  for(const item of s.services||[]){
   const row=n("div",undefined,"bcSampleService"),info=n("div");
-  info.append(n("strong",item.name),n("small",item.duration));
+  info.append(n("strong",item.name),n("small",item.duration||"Durată neprecizată"));
   row.append(info,n("b",item.price));root.append(row);
  }
- root.append(n("h3","Specialiști menționați în lista publică"));
- const names=s.publicly_listed_team||[];
- root.append(n("p",names.length?names.join(" · "):"Nu există nume de specialiști verificate în extrasul consultat. Consultă pagina originală."));
- const actions=n("div",undefined,"bcSampleCtas"),source=n("a","Deschide profilul MERO ↗");
- if(!/^https:\/\/mero\.ro\/p\/[a-z0-9-]+$/i.test(s.source_url))return;
- source.href=s.source_url;source.target="_blank";source.rel="noopener noreferrer";
+ if(!s.services?.length)root.append(n("p","Lista serviciilor urmează să fie actualizată."));
+ root.append(n("h3","Echipă"));
+ root.append(n("p",s.publicly_listed_team?.length?s.publicly_listed_team.join(" · "):"Lista specialiștilor nu este încă actualizată."));
+ const pics=Array.isArray(s.gallery_paths)?s.gallery_paths:[];
+ if(s.photo_permission&&pics.length){
+  root.append(n("h3","Galerie"));const gallery=n("div",undefined,"bcExplorePublicGallery");
+  for(const path of pics){const img=n("img");img.src=photo(s,path);img.loading="lazy";img.alt="Fotografie pentru "+s.name;gallery.append(img)}
+  root.append(gallery);
+ }
  const close=n("button","Închide");close.type="button";close.onclick=()=>dialog.close();
- actions.append(source,close);root.append(actions);dialog.showModal();
+ const actions=n("div",undefined,"bcSampleCtas");actions.append(close);root.append(actions);dialog.showModal();
 }
 async function load(){
  const t=++token;
  try{
-  const sb=window.supabase.createClient(window.BARBERCRAFT_SUPABASE_URL,window.BARBERCRAFT_SUPABASE_PUBLISHABLE_KEY);
-  const {data:items,error}=await sb.from("bc_discovery_salon_samples").select("id,name,address,city,county,sector,source_url,services,publicly_listed_team").limit(100);
+  const {data:items,error}=await sb.from("bc_discovery_salon_samples")
+   .select("id,name,address,city,county,sector,services,publicly_listed_team,photo_permission,cover_path,gallery_paths,data_status")
+   .limit(150);
   if(error)throw error;if(t!==token)return;
-  data=items||[];window.BCDemoCatalog=data;
-  ensureOptions();
-  // Main catalog reload replaces select options. Synchronize after that fetch completes.
-  const observer=new MutationObserver(()=>ensureOptions());
-  for(const sel of [city,county,sector])if(sel)observer.observe(sel,{childList:true});
+  data=items||[];window.BCDemoCatalog=data;ensureOptions();
+  for(const sel of [city,county,sector])if(sel)new MutationObserver(ensureOptions).observe(sel,{childList:true});
   title.textContent="Saloane de explorat · "+data.length+" profiluri";
   draw();window.BCLocationMap?.updatePins();
- }catch(e){description.textContent="Lista demonstrativă nu poate fi încărcată momentan.";console.warn("External sample directory",e)}
+ }catch(e){description.textContent="Catalogul demonstrativ nu este disponibil momentan.";console.warn(e)}
 }
-for(const f of filters)f?.addEventListener("input",draw);
-for(const f of [county,city,sector])f?.addEventListener("change",draw);
+for(const x of [$("search"),city,county,sector]){x?.addEventListener("input",draw);x?.addEventListener("change",draw)}
 load();
 })();

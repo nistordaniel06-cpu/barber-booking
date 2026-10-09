@@ -14,10 +14,11 @@ const profileForm=$("socialProfileForm"),self=$("socialMyProfile"),barber=$("soc
 let me=null,own=null,selected=null,chatWith=null,staff=[],mutuals=[],chatTimer=null;
 const uuid=x=>/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(x||"");
 function openTab(name){
+ if(name==="ideas")name="discover";
  document.querySelectorAll(".socialPanel").forEach(x=>x.hidden=x.id!=="panel"+name[0].toUpperCase()+name.slice(1));
  document.querySelectorAll(".socialTabs button").forEach(x=>x.classList.toggle("selected",x.dataset.panel===name));
  if(name==="messages")loadMutuals();
- if(name==="ideas")loadIdeas();
+ 
 }
 document.querySelectorAll(".socialTabs button").forEach(b=>b.onclick=()=>openTab(b.dataset.panel));
 function msgErr(err){line("Nu am putut efectua acțiunea: "+(err?.message||String(err)))}
@@ -260,7 +261,7 @@ async function init(){
   const search=new URLSearchParams(location.search),id=search.get("u");
   if(uuid(id))await showPerson(id);
   const dest=(location.hash||"").replace("#","");
-  if(["profile","messages","ideas","discover"].includes(dest))openTab(dest==="ideas"&&barber.hidden===false?"profile":dest);
+  if(["profile","messages","discover"].includes(dest))openTab(dest);
   line("Comunitatea este disponibilă. Datele tale private rămân separate de profilul social.");
  }catch(e){msgErr(e)}
 }

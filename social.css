@@ -139,3 +139,26 @@ body.bc-social #socialFeedMore{width:100%;margin:0 0 25px}
  body.bc-social .socialPostTop button{margin-left:auto}
  body.bc-social .socialFeedHeading{flex-wrap:wrap}
 }
+
+/* Three-tab navigation and mobile profile layout. */
+body.bc-social .socialTabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+body.bc-social #panelProfile,body.bc-social #panelProfile *,
+body.bc-social .socialProfileMini,body.bc-social .socialSelectedRow{min-width:0;max-width:100%;overflow-wrap:anywhere}
+body.bc-social #socialProfileForm{display:grid;gap:3px;min-width:0}
+body.bc-social #socialProfileForm input,
+body.bc-social #socialProfileForm textarea{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+body.bc-social #socialBarber .socialGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.bc-social #socialBarber .socialGrid .socialField{min-width:0}
+body.bc-social #socialBarber .socialPortfolio{min-width:0;grid-template-columns:repeat(3,minmax(0,1fr))}
+body.bc-social .socialCard{overflow-wrap:anywhere}
+body.bc-social .socialCard a{overflow-wrap:anywhere}
+@media(max-width:610px){
+ body.bc-social #socialBarber .socialGrid{grid-template-columns:1fr}
+ body.bc-social .socialTop strong{white-space:normal}
+ body.bc-social .socialTabs{gap:4px;padding:4px}
+ body.bc-social .socialTabs button{padding:12px 5px;font-size:11px}
+ body.bc-social .socialWrap{padding-inline:12px}
+}
+@media(max-width:350px){
+ body.bc-social #socialBarber .socialPortfolio{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
