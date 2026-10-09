@@ -43,10 +43,27 @@ async function draw(){
 function renderLink(code,audience){
  const url=new URL("./referral.html",location.href);
  url.searchParams.set("ref",code);url.searchParams.set("type",audience);
- const row=n("div");row.className="refLine",details=n("div");details.append(n("strong",audience==="pro"?"Link pentru saloane":"Link pentru prieteni"));
- details.append(n("p",url.href));const b=n("button","Copiază linkul");b.type="button";
- b.onclick=()=>navigator.clipboard?.writeText(url.href).then(()=>status("Link copiat."),()=>status("Selectează linkul și copiază-l."));
- row.append(details,b);$("refLinks").append(row);
+ const row=n("div");row.className="refLine";
+ const details=n("div");details.className="refLinkDetails";
+ const title=n("strong",audience==="pro"?"Link pentru saloane":"Link pentru clienți");
+ const input=n("input");input.type="text";input.className="refShareUrl";input.readOnly=true;
+ input.value=url.href;input.setAttribute("aria-label","Link de invitație BARBERCRAFT pentru "+(audience==="pro"?"PRO":"clienți"));
+ const link=n("a","Deschide linkul ↗");link.className="refShareOpen";link.href=url.href;
+ link.target="_blank";link.rel="noopener noreferrer";
+ details.append(title,input,link);
+ const actions=n("div");actions.className="refShareActions";
+ const copy=n("button","Copiază linkul");copy.type="button";
+ copy.onclick=async()=>{
+  try{
+   if(!navigator.clipboard?.writeText)throw new Error("CLIPBOARD_UNAVAILABLE");
+   await navigator.clipboard.writeText(url.href);
+   status("Link pentru "+(audience==="pro"?"PRO":"clienți")+" copiat.");
+  }catch(_error){
+   input.focus();input.select();
+   status("Linkul este selectat. Apasă Copiază din meniul telefonului sau folosește «Deschide linkul».");
+  }
+ };
+ actions.append(copy);row.append(details,actions);$("refLinks").append(row);
 }
 $("refLogin").onsubmit=async e=>{
  e.preventDefault();const f=e.currentTarget;const kind=e.submitter?.value||"login";
@@ -65,7 +82,16 @@ $("refClaim").onsubmit=async e=>{
  status("Invitație înregistrată ("+result.audience+"). Se califică doar după acțiunea reală verificată.");
  await draw()}catch(err){status("Codul nu a fost înregistrat: "+err.message)}
 };
-$("refClient").onclick=async()=>{try{const result=await call("bc_referral_link_create",{p_audience:"client",p_salon:null});renderLink(result.code,"client");status("Link client creat.")}catch(e){status(e.message)}};
+$("refClient").onclick=async()=>{
+ const button=$("refClient");button.disabled=true;
+ try{
+  const result=await call("bc_referral_link_create",{p_audience:"client",p_salon:null});
+  await draw();
+  status("Link pentru clienți pregătit. Îl poți copia sau deschide din lista de mai jos.");
+  $("refLinks").scrollIntoView({block:"nearest",behavior:"smooth"});
+ }catch(e){status("Nu s-a putut genera linkul: "+e.message)}
+ finally{button.disabled=false}
+};
 $("refPro").onclick=async()=>{try{const result=await call("bc_referral_link_create",{p_audience:"pro",p_salon:$("refSalon").value});renderLink(result.code,"pro");status("Link PRO creat.")}catch(e){status(e.message)}};
 await draw();
 })();

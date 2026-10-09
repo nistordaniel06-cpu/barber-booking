@@ -54,3 +54,45 @@ body.bc-referral .refLine button{flex:0 1 180px}
 }
 @media(max-width:355px){body.bc-referral .refWrap header{justify-content:center}
  body.bc-referral .refLine button{flex:1 1 100%}}
+
+/* Clear, tappable customer invitation links on iPhone and Android. */
+body.bc-referral #refLinks .refLine{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) auto;
+ gap:12px;
+ align-items:center;
+ padding:15px;
+ margin:10px 0;
+ border:1px solid #635037;
+ border-radius:14px;
+ background:linear-gradient(130deg,#2a241c,#1b1b22);
+}
+body.bc-referral #refLinks .refLinkDetails{
+ display:grid;gap:9px;min-width:0;max-width:100%;
+}
+body.bc-referral #refLinks .refLinkDetails strong{
+ color:#f6d595;font-size:13px;line-height:1.4;
+}
+body.bc-referral #refLinks .refShareUrl{
+ display:block;width:100%;max-width:100%;min-width:0;
+ background:#101115;border:1px solid #5c5146;border-radius:9px;
+ color:#e8e5e0;padding:11px;font-size:13px;
+ box-sizing:border-box;
+}
+body.bc-referral #refLinks .refShareOpen{
+ color:#f5cb77;font-size:12px;font-weight:800;
+ text-decoration:underline;text-underline-offset:3px;
+ overflow-wrap:anywhere;
+}
+body.bc-referral #refLinks .refShareActions{
+ display:flex;gap:8px;align-items:center;justify-content:flex-end;
+ min-width:0;
+}
+body.bc-referral #refLinks .refShareActions button{
+ white-space:normal;max-width:100%;
+}
+@media(max-width:540px){
+ body.bc-referral #refLinks .refLine{grid-template-columns:1fr}
+ body.bc-referral #refLinks .refShareActions,
+ body.bc-referral #refLinks .refShareActions button{width:100%}
+}

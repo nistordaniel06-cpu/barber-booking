@@ -5,6 +5,8 @@
 <div class="bc-admin-hub">
  <a href="./pilot-control.html" class="bc-admin-hub-tile"><span>✦</span><strong>Testează cu clienții 4MEN</strong><small>Servicii, link privat și programări pilot</small></a>
  <a href="./professionals.html" class="bc-admin-hub-tile"><span>▦</span><strong>Programări PRO</strong><small>Calendarul și echipa salonului</small></a>
+ <a href="./" class="bc-admin-hub-tile"><span>⌂</span><strong>Aplicația clienților</strong><small>Deschide pagina pe care o distribui pentru programări</small></a>
+ <a href="./referral.html?type=client" class="bc-admin-hub-tile"><span>↗</span><strong>Link pentru clienți</strong><small>Invită clienți noi și distribuie linkul BARBERCRAFT</small></a>
  <button type="button" data-tab="clients" class="tab bc-admin-hub-tile"><span>♙</span><strong>Clienți de aprobat</strong><small>Conturi noi, aprobări și suspendări</small></button>
  <button type="button" data-tab="partners" class="tab bc-admin-hub-tile"><span>♧</span><strong>Saloane & specialiști</strong><small>Înscrieri și verificare</small></button>
  <button type="button" data-tab="catalog" class="tab bc-admin-hub-tile"><span>✂</span><strong>Servicii & prețuri</strong><small>Catalogul partenerilor</small></button>
@@ -66,8 +68,12 @@ Promise.all([sb.rpc("bc_admin_sales_summary"),sb.rpc("bc_tw_leaderboard")]).then
  state.textContent="Bătălia Zonelor: "+(s.enabled?"ACTIV":"PREGĂTIRE — dezactivat")+(war.error?" · Clasamentul nu a fost încărcat.":" · Runde încheiate: "+(war.data?.rounds?.length||0));
  const link=elt("a","Vezi clasamentul public →","btn");link.href="./territory-war.html";link.target="_blank";link.rel="noopener";c.append(link);
 }).catch(err=>{state.textContent="Eroare: "+err.message;});}if(active==="zones"){if(window.BCZonesAdmin)window.BCZonesAdmin.render(sb,c);else c.append(elt("p","Editorul de zone nu a fost încărcat."));}if(active==="rewards"){if(window.BCRewardAdmin)window.BCRewardAdmin.render(sb,c);else c.append(elt("p","Editorul de recompense nu a fost încărcat."));}if(active==="explore"){if(window.BCExploreAdmin)window.BCExploreAdmin.render(sb,c);else c.append(elt("p","Editorul de explorare nu este disponibil."));}if(active==="referrals"){if(window.BCReferralAdmin)window.BCReferralAdmin.render(sb,c);else c.append(elt("p","Campaniile nu sunt disponibile."));}if(active==="community"){if(window.BCAdminCommunity)window.BCAdminCommunity.render(sb,c);else c.append(elt("p","Modulul comunității nu este disponibil."));}if(active==="clients"){
- if(window.BCAdminClients)window.BCAdminClients.render(sb,c);
- else c.append(elt("p","Aprobarea clienților nu este disponibilă."));
+ if(window.BCAdminClients){
+  Promise.resolve(window.BCAdminClients.render(sb,c)).catch(error=>{
+   c.replaceChildren(elt("h2","Clienți de aprobat"),
+    elt("p","Nu am putut încărca clienții: "+(error.message||"Eroare temporară"),"status"));
+  });
+ }else c.append(elt("p","Modulul de aprobare nu s-a încărcat. Reîncarcă pagina.","status"));
 }if(active==="moderation"){c.append(elt("h2","Moderare clienți și utilizatori"));c.append(elt("p","Folosește UUID-ul utilizatorului din Supabase Auth. Nu sunt disponibile căutări publice după date private.","sub"));const form=elt("div");form.innerHTML='<label class="field">ID utilizator (UUID)<input class="input" id="target" placeholder="UUID utilizator"></label><label class="field">Acțiune<select class="input" id="mode"><option value="flag">Flag</option><option value="warning">Warning</option><option value="suspension">Suspendare</option><option value="ban">Ban</option><option value="unban">Anulare restricție</option><option value="note">Notă internă</option></select></label><label class="field">Motiv (minimum 5 caractere)<textarea class="input" id="reason" rows="3" maxlength="1000"></textarea></label><button class="btn gold" id="applyModeration">Înregistrează acțiunea</button>';form.querySelector("#applyModeration").onclick=()=>{const id=$("target").value.trim(),mode=$("mode").value,reason=$("reason").value.trim();if(!/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(id)||reason.length<5){$("actionStatus").textContent="Introdu un UUID valid și un motiv clar de minimum 5 caractere.";return;}act("moderation",id,mode,reason)};c.append(form,elt("h2","Istoric moderare"));for(const x of overview.recent_cases||[])c.append(item(x.case_type,x.target_user_id+" · "+x.reason,[]));}if(active==="audit"){c.append(elt("h2","Jurnalul acțiunilor administrative"));for(const x of overview.audit||[])c.append(item(x.action,x.target_type+" · "+x.target_id+" · "+new Date(x.created_at).toLocaleString("ro-RO"),[]));}}
 
 function openServiceEditor(id){
@@ -133,7 +139,7 @@ $("dashboard").addEventListener("click",e=>{
  const b=e.target.closest("button[data-tab]");
  if(!b||!$("dashboard").contains(b))return;
  const target=b.dataset.tab;
- if(!["storefront","partners","imports","catalog","sales","rewards","zones","explore","referrals","community","moderation","audit"].includes(target))return;
+ if(!["storefront","partners","imports","catalog","sales","rewards","zones","explore","referrals","community","clients","moderation","audit"].includes(target))return;
  active=target;render();
  document.querySelectorAll("button[data-tab]").forEach(item=>{
   const selected=item.dataset.tab===active;
@@ -142,5 +148,12 @@ $("dashboard").addEventListener("click",e=>{
  });
  history.replaceState(null,"","#admin-"+target);
  $("content").scrollIntoView({block:"start",behavior:"smooth"});
-});$("refresh").onclick=reload;$("logout").onclick=async()=>{await sb.auth.signOut();show("denied")};$("login").onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("loginStatus").textContent=error?error.message:"Autentificare reușită";if(!error)await init()};init();
+});window.addEventListener("hashchange",()=>{
+ const target=(location.hash||"").match(/^#admin-(storefront|partners|imports|catalog|sales|rewards|zones|explore|referrals|community|clients|moderation|audit)$/)?.[1];
+ if(target&&active!==target&&!$("dashboard").hidden){
+  active=target;render();
+  $("content").scrollIntoView({block:"start",behavior:"smooth"});
+ }
+});
+$("refresh").onclick=reload;$("logout").onclick=async()=>{await sb.auth.signOut();show("denied")};$("login").onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("loginStatus").textContent=error?error.message:"Autentificare reușită";if(!error)await init()};init();
 </script><script defer src="./premium-ui.js"></script><script defer src="./admin-rewards.js"></script><script defer src="./admin-zones.js"></script><script defer src="./admin-community.js"></script><script defer src="./admin-referrals.js"></script><script defer src="./admin-explore.js"></script><script defer src="./admin-clients.js"></script></body></html>
