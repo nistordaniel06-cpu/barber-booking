@@ -39,3 +39,11 @@
 @media(max-width:460px){.kingWrap{padding:13px}.kingVillage{height:225px}.kingCastle{font-size:75px}.kingField{font-size:36px}
  .kingResources b{font-size:19px}.kingBuildings{grid-template-columns:1fr}.kingFuture{grid-template-columns:1fr}}
 [hidden]{display:none!important}
+.kingAlliances{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:12px 0}
+.kingAllianceCard{background:#232b22;border:1px solid #514d3c;border-radius:14px;display:grid;gap:9px;padding:12px}
+.kingAllianceCard.selected{border-color:#e3c479;box-shadow:inset 0 0 0 1px #b99a50;background:#393322}
+.kingAllianceCard strong{font-size:12px;color:#f0d38c}
+.kingAllianceCard small{font-size:11px;color:#cabfa8;line-height:1.4}
+.kingFieldSelect{display:grid;gap:8px;color:#e2d6bd;font-size:12px;margin:15px 0}
+.kingFieldSelect select{padding:12px;background:#141a17;border:1px solid #6c603b;color:#fff;border-radius:11px}
+@media(max-width:520px){.kingAlliances{grid-template-columns:repeat(2,minmax(0,1fr))}}
