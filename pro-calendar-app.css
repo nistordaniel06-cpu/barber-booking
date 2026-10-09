@@ -92,3 +92,22 @@ body.modalOpen{overflow:hidden}
 .timeline[data-view="week"] .calendarEvent small{display:none}
 .timeline[data-view="week"] .timeCell,
 .timeline[data-view="three"] .timeCell{min-width:0!important}
+
+/* Standard header controls on every Calendar PRO modal and authentication gate. */
+.popupChrome{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-8px -4px 20px;min-height:42px}
+.popupChromeLabel{font-size:11px;font-weight:800;color:#c1b8a8;letter-spacing:.03em}
+.popupChromeActions{display:inline-flex;gap:9px;align-items:center;flex-shrink:0}
+.popupIconButton,.sheetHead .popupChromeActions>button,.gateBox .popupIconButton{
+ display:inline-grid;place-items:center;width:44px;height:44px;min-width:44px;min-height:44px;
+ border:1px solid #535865;border-radius:12px;background:#31343f;color:#f8d782;
+ text-decoration:none;font-size:23px;font-weight:800;line-height:1;padding:0;
+ -webkit-tap-highlight-color:transparent;
+}
+.popupChromeActions>button{color:#fff!important}
+.popupIconButton:hover,.popupChromeActions>button:hover{background:#42414a}
+.popupIconButton:focus-visible,.popupChromeActions>button:focus-visible{outline:3px solid #f0c75d;outline-offset:2px}
+.sheetHead .popupChromeActions>button{width:44px;height:44px}
+.gateBox .popupChrome{margin:-13px -10px 18px}
+.gateBox .popupChromeLabel{text-align:left}
+.gateBox .popupChromeActions{gap:7px}
+@media(max-width:360px){.popupChromeLabel{font-size:10px}.popupChromeActions{gap:6px}}
