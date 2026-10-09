@@ -31,7 +31,7 @@ begin
  if u is null or not coalesce((public.bc_portal_access('client')->>'allowed')::boolean,false) then
   raise exception 'CLIENT_ACCOUNT_REQUIRED' using errcode='42501';
  end if;
- if p_path is null or p_path !~* ('^'||u::text||'/[0-9a-f-]{36}\\.(jpg|png|webp)$') then
+ if p_path is null or p_path !~* ('^'||u::text||'/[0-9a-f-]{36}[.](jpg|png|webp)$') then
   raise exception 'INVALID_AVATAR_PATH' using errcode='22023';
  end if;
  if not exists(select 1 from storage.objects where bucket_id='bc-client-avatars' and name=p_path) then
