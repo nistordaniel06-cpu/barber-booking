@@ -75,7 +75,7 @@ $("catalogResendConfirmation").onclick=async()=>{
    "Dacă adresa poate primi confirmări, vei primi un nou e-mail. Verifică și Spam.";
  }finally{button.disabled=false}
 };
-$("catalogLogout").onclick=async()=>{await sb.auth.signOut();await checkAccount();};
+$("catalogLogout").onclick=async()=>{await sb.auth.signOut({scope:"local"});await checkAccount();};
 $("catalogRecheck").onclick=checkAccount;
 
 const localDate=(d)=>{
