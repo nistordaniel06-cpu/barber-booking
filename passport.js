@@ -4,7 +4,7 @@ const el=(tag,txt,cls)=>{const x=document.createElement(tag);if(txt!==undefined)
 if(!window.supabase||!window.BARBERCRAFT_SUPABASE_URL){status.textContent="Serviciul de autentificare nu este disponibil.";return}
 const sb=await window.BCPassportSession();
 const {data:{user},error:userError}=await sb.auth.getUser();
-if(userError||!user){status.replaceChildren(document.createTextNode("Autentifică-te pentru a vedea pașaportul. "),Object.assign(el("a","Intră în cont →"),{href:"./#account"}));return}
+if(userError||!user){status.replaceChildren(document.createTextNode("Autentifică-te pentru a vedea pașaportul. "),Object.assign(el("a","Intră în cont →"),{href:new URLSearchParams(location.search).get("from")==="pro"?"./professionals.html":"./#account"}));return}
 $("signedIn").hidden=false;status.textContent="Informațiile din pașaport sunt private și sincronizate între dispozitive.";
 const fmt=n=>new Intl.NumberFormat("ro-RO").format(Number(n)||0);
 try{
