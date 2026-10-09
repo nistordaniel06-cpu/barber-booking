@@ -34,13 +34,13 @@ async function loadOffers(){
 }
 $("redeemBtn").onclick=async()=>{
  const input=$("claimCode"),payload=input.value.trim(),s=current(),button=$("redeemBtn");
- if(!payload.startsWith("BC1|")||payload.length>200){$("redeemStatus").textContent="Introdu un cod BARBERCRAFT valid.";return}
- if(!confirm("Confirmi că ai acordat deja clientului beneficiul corespunzător? Codul va fi consumat definitiv."))return;
+ if((!payload.startsWith("BC1|")&&!payload.startsWith("BCP1|"))||payload.length>200){$("redeemStatus").textContent="Introdu un cod BARBERCRAFT valid.";return}
+ const identity=payload.startsWith("BCP1|");if(!confirm(identity?"Confirmi prezența clientului în salon? Check-in-ul nu acordă puncte.":"Confirmi că ai acordat deja clientului beneficiul corespunzător? Codul va fi consumat definitiv."))return;
  button.disabled=true;$("redeemStatus").textContent="Se verifică autenticitatea codului…";
  try{
-  const {data,error}=await sb.rpc("bc_reward_claim_redeem",{p_salon:s.salon_id,p_qr:payload});
+  const {data,error}=identity?await sb.rpc("bc_passport_qr_checkin",{p_salon:s.salon_id,p_payload:payload}):await sb.rpc("bc_reward_claim_redeem",{p_salon:s.salon_id,p_qr:payload});
   if(error)throw error;
-  $("redeemStatus").textContent="✓ Recompensă validată: "+data.reward+" · "+data.points_used+" puncte consumate.";
+  $("redeemStatus").textContent=identity?"✓ Check-in verificat: "+data.display_name+(data.new_checkin?" · înregistrat":" · deja înregistrat recent")+". Nu s-au acordat XP.":"✓ Recompensă validată: "+data.reward+" · "+data.points_used+" puncte consumate.";
   input.value="";
  }catch(err){$("redeemStatus").textContent="Cod respins: "+err.message}finally{button.disabled=false}
 };
@@ -56,7 +56,7 @@ $("scanBtn").onclick=async()=>{
   $("stopBtn").hidden=false;$("scanBtn").hidden=true;stopped=false;
   const frame=async()=>{
    if(stopped)return;
-   try{const hits=await detector.detect(video);const found=hits.find(h=>h.rawValue?.startsWith("BC1|"));if(found){$("claimCode").value=found.rawValue;$("redeemStatus").textContent="Cod citit. Verifică și confirmă manual utilizarea.";stop();return}}
+   try{const hits=await detector.detect(video);const found=hits.find(h=>(h.rawValue?.startsWith("BC1|")||h.rawValue?.startsWith("BCP1|")));if(found){$("claimCode").value=found.rawValue;$("redeemStatus").textContent="Cod citit. Verifică și confirmă manual utilizarea.";stop();return}}
    catch{}
    if(!stopped)raf=requestAnimationFrame(frame);
   };raf=requestAnimationFrame(frame);
