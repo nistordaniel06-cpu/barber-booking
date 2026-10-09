@@ -152,7 +152,7 @@ document.addEventListener("click",e=>{
  const b=e.target.closest("[data-catalog-id]");if(!b)return;
  const salon=catalogSalons.find(x=>x.id===b.dataset.catalogId);if(salon)renderCatalogProfile(salon);
 });
-loadCatalog();
+const searchFromLink=new URLSearchParams(location.search).get("q");if(searchFromLink){$("search").value=searchFromLink.slice(0,90);}loadCatalog();
 renderBarbers();renderServices();renderBooking();
 
 const getTheme=()=>{try{return localStorage.getItem("bc-theme")}catch{return null}};
