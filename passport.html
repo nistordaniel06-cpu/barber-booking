@@ -21,14 +21,21 @@
  padding:12px 13px;border:1px solid #635239;border-radius:11px;background:#282319;margin:13px 0 0}
 .bcPhotoFeedback[data-state="error"]{color:#ffc0b4;border-color:#984e4e;background:#332023}
 @media(max-width:420px){#photoForm{padding:14px}#photoForm input[type="file"]{font-size:12px}}
-</style><link rel="stylesheet" href="./barbercraft-assistant.css"><link rel="stylesheet" href="./barbercraft-experience.css"></head><body class="bc-premium bc-passport"><div class="wrap">
+</style><link rel="stylesheet" href="./barbercraft-assistant.css"><link rel="stylesheet" href="./barbercraft-experience.css"><link rel="stylesheet" href="./passport-medals.css"><link rel="stylesheet" href="./barbercraft-sticky-nav.css"></head><body class="bc-premium bc-passport"><div class="wrap">
 <header><a class="brand" href="./">BARBER<b>CRAFT</b></a><a href="./#account" class="back">‹ Înapoi la cont</a></header>
-<section class="hero"><span class="eyebrow">Identitatea ta în comunitate</span><h1>Barber Passport</h1><p>Istoricul tău de frizerie. Experiențe, progres, poze și beneficii — toate într-un singur loc.</p>
+<section class="hero"><span class="eyebrow">Identitatea ta în comunitate</span><h1>Barber Passport</h1><p>Pașaportul tău de Client sau frizer: profilul, vizitele confirmate, fotografiile și distincțiile tale. Beneficiile comerciale se revendică separat.</p>
 <div class="identity"><span class="avatar" id="avatar">B</span><div><strong id="name">Client BARBERCRAFT</strong><div class="rank" id="rank">Membru</div></div></div><div class="xpbar"><span id="xpProgress"></span></div><p class="muted" id="xpNext">XP acordat numai pentru vizite validate.</p></section>
 <p class="notice" id="status" role="status">Verificăm sesiunea și încărcăm pașaportul…</p>
 <div id="signedIn" hidden>
-<section class="bcIndividualPassport" id="bcIndividualPassport" aria-label="Barber Passport - progres client">Se încarcă nivelurile și misiunile tale…</section>
-<div class="grid"><div class="stat"><small>XP verificat</small><strong id="xp">0</strong></div><div class="stat"><small>Nivel Barber Passport</small><strong id="points">1</strong></div><div class="stat"><small>Vizite confirmate</small><strong id="visits">0</strong></div></div>
+
+<div class="grid"><div class="stat"><small>XP Barber Pass</small><strong id="xp">0</strong></div><div class="stat"><small>Nivel Barber Pass</small><strong id="points">1</strong></div><div class="stat"><small>Vizite confirmate</small><strong id="visits">0</strong></div></div>
+<section class="bcMedalPanel" id="medalBoardSection" aria-label="Medaliile tale">
+<h2>🏆 Medalii & distincții</h2>
+<p class="muted">Colecția ta personală: cu cât confirmi mai multe vizite și termini misiuni, cu atât câștigi cupe tot mai prețioase. Niciuna nu se cumpără.</p>
+<div id="bcMedalBoard" aria-live="polite">Se încarcă medaliile tale…</div>
+<div class="bcIdentityActions"><a href="./rewards.html">✦ Revendică recompense</a><a class="secondary" href="./social.html#profile">♡ Profilul tău public</a></div>
+</section>
+<section class="bcIndividualPassport" id="bcIndividualPassport" aria-label="Barber Pass - niveluri și misiuni">Se încarcă progresul Barber Pass…</section>
 <nav class="socialPassportQuick" aria-label="Comunitatea BARBERCRAFT"><a href="./referral.html?type=client">↗ Invită prieteni</a>
 <a href="./social.html">♡ Comunitate · Urmărește frizeri</a>
 <a href="./social.html#profile">✂ Publică o tunsoare · După 3 vizite</a>
@@ -40,14 +47,7 @@
 <button class="btn gold" id="passportIssueQr" type="button">Arată pașaportul meu QR</button>
 <p class="muted" id="passportCheckinStatus" role="status"></p><div class="rewardQrPanel" id="passportCheckinCode"></div>
 <h3 style="font-size:15px">Check-in-uri confirmate</h3><div class="panel" id="passportCheckins"></div></section>
-<section class="section" id="rewardMarketplace">
- <h2>Portofel & recompense</h2><p class="muted">Punctele sunt câștigate exclusiv din vizite validate. La solicitarea unei recompense, punctele sunt rezervate până la folosire sau anulare. Saloanele participă voluntar.</p>
- <div class="rewardInfo"><div><div class="eyebrow">Disponibile pentru revendicare</div><strong id="rewardBalance">—</strong><p id="rewardCommitted" class="muted">Se verifică portofelul…</p></div><span class="pill">Puncte reale</span></div>
- <div id="rewardFlowStatus" class="notice" role="status">Se încarcă recompensele…</div>
- <div class="rewardMarketArea"><h3>Oferte de la saloane participante</h3><div class="offers" id="rewardMarketList"></div></div>
- <div class="rewardMarketArea"><h3>Cererile mele</h3><div class="panel" id="rewardClaimList"></div></div>
- <div class="rewardQrPanel" id="rewardQrPanel" aria-live="polite"></div>
- <div id="offers" class="offers" hidden></div><p id="pendingAwards" class="muted"></p></section>
+
 <section class="section"><h2>Istoricul tău</h2><p class="muted">Afișăm doar vizitele care au fost validate efectiv de salon, nu simple cereri de programare.</p><div class="panel" id="history"></div></section>
 <section class="section" id="verifiedReviews"><h2>Recenzii cu vizită verificată</h2>
 <p class="muted">Numai clienții cu check-in QR și serviciu finalizat și confirmat de salon pot lăsa recenzii publice. O vizită = o recenzie.</p>
@@ -67,4 +67,4 @@
 <button class="btn gold" type="submit">Salvează fotografia</button>
 <p class="bcPhotoFeedback" id="photoFeedback" role="status" aria-live="polite">Poți selecta o fotografie din telefon. Imaginile mari vor fi optimizate automat.</p>
 </form><div class="photos" id="photos" style="margin-top:12px"></div></section></div>
-</div><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script><script src="./passport-image.js" defer></script><script src="./passport.js" defer></script><script src="./passport-rewards.js" defer></script><script src="./passport-qr-render.js" defer></script><script src="./passport-checkin.js" defer></script><script src="./premium-ui.js" defer></script><script src="./passport-verified-reviews.js" defer></script><script src="./passport-progression.js" defer></script><script src="./barbercraft-experience.js" defer></script><script src="./barbercraft-assistant.js" defer></script></body></html>
+</div><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script><script src="./passport-image.js" defer></script><script src="./passport.js" defer></script><script src="./passport-qr-render.js" defer></script><script src="./passport-checkin.js" defer></script><script src="./premium-ui.js" defer></script><script src="./passport-verified-reviews.js" defer></script><script src="./passport-progression.js" defer></script><script src="./passport-medals.js" defer></script><script src="./barbercraft-sticky-nav.js" defer></script><script src="./barbercraft-experience.js" defer></script><script src="./barbercraft-assistant.js" defer></script></body></html>
