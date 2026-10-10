@@ -18,8 +18,12 @@ const name=profile.data?.display_name||user.email?.split("@")[0]||"Client BARBER
 $("profileName").textContent=name;$("profileAvatar").textContent=name.trim().slice(0,1).toUpperCase();
 $("profileHandle").textContent="@"+name.toLocaleLowerCase("ro-RO").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"").slice(0,32);
 const xp=Number(summary.data?.xp)||0;
-const ranks=[["Bronze",0],["Silver",500],["Gold",1500],["Platinum",3500],["Legend",7000]];
-$("profileRank").textContent="♛ "+([...ranks].reverse().find(([n,threshold])=>xp>=threshold)||ranks[0])[0]+" · BARBERCRAFT";
+try{
+ const {data:rank}=await sb.rpc("bc_social_client_rank",{p_user:user.id});
+ $("profileRank").textContent=rank?"🏅 "+rank.rank+" · "+rank.visits+" tunsori verificate"+
+ (rank.next_goal?" · "+rank.visits+"/"+rank.next_goal+" spre "+rank.next_rank:" · rang maxim"):
+ "♛ Barber Passport";
+}catch(_){$("profileRank").textContent="♛ Barber Passport";}
 $("profileXp").textContent=summary.error?"—":fmt(xp);
 $("profilePoints").textContent=wallet.error?"—":fmt(wallet.data?.available);
 $("profileVisits").textContent=history.error?"—":fmt(history.data?.total_visits);
