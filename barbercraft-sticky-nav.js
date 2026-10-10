@@ -7,8 +7,7 @@ const path=location.pathname.toLowerCase();
 const pages=[
 {label:"Descoperă",symbol:"⌂",href:"./client/#home",active:/\/client\/|\/index\.html$/.test(path)},
 {label:"Rezervări",symbol:"▦",href:"./client/#booking",active:false},
-{label:"Comunitate",symbol:"♡",href:"./social.html",active:path.endsWith("/social.html")},
-{label:"Passport",symbol:"♛",href:"./passport.html",active:path.endsWith("/passport.html")||path.endsWith("/passport-preview.html")},
+{label:"Favorite",symbol:"♥",href:"./client/#favorites",active:false},
 {label:"Contul meu",symbol:"♙",href:"./client/#account",active:false}
 ];
 const nav=document.createElement("nav");

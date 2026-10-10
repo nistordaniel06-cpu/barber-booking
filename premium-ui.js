@@ -7,7 +7,7 @@ function passport(){
  const hero=d.querySelector(".bc-passport .hero");
  if(hero&&!hero.querySelector(".bc-profile-actions")){
   const actions=node("div",undefined,"bc-profile-actions");
-  actions.append(link("♛  Vezi profilul meu","./passport-preview.html"),link("📷  Adaugă fotografii","#photos","secondary"));
+  actions.append(link("♛  Vizualizează profilul","./passport-preview.html"),link("📷  Adaugă fotografii","#photos","secondary"));
   hero.append(actions);
  }
  const container=d.getElementById("signedIn");

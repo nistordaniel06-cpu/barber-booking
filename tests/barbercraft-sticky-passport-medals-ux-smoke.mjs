@@ -26,7 +26,7 @@ assert.ok(read("client-home-v2.css").includes("#home .hero h2"),"Hero remains le
 assert.ok(read("client-home-v2.css").includes('data-theme="light"'),"Light mode-specific image contrast");
 assert.ok(home.includes('if(state.filter!=="Toate")'),"Service chips filter actual salon services");
 assert.ok(read("demo-salons.js").includes("matchQuick(x)"),"Sample salons respect chosen filter");
-assert.ok(read("discovery-marketplace.js").includes("details.open=false"),"Advanced filters start closed");
+assert.ok(!read("discovery-marketplace.js").includes("bcRareServices"),"Rare services section is removed");
 assert.ok(read("ro-discovery.css").includes("height:min(68dvh,690px)"),"Map is inset, not fullscreen");
 assert.ok(pass.includes('id="bcMedalBoard"'),"Medal wall lives in Passport identity");
 assert.ok(pass.includes('id="medalBoardSection"'),"Award wall deep link");
@@ -48,3 +48,4 @@ assert.ok(social.includes('id="socialPrivacyHint"'),"Client knows when public/pr
 assert.ok(read("social.js").includes("bc_social_privacy_eligibility"),"Privacy toggle is server-informed");
 assert.ok(read("supabase/migrations/20261010_social_client_privacy_three_verified_visits.sql").includes("THREE_VERIFIED_VISITS_FOR_PRIVACY"),"Backend enforces 3 verified haircuts");
 console.log("PASS: Client & community sticky navigation, identity medals, secure privacy and functioning filters/assistant");
+

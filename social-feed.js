@@ -49,7 +49,8 @@ function card(p){
    finally{follow.disabled=false}
   });head.append(follow);
  }
- art.append(head,node("p",p.body,"socialPostBody"));
+ window.BCPresence?.mount(info,p.author_id);
+ const body=node("p",p.body,"socialPostBody");art.append(head,body);void window.BCSalonMentions?.render(body,p.body);
  if(typeof p.media_path==="string"&&p.media_path.startsWith(p.author_id+"/")&&
  /^[0-9a-f-]{36}\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(p.media_path)){
   const img=node("img");img.className="socialPostImage";img.loading="lazy";

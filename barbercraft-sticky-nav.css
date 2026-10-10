@@ -18,7 +18,7 @@ body.bc-aux-client{padding-bottom:calc(77px + env(safe-area-inset-bottom))!impor
 body.bc-social .socialWrap,body.bc-passport .wrap{padding-bottom:calc(114px + env(safe-area-inset-bottom))!important}
 body.bc-social .socialTabs{position:sticky;top:69px;z-index:110;box-shadow:0 4px 14px #0007}
 .bcAppBottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:900;
- width:100%;max-width:980px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+ width:100%;max-width:980px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
  align-items:stretch;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
  border-top:1px solid #57452b;background:rgba(17,18,22,.98);
  backdrop-filter:blur(18px);box-shadow:0 -6px 23px #0008}
@@ -43,3 +43,4 @@ body.bc-passport .bcRewardWrap>.bcRewardHeader{
  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)
 }
 body.bc-passport .bcRewardWrap{overflow:visible!important}
+

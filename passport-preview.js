@@ -4,6 +4,7 @@ if(!window.supabase||!window.BARBERCRAFT_SUPABASE_URL){$("profileStatus").textCo
 const sb=await window.BCPassportSession();
 const {data:{user},error:authError}=await sb.auth.getUser();
 if(authError||!user){$("profileStatus").replaceChildren(el("span","Profilul este privat. "),Object.assign(el("a","Autentifică-te →"),{href:new URLSearchParams(location.search).get("from")==="pro"?"./professionals.html":"./#account"}));return}
+$("previewPublicProfile").href="./social.html?u="+encodeURIComponent(user.id)+(new URLSearchParams(location.search).get("from")==="pro"?"&from=pro":"");
 const fmt=n=>new Intl.NumberFormat("ro-RO").format(Number(n)||0);
 const results=await Promise.all([
  sb.from("bc_profiles").select("display_name").eq("user_id",user.id).maybeSingle(),
@@ -18,8 +19,8 @@ const name=profile.data?.display_name||user.email?.split("@")[0]||"Client BARBER
 $("profileName").textContent=name;$("profileAvatar").textContent=name.trim().slice(0,1).toUpperCase();
 $("profileHandle").textContent="@"+name.toLocaleLowerCase("ro-RO").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"").slice(0,32);
 const xp=Number(summary.data?.xp)||0;
-const ranks=[["Bronze",0],["Silver",500],["Gold",1500],["Platinum",3500],["Legend",7000]];
-$("profileRank").textContent="♛ "+([...ranks].reverse().find(([n,threshold])=>xp>=threshold)||ranks[0])[0]+" · BARBERCRAFT";
+const rankInfo=window.BCVisitRank?.rank(history.data?.total_visits||0);
+$("profileRank").textContent=rankInfo?rankInfo.current.badge+" "+rankInfo.current.name:"Membru";
 $("profileXp").textContent=summary.error?"—":fmt(xp);
 $("profilePoints").textContent=wallet.error?"—":fmt(wallet.data?.available);
 $("profileVisits").textContent=history.error?"—":fmt(history.data?.total_visits);

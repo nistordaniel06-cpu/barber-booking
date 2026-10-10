@@ -26,7 +26,7 @@ assert.ok(admin.includes('data-tab="zones" class="tab bc-admin-hub-tile" hidden'
 assert.ok(pro.includes('id="proWarOptin" hidden'),"PRO historical participation panel is hidden");
 assert.ok(!menu.includes("Bătălia Zonelor"),"Legacy territory removed from Client menu");
 assert.ok(!read("premium-ui.js").includes('Bătălia Zonelor'),"Legacy role menu removed");
-assert.ok(menu.includes('Portal client')&&menu.includes('Portal profesioniști'),"Four clean guest links");
+assert.ok(menu.includes('Profil Client')&&menu.includes('Profil Profesionist'),"Four clean guest links");
 assert.ok(!menu.includes("if(window.BCClientUser)"),"Guest never sees extra links");
 assert.ok(client.includes('textContent="C."')||client.includes('document.createTextNode("C.")'),"Guest avatar initial");
 assert.ok(client.includes("bcFavoriteHeart")&&read("client-home-v2.css").includes(".bcFavoriteHeart"),"Red favorite icon");
@@ -48,7 +48,7 @@ assert.ok(sql.includes("revoke all on public.bc_passport_clients"),"XP tables ar
 assert.ok(sql.includes("tip_passport='premium'"),"Premium rewards require paid tier");
 assert.ok(read("supabase/migrations/20261010_barber_passport_quest_summary_hardening.sql").includes("storage.objects"),"Avatar XP needs actual uploaded image");
 assert.ok(read("supabase/migrations/20261010_barber_passport_actual_service_history.sql").includes("bc_service_visits"),"Visit history excludes legacy territory XP");
-assert.ok(guide.includes("pointermove")&&guide.includes("setPointerCapture"),"Drag with touch pointer");
+assert.ok(!guide.includes("pointermove")&&guide.includes('document.addEventListener("pointerdown"'),"Fixed assistant dismisses on outside touch");
 assert.ok(guide.includes("familiar"),"Onboarding preference");
 assert.ok(guide.includes("nu dintr-un model generativ"),"No false claims of generative AI");
 assert.ok(read("barber-pass.html").includes("15 lei")&&read("barber-pass.html").includes("8 lei"),"Transparent fixed price offers");
@@ -60,3 +60,4 @@ assert.ok(read("sitemap.xml").includes("client/"),"Discovery pages indexed");
 assert.ok(read("barbercraft-experience.js").includes("navigator.languages"),"System language detected");
 assert.ok(read("barbercraft-experience.js").includes("SameSite=Lax"),"Scoped essential cookies");
 console.log("PASS: BARBERCRAFT individual Barber Passport, 5 trusted quests, clean menus, mobile map, consent, contextual guide and separated portals");
+

@@ -61,3 +61,5 @@ jobs:
           node tests/barbercraft-passport-individual-ux-smoke.mjs
           node tests/barbercraft-sticky-passport-medals-ux-smoke.mjs
 
+
+          node tests/barbercraft-community-modern.mjs
