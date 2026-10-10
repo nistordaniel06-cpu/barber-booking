@@ -26,7 +26,7 @@ assert.ok(admin.includes('data-tab="zones" class="tab bc-admin-hub-tile" hidden'
 assert.ok(pro.includes('id="proWarOptin" hidden'),"PRO historical participation panel is hidden");
 assert.ok(!menu.includes("Bătălia Zonelor"),"Legacy territory removed from Client menu");
 assert.ok(!read("premium-ui.js").includes('Bătălia Zonelor'),"Legacy role menu removed");
-assert.ok(menu.includes('Portal client')&&menu.includes('Portal profesioniști'),"Four clean guest links");
+assert.ok(menu.includes("Profil Client")&&menu.includes("Profil Profesionist")&&menu.includes("Devino partener"),"Simple Client/PRO/partner menu");
 assert.ok(!menu.includes("if(window.BCClientUser)"),"Guest never sees extra links");
 assert.ok(client.includes('textContent="C."')||client.includes('document.createTextNode("C.")'),"Guest avatar initial");
 assert.ok(client.includes("bcFavoriteHeart")&&read("client-home-v2.css").includes(".bcFavoriteHeart"),"Red favorite icon");
