@@ -69,7 +69,7 @@ const searchPanel=home.querySelector(".search");
 searchPanel?.insertAdjacentElement("afterend",categories);
 const details=document.querySelector(".bcAdvancedFilters");
 if(details){
- details.open=true;
+ details.open=false; // Closed by default. Expand only after a direct user tap.
  const section=document.createElement("section");section.className="bcRareServices";
  section.append(document.createElement("h3"));section.querySelector("h3").textContent="Servicii speciale · ce cauți mai rar";
  const info=document.createElement("p");info.textContent="Afișăm doar saloanele care au declarat serviciile respective.";
