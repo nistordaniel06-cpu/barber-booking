@@ -20,3 +20,14 @@
 :root[data-theme=light] .bcAssistantForm input{background:#fff;color:#272932}
 @media(max-width:400px){.bcAssistantChat{width:min(330px,calc(100vw - 25px))}}
 @media(prefers-reduced-motion:reduce){.bcAssistantOrb{animation:none}}
+
+/* Single consistent assistant position on every portal and companion page. */
+body .bcAssistant,body.bc-passport .bcAssistant,body.bc-social .bcAssistant,
+body.bc-preview .bcAssistant,body.bc-aux-client .bcAssistant,
+body.bc-pro .bcAssistant{position:fixed!important;left:auto!important;top:auto!important;
+ right:12px!important;bottom:calc(88px + env(safe-area-inset-bottom))!important;
+ transform:none!important;z-index:9991!important}
+body .bcAssistantOrb{touch-action:manipulation!important;cursor:pointer!important}
+body .bcAssistantChat{right:0!important;max-height:min(67dvh,560px);
+ grid-template-rows:auto minmax(78px,1fr) auto auto auto}
+body .bcAssistantTools>button{cursor:pointer}
