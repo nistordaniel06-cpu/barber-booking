@@ -1,0 +1,25 @@
+/* compact two-category favorites with true public heart counts */
+#favoritesView .bcFavTabs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:22px 0 18px}
+#favoritesView .bcFavTabs button{padding:15px;border-radius:15px;border:1px solid #645136;background:#24232a;color:#d8d7db;font-weight:850;font-size:14px}
+#favoritesView .bcFavTabs button.active{background:#f2c969;color:#22180a;border-color:#f2c969}
+#bcFavoriteStatus{font-size:12px;color:var(--muted,#b7b7bf);margin:12px 0}
+#bcFavoriteList{display:grid;gap:11px}
+.bcFavRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;
+ border:1px solid #765d35;border-radius:16px;background:#222126}
+.bcFavRow div{display:grid;gap:6px;min-width:0}.bcFavRow strong{font-size:16px}
+.bcFavRow small{font-size:12px;color:#cebd9d}
+.bcFavOpen{border:1px solid #94753e;border-radius:13px;padding:12px;background:#3b3120;color:#f6ce77;font-weight:800}
+.bcFavoriteCardWrap{position:relative;min-width:0}
+.bcFavoriteCardWrap .saloncard{width:100%;height:100%;display:block}
+.bcFavHeart{display:inline-flex;align-items:center;gap:6px;justify-content:center;
+ border:1px solid #b4a6a0;border-radius:30px;padding:7px 10px;background:#fffefaed;
+ color:#3e2730;font-size:13px;font-weight:800;box-shadow:0 4px 14px #09090944;white-space:nowrap}
+.bcFavHeart .bcFavSymbol{font-size:21px;line-height:1;color:#e04865}
+.bcFavHeart.isSaved .bcFavSymbol{color:#f32655}
+.bcFavoriteCardWrap>.bcFavHeart{position:absolute;top:9px;right:8px;z-index:4}
+.catalogProfileActions .bcFavProfileHeart{margin-left:auto}
+.bcFavEmpty{color:var(--muted);font-size:14px;padding:30px 12px}
+:root[data-theme="light"] .bcFavRow{background:#fff;color:#222;border-color:#e0d8c8}
+:root[data-theme="light"] #favoritesView .bcFavTabs button:not(.active){background:#fff;color:#252b32;border-color:#d9dce0}
+:root[data-theme="light"] .bcFavRow small{color:#585561}
+@media(max-width:420px){.bcFavRow{padding:12px}.bcFavOpen{padding:9px;font-size:11px}}

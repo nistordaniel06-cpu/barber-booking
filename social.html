@@ -3,7 +3,7 @@
 <title>Comunitate & Barber Passport — BARBERCRAFT</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="./auth-config.js"></script><script src="./passport-session.js" defer></script>
-<link rel="stylesheet" href="./premium.css"><link rel="stylesheet" href="./social.css">
+<link rel="stylesheet" href="./premium.css"><link rel="stylesheet" href="./social.css"><link rel="stylesheet" href="./salon-mentions.css">
 <link rel="stylesheet" href="./barbercraft-assistant.css"><link rel="stylesheet" href="./barbercraft-experience.css"><link rel="stylesheet" href="./barbercraft-sticky-nav.css"></head><body class="bc-premium bc-social"><main class="socialWrap">
 <header class="socialTop"><a href="./">‹ BARBER<span>CRAFT</span></a><strong>COMUNITATE</strong><a href="./passport-preview.html">♛ Pașaport</a></header>
 <section class="socialHero"><div class="socialEyebrow">BARBERCRAFT SOCIAL</div><h1>Stilul se construiește împreună.</h1><p>Vezi cele mai recente postări ale clienților și frizerilor, urmărește oameni și vorbește cu ei.</p><p class="socialInfo">Profilurile sunt publice numai cu acordul titularului. Mesajele necesită urmărire reciprocă; nu dispar automat.</p></section>
@@ -30,7 +30,7 @@
 <div class="socialCard" id="socialSelected" hidden></div>
 </section>
 <section class="socialPanel" id="panelProfile" hidden>
-<div class="socialCard"><h2>Pașaportul tău social</h2><p>Poți avea un cont privat pentru vizite și un profil social public, separat. Alege ce distribui.</p>
+<div class="socialCard"><h2>Identitatea ta BARBERCRAFT</h2><p>Poți avea un cont privat pentru vizite și un profil social public, separat. Alege ce distribui.</p>
 <form id="socialProfileForm">
 <label class="socialField">Nume afișat<input name="name" minlength="2" maxlength="70" required placeholder="Numele tău public"></label>
 <label class="socialField">@utilizator (3–25 litere mici, cifre sau _)<input name="handle" minlength="3" maxlength="25" pattern="[a-z0-9_]{3,25}" required placeholder="barbercraft_user"></label>
@@ -38,6 +38,7 @@
 <label class="socialToggle" id="socialPrivacyToggle"><input type="checkbox" name="public"><span>Profil vizibil în comunitate</span></label>
 <p class="socialPrivacyHint" id="socialPrivacyHint" role="status">Se verifică dacă poți schimba vizibilitatea...</p>
 <label class="socialToggle"><input type="checkbox" name="messages"><span>Acceptă mesaje de la persoane urmărite reciproc</span></label>
+<label class="socialToggle"><input type="checkbox" id="socialOnlineVisible"><span>Arată punctul verde când sunt online (opțional)</span></label><p class="socialPrivacyHint">Online înseamnă activ în ultimele 2 minute. Nu afișăm locația sau ora ultimei activități.</p>
 <button class="socialButton primary" type="submit">Salvează profilul</button>
 </form><div id="socialMyProfile" class="socialProfileMini"></div></div>
 <div class="socialCard" id="socialBarber" hidden><h2>Barber Passport · PRO</h2><p>Profil de profesionist confirmat prin apartenența la un salon. Istoricul joburilor adăugat manual este marcat «declarat».</p>
@@ -58,9 +59,10 @@
 <h2>Galeria mea de tunsori · Client</h2>
 <p>După minimum <strong>3 tunsori verificate prin aplicație</strong>, poți publica <strong>o fotografie per QR scanat</strong> de profesionist, în maximum <strong>24 de ore de la verificare</strong>. Contează tunsorile finalizate și confirmate, inclusiv programările validate în aplicație; simplul check-in nu se numără ca tunsoare.</p>
 <p>Fotografiile încărcate au un link public, chiar dacă profilul social este privat. În comunitate apar numai după ce alegi să-ți publici profilul. Pozele tale din jurnalul privat Passport rămân separate.</p>
+<p id="socialClientRankProgress" class="socialRankProgress" aria-live="polite">✂ 0/3 pentru Bronz I</p>
 <p id="socialClientQuota" class="socialGalleryQuota" role="status">Se verifică tunsorile confirmate…</p>
 <form id="socialClientGalleryForm">
-<label class="socialField">Vizită eligibilă<select name="visit" required id="socialClientGalleryVisit"></select></label>
+<label class="socialField">Alege tunsoarea confirmată prin QR (valabilă 24 de ore)<select name="visit" required id="socialClientGalleryVisit"></select></label>
 <label class="socialField">Fotografia tunsorii<input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required></label>
 <label class="socialField">Descriere<input name="caption" maxlength="160" placeholder="Fresh fade, tunsoare nouă…"></label>
 <button type="submit" class="socialButton primary" disabled>Publică fotografia</button>
@@ -71,7 +73,7 @@
 </section>
 <section class="socialPanel" id="panelMessages" hidden><div class="socialCard">
 <h2>Mesaje private</h2><p>Poți discuta cu cineva după ce vă urmăriți reciproc și amândoi permiteți mesaje. Fără mesaje care dispar automat.</p>
-<div id="socialMutuals" class="socialPeople"></div>
+<h3>Prietenii mei <span class="socialTiny">· persoane urmărite reciproc</span></h3><div id="socialFriends" class="socialPeople"></div><h3>Conversații</h3><div id="socialMutuals" class="socialPeople"></div>
 <div id="socialChat" hidden><div class="socialDivider"></div><h3 id="socialChatName">Conversație</h3>
 <div class="socialChatMessages" id="socialChatMessages" aria-live="polite"></div>
 <form id="socialChatForm" class="socialChatComposer"><input name="message" required maxlength="1000" placeholder="Scrie un mesaj…" aria-label="Mesaj privat"><button class="socialButton primary" type="submit">Trimite</button></form>
@@ -87,4 +89,4 @@
 <div class="socialCard" id="socialProIdeas" hidden><h2>Propunerile primite de salon</h2><p>Sugestiile sunt vizibile doar echipei salonului și persoanei care le-a trimis.</p>
 <label class="socialField">Locația salonului<select id="socialProIdeaSalon"></select></label><div id="socialProIdeasList"></div></div>
 </section>
-</main><script src="./social.js" defer></script><script src="./social-feed.js" defer></script><script src="./barbercraft-experience.js" defer></script><script src="./barbercraft-assistant.js" defer></script><script src="./barbercraft-sticky-nav.js" defer></script></body></html>
+</main><script src="./salon-mentions.js" defer></script><script src="./social.js" defer></script><script src="./social-feed.js" defer></script><script src="./barbercraft-experience.js" defer></script><script src="./barbercraft-assistant.js" defer></script><script src="./barbercraft-sticky-nav.js" defer></script></body></html>

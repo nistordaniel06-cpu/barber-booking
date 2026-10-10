@@ -284,3 +284,43 @@ body.bc-social .socialTabs{grid-template-columns:repeat(3,minmax(0,1fr))!importa
 body.bc-social .socialTop{min-height:66px}
 body.bc-social .socialPanel{scroll-margin-top:150px}
 @media(max-width:370px){body.bc-social .socialTop a{font-size:11px}}
+
+/* Member profiles are the focal point, with the edit icon up-left and heart up-right. */
+.socialProfileView{position:relative;display:flex;gap:12px;align-items:center;
+ padding:57px 14px 17px!important;border-radius:19px;background:linear-gradient(145deg,#3b3021,#1b1b21);
+ border:1px solid #b08d58}
+.socialProfileCornerActions{position:absolute;top:10px;left:12px;right:12px;
+ display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none}
+.socialProfileCornerActions>*{pointer-events:auto}
+.socialProfileCornerActions:has(.socialBarberHeart){justify-content:flex-end}
+.socialProfileCornerActions .socialEditCorner{padding:8px 12px;font-size:12px;background:#352b20;color:#ffe19d}
+.socialBarberHeart{display:inline-flex;gap:5px;align-items:center;justify-content:center;
+ padding:7px 10px;border:1px solid #c79a9e;border-radius:30px;background:#fff;color:#30212a;
+ font-size:12px;font-weight:850;cursor:pointer;white-space:nowrap}
+.socialHeartSymbol{font-size:20px;color:#ef3d66;line-height:1}
+.socialBarberHeart.isSaved .socialHeartSymbol{color:#f02657}
+.socialPerson .socialBarberHeart{padding:7px;min-width:63px}
+.socialPerson strong{display:flex;align-items:center;gap:7px}
+.socialOnlineDot{display:inline-block;width:10px;height:10px;flex:0 0 10px;border-radius:50%;
+ background:#5a5b61;border:2px solid #30313a}
+.socialOnlineDot.isOnline{background:#39dc69;box-shadow:0 0 0 2px #39dc6933;border-color:#2e5a3f}
+.socialTiny{font-size:11px;color:#b7abb6;font-weight:500}
+.socialRankProgress{color:#f9d68f;font-size:13px;font-weight:900;padding:13px 14px;border:1px solid #80643c;
+ border-radius:12px;background:linear-gradient(125deg,#44301e,#222024);margin:15px 0}
+.socialViewProfile{font-weight:900!important;background:linear-gradient(130deg,#f5d68c,#c89d50)!important;
+ border-radius:13px!important;color:#211606!important;text-decoration:none!important}
+.socialChatMessages{display:flex!important;flex-direction:column!important;gap:9px!important;
+ min-height:210px;max-height:53dvh;overflow:auto;padding:14px!important;
+ border:1px solid #62513e;border-radius:18px!important;background:
+ radial-gradient(circle at 85% 18%,#51402b55,transparent 36%),#14161d}
+.socialBubble{max-width:82%;width:fit-content!important;align-self:flex-start;border-radius:16px 16px 16px 4px!important;
+ padding:12px 13px!important;background:#30343d!important;color:#f4f5f7!important;word-break:break-word}
+.socialBubble.mine{align-self:flex-end;border-radius:16px 16px 4px 16px!important;background:#d7af5e!important;color:#19160c!important}
+.socialBubble small{font-size:10px;opacity:.7}
+.socialChatComposer{position:sticky;bottom:70px;display:flex;gap:7px;padding:11px;
+ background:#25262d;border:1px solid #575158;border-radius:16px;z-index:1}
+.socialChatComposer input{flex:1;min-width:0;border-radius:28px!important}
+.socialChatComposer button{border-radius:28px!important}
+@media(max-width:420px){.socialPerson{flex-wrap:wrap}.socialPerson>div:first-child{flex:1 1 140px}}
+
+.socialPostOnline{color:#36dc73;font-size:13px;display:inline-block;padding:0 5px 0 0;text-shadow:0 0 9px #37dc7880}

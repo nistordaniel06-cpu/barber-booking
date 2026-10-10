@@ -10,6 +10,7 @@ if(!window.supabase){setStatus("Serviciul de rezervări nu este disponibil.");re
 const sb=window.BCAuthClient("client");
 const rpc=async(fn,args={})=>{const {data,error}=await sb.rpc(fn,args);if(error)throw Error(error.message);return data};
 let config=null,requestId=null,selected=null,busy=false;
+let confirmedCalendar=null;
 async function checkAccount(){
  const access=$("catalogApprovalAccess"),form=$("catalogAccountLogin"),status=$("catalogAccountStatus");
  const {data:{user},error}=await sb.auth.getUser();
@@ -135,6 +136,11 @@ $("pilotBookingForm").onsubmit=async e=>{
   $("pilotResult").textContent=result.salon+" · "+result.service+" · "+when+
    " · "+result.price_ron+" lei. Programarea este salvată în calendarul salonului.";
   $("pilotBookingCode").textContent=result.code;
+  const selectedService=(config.services||[]).find(x=>x.name===result.service);
+  confirmedCalendar={title:result.service+" · "+result.salon,start:new Date(result.start),
+    minutes:Number(selectedService?.duration)||45,location:result.salon,
+    description:"Programare confirmată BARBERCRAFT · cod "+result.code};
+
   $("pilotClientForm").hidden=true;$("pilotSuccess").hidden=false;
   setStatus("Rezervarea a fost confirmată. Salvează codul de mai jos.");
   $("pilotSuccess").scrollIntoView({behavior:"smooth",block:"start"});
@@ -142,6 +148,28 @@ $("pilotBookingForm").onsubmit=async e=>{
   setStatus(err.message==="SLOT_TAKEN"?"Ora a fost rezervată între timp. Selectează alt interval.":"Rezervarea nu a fost efectuată: "+err.message);
   if(err.message==="SLOT_TAKEN")await slots();
  }finally{busy=false;$("pilotSubmit").disabled=false}
+};
+$("pilotSyncCalendar").onclick=async()=>{
+ const item=confirmedCalendar;if(!item)return;
+ const esc=v=>String(v||"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");
+ const stamp=d=>new Date(d).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+ const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//BARBERCRAFT//Confirmed Booking//RO",
+  "CALSCALE:GREGORIAN","METHOD:PUBLISH","BEGIN:VEVENT",
+  "UID:"+crypto.randomUUID()+"@barbercraft",
+  "DTSTAMP:"+stamp(new Date()),"DTSTART:"+stamp(item.start),
+  "DTEND:"+stamp(new Date(item.start.getTime()+item.minutes*60000)),
+  "SUMMARY:"+esc(item.title),"DESCRIPTION:"+esc(item.description),"LOCATION:"+esc(item.location),
+  "END:VEVENT","END:VCALENDAR"];
+ const blob=new Blob([lines.join("\r\n")+"\r\n"],{type:"text/calendar;charset=utf-8"});
+ const file=new File([blob],"barbercraft-programare.ics",{type:"text/calendar"});
+ try{
+  if(navigator.canShare?.({files:[file]})&&navigator.share){
+   await navigator.share({files:[file],title:"Programare BARBERCRAFT"});
+   return;
+  }
+ }catch(error){if(error?.name==="AbortError")return;}
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=file.name;
+ document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 $("pilotFeedbackForm").onsubmit=async event=>{
  event.preventDefault();

@@ -2,7 +2,7 @@
 (()=>{"use strict";
 const toggle=document.getElementById("infoBtn");if(!toggle)return;
 const dialog=document.createElement("dialog");dialog.className="bcClientMenu";dialog.setAttribute("aria-label","Meniul BARBERCRAFT");
-dialog.innerHTML='<div class="bcClientMenuTop"><strong>Meniu BARBERCRAFT</strong><div class="bcClientMenuTools"><a href="./client/" target="_blank" rel="noopener noreferrer" aria-label="Deschide în tab nou">↗</a><button type="button" id="bcClientMenuClose" aria-label="Închide">✕</button></div></div><div id="bcClientMenuItems" class="bcClientMenuItems"></div><p class="bcClientMenuInfo" id="bcClientMenuInfo" role="status"></p>';
+dialog.innerHTML='<div class="bcClientMenuTop"><strong class="bcClientMenuBrand">◩ BARBER<b>CRAFT</b></strong><div class="bcClientMenuTools"><button type="button" id="bcClientMenuClose" aria-label="Închide">✕</button></div></div><div id="bcClientMenuItems" class="bcClientMenuItems"></div><p class="bcClientMenuInfo" id="bcClientMenuInfo" role="status"></p>';
 document.body.append(dialog);
 dialog.querySelector("#bcClientMenuClose").onclick=()=>dialog.close();
 const box=dialog.querySelector("#bcClientMenuItems");
@@ -25,11 +25,17 @@ async function invite(){
 }
 function populate(){
  box.replaceChildren();
- button("⌂ Descoperă saloane",openDiscovery);
+ // Guest and authenticated menus remain focused on the requested entrypoints.
+ if(window.BCClientUser){
+  button("♙ Profil Client",()=>document.querySelector('[data-go="account"]')?.click());
+ }else{
+  button("♙ Profil Client",()=>document.querySelector('[data-go="account"]')?.click());
+ }
+ link("✂ Profil Profesionist","./pro/");
+ link("◇ Devino partener","./partner.html");
  button("↗ Invită prietenii",()=>{void invite()});
- link("◉ Portal client","./client/");
- link("✂ Portal profesioniști","./pro/");
 }
+
 toggle.onclick=()=>{populate();if(typeof dialog.showModal==="function")dialog.showModal();else dialog.setAttribute("open","")};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&dialog.open)dialog.close()});
 })();

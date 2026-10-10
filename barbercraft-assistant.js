@@ -14,7 +14,17 @@ const dialog=el("section","bcAssistantChat");dialog.hidden=true;dialog.setAttrib
 const top=el("div","bcAssistantTop");
 const title=el("strong",null,"✂ Asistent BARBERCRAFT");
 const tabs=el("div","bcAssistantTools");
-const expand=el("a",null,"↗");expand.href="./tutorial.html";expand.target="_blank";expand.rel="noopener noreferrer";expand.title="Tutorial în tab nou";
+const mutedKey="bc-assistant-muted-v1";
+let muted=false;try{muted=localStorage.getItem(mutedKey)==="1"}catch(_){}
+const expand=el("button",null,muted?"🔕":"🔔");
+expand.type="button";expand.setAttribute("aria-label",muted?"Activează indiciile":"Dezactivează indiciile");
+expand.title=muted?"Arată indiciile din nou":"Ascunde indiciile automate";
+expand.onclick=()=>{
+ muted=!muted;try{localStorage.setItem(mutedKey,muted?"1":"0")}catch(_){}
+ expand.textContent=muted?"🔕":"🔔";
+ expand.setAttribute("aria-label",muted?"Activează indiciile":"Dezactivează indiciile");
+ if(muted)note.hidden=true;
+};
 const close=el("button",null,"✕");close.type="button";close.setAttribute("aria-label","Închide asistentul");close.onclick=()=>{dialog.hidden=true};tabs.append(expand,close);top.append(title,tabs);
 const transcript=el("div","bcAssistantMessages");
 transcript.setAttribute("aria-live","polite");
@@ -85,33 +95,13 @@ function showChat(){
  }
 }
 form.onsubmit=e=>{e.preventDefault();const text=input.value.trim();if(!text)return;say(text,"user");say(answer(text),"bot");input.value=""};
-let pointer=null,moved=false,initial={x:0,y:0,left:0,top:0};
-const keepInScreen=(x,y)=>{
- const width=56,height=56;return {x:Math.min(innerWidth-width-9,Math.max(9,x)),
-  y:Math.min(innerHeight-height-70,Math.max(65,y))};
-};
-function place(x,y){const p=keepInScreen(x,y);root.style.left=p.x+"px";root.style.top=p.y+"px";root.style.right="auto";root.style.bottom="auto"}
-try{const saved=JSON.parse(localStorage.getItem("bc-assistant-position"));if(saved&&Number.isFinite(saved.x)&&Number.isFinite(saved.y))place(saved.x,saved.y)}catch(_){}
-bubble.addEventListener("pointerdown",e=>{
- if(e.button!==0)return;pointer=e.pointerId;moved=false;
- const rect=root.getBoundingClientRect();initial={x:e.clientX,y:e.clientY,left:rect.left,top:rect.top};
- bubble.setPointerCapture?.(pointer);
-});
-bubble.addEventListener("pointermove",e=>{
- if(pointer!==e.pointerId)return;
- const dx=e.clientX-initial.x,dy=e.clientY-initial.y;
- if(Math.hypot(dx,dy)>8)moved=true;
- if(moved){place(initial.left+dx,initial.top+dy);e.preventDefault()}
-});
-bubble.addEventListener("pointerup",e=>{
- if(pointer!==e.pointerId)return;pointer=null;
- if(moved){
-  try{localStorage.setItem("bc-assistant-position",JSON.stringify({x:root.getBoundingClientRect().left,y:root.getBoundingClientRect().top}))}catch(_){}
- }else showChat();
-});
-bubble.addEventListener("click",e=>{if(e.detail===0)showChat()});
+// A fixed assistant is predictable across all pages and never moves while scrolling.
+bubble.addEventListener("click",()=>{if(dialog.hidden)showChat();else dialog.hidden=true});
+document.addEventListener("pointerdown",event=>{
+ if(!dialog.hidden&&!root.contains(event.target))dialog.hidden=true;
+},true);
 function showHint(){
- if(familiar!=="beginner")return;
+ if(muted||familiar!=="beginner")return;
  const key="bc-assistant-hint:"+context();
  try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,"yes")}catch(_){}
  tipTxt.textContent=messages[context()];

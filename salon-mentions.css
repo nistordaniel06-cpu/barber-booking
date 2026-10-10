@@ -1,0 +1,8 @@
+.bcSalonMention{color:#f6d177;text-decoration:none;font-weight:900;
+ border-bottom:1px dashed #d2a24c}
+.bcSalonMention:hover{text-decoration:underline}
+.bcMentionsSuggest{display:grid;gap:3px;padding:7px;margin:5px 0;background:#28252e;
+ border:1px solid #9e783b;border-radius:13px;box-shadow:0 8px 20px #0006}
+.bcMentionsSuggest[hidden]{display:none!important}
+.bcMentionsSuggest button{padding:11px 12px;background:#373036;color:#ffe19c;
+ border:0;border-radius:9px;text-align:left;font:800 12px system-ui}

@@ -5,11 +5,11 @@ if(body.querySelector(".bottom,.proBottom,.bcAppBottom"))return;
 if(body.classList.contains("bc-pro")||body.classList.contains("bc-admin"))return;
 const path=location.pathname.toLowerCase();
 const pages=[
-{label:"Descoperă",symbol:"⌂",href:"./client/#home",active:/\/client\/|\/index\.html$/.test(path)},
+{label:"Descoperă",symbol:"⌂",href:"./client/#home",active:false},
 {label:"Rezervări",symbol:"▦",href:"./client/#booking",active:false},
-{label:"Comunitate",symbol:"♡",href:"./social.html",active:path.endsWith("/social.html")},
-{label:"Passport",symbol:"♛",href:"./passport.html",active:path.endsWith("/passport.html")||path.endsWith("/passport-preview.html")},
-{label:"Contul meu",symbol:"♙",href:"./client/#account",active:false}
+{label:"Favorite",symbol:"♥",href:"./client/#favoritesView",active:false},
+{label:"Comunitate",symbol:"♧",href:"./social.html",active:path.endsWith("/social.html")},
+{label:"Contul meu",symbol:"♙",href:"./client/#account",active:path.endsWith("/passport.html")||path.endsWith("/passport-preview.html")||path.endsWith("/rewards.html")}
 ];
 const nav=document.createElement("nav");
 nav.className="bcAppBottom";nav.setAttribute("aria-label","Navigație BARBERCRAFT");

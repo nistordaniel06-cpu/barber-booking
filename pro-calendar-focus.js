@@ -24,7 +24,7 @@ $("bcCalendarMore").onclick=()=>{
  $("bcCalendarMore").setAttribute("aria-expanded",String(!advanced.hidden));
 };
 const quick=document.createElement("div");quick.className="bcCalendarQuick";quick.hidden=true;
-quick.innerHTML='<div class="bcCalendarQuickCard" role="dialog" aria-modal="true" aria-label="Alege acțiunea"><div class="bcQuickTop"><span id="bcQuickSelection"></span><span class="bcPopupActions"><a id="bcQuickNewTab" href="./pro/calendar/" target="_blank" rel="noopener noreferrer" aria-label="Deschide selecția în tab nou" title="Deschide în tab nou">↗</a><button id="bcQuickClose" type="button" aria-label="Închide" title="Închide">✕</button></span></div><button id="bcQuickBook" class="bcQuickPrimary" type="button">＋ Programare nouă</button><button id="bcQuickBlock" type="button">▧ Blochează timp</button></div>';
+quick.innerHTML='<div class="bcCalendarQuickCard" role="dialog" aria-modal="true" aria-label="Alege acțiunea"><div class="bcQuickTop"><span id="bcQuickSelection"></span><span class="bcPopupActions"><button id="bcQuickClose" type="button" aria-label="Închide" title="Închide">✕</button></span></div><button id="bcQuickBook" class="bcQuickPrimary" type="button">＋ Programare nouă</button><button id="bcQuickBlock" type="button">▧ Blochează timp</button></div>';
 panel.append(quick);
 const gridMask=document.createElement("div");gridMask.className="bcGridDragTip";gridMask.textContent="";
 scroller.append(gridMask);
@@ -112,7 +112,7 @@ function openQuick(s){
  const url=new URL("./pro/calendar/",document.baseURI);
  url.searchParams.set("popup","quick");url.searchParams.set("from",stamp(actionStart));url.searchParams.set("to",stamp(actionEnd));
  if(actionSpecialist)url.searchParams.set("staff",actionSpecialist);
- $("bcQuickNewTab").href=url.href;
+
  quick.hidden=false;
  $("bcQuickBook").focus({preventScroll:true});
 }

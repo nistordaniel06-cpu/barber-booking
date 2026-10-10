@@ -18,16 +18,16 @@ assert.equal(portal,root.replace("<head>",'<head><base href="../"><meta name="ba
 // Auth blocking popup cannot be dismissed into protected calendar: X goes to authenticated PRO login.
 const gate=html.slice(html.indexOf('<div id="gate"'),html.indexOf('<div id="sheetBackdrop"'));
 assert.match(gate,/class="popupChrome"/,"Gate offers popup toolbar");
-assert.match(gate,/target="_blank" rel="noopener noreferrer"/,"Gate opens auth in a safe new tab");
-assert.match(gate,/aria-label="Deschide autentificarea PRO în tab nou"/);
+assert.doesNotMatch(gate,/target="_blank"/,"Calendar gate opens no redundant extra tabs");
+assert.doesNotMatch(gate,/aria-label="Deschide autentificarea PRO în tab nou"/);
 assert.match(gate,/href="\.\/pro\/" aria-label="Închide și revino la PRO"/,"Gate X goes to PRO without bypassing login");
 for(const id of ["quickSheet","editSheet","syncSheet"]){
  const start=html.indexOf('id="'+id+'"'),end=html.indexOf('</section>',start);
  assert.ok(start>0&&end>start,"Popup "+id+" exists");
  const block=html.slice(start,end);
  assert.match(block,/class="popupChromeActions"/,"Popup "+id+" has controls");
- assert.match(block,/aria-label="Deschide această fereastră în tab nou"/,"Popup "+id+" has new tab");
- assert.match(block,/target="_blank" rel="noopener noreferrer"/,"Popup "+id+" prevents opener access");
+ assert.doesNotMatch(block,/aria-label="Deschide această fereastră în tab nou"/,"PRO popup uses only X");
+ assert.doesNotMatch(block,/target="_blank"/,"Popup "+id+" has no separate tab");
  assert.match(block,/aria-label="Închide"/,"Popup "+id+" has a close button");
 }
 assert.match(app,/function popupURL\(kind\)/,"Separate-tab URLs built for all three dialogs");
@@ -40,9 +40,9 @@ assert.doesNotMatch(app,/searchParams\.set\(["'](?:clientName|client_display_nam
 assert.match(app,/discardPopupQuery\(\)/,"Closed modals remove deep-link parameters");
 assert.match(css,/\.popupChromeActions/);
 assert.match(css,/width:44px;height:44px/,"Touch targets sized for Android");
-assert.match(root,/id="calendarManualNewTab"/,"Legacy pro modal new-tab present");
+assert.doesNotMatch(root,/id="calendarManualNewTab"/,"PRO edit dialog has only X");
 assert.match(root,/id="calendarCloseEditor"/,"Legacy pro modal close remains");
-assert.match(legacy,/id="bcQuickNewTab"/,"Legacy quick sheet has new-tab action");
+assert.doesNotMatch(legacy,/id="bcQuickNewTab"/,"Legacy quick sheet has only X");
 assert.match(client,/id="bcSampleClose"/,"Client salon popup has close button");
 assert.match(client,/id="bcSampleNewTab"/,"Client salon popup has new-tab anchor");
 assert.match(client,/url\.searchParams\.set\("previewSalon",s\.id\)/,"Client popups open same salon in new tab");
@@ -51,4 +51,4 @@ assert.match(clientCSS,/\.bcSamplePopupHeader/,"Client popup actions remain visi
 assert.match(passport,/id="lightboxClose"/);
 assert.match(passport,/id="lightboxNewTab"/);
 assert.match(passportJS,/\$\("lightboxNewTab"\)\.href=signed\.signedUrl/,"New-tab photo uses signed link");
-console.log("PASS: each known in-app popup has close and safe new-tab control; deep links restore content after PRO auth");
+console.log("PASS: PRO popups have X only; deep-link restoration and access guard remain intact");
