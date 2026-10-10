@@ -314,7 +314,9 @@ async function loadClientGallery(id,mine,target){
   const card=el("div",undefined,"socialPortfolioItem"),img=el("img");
   img.loading="lazy";img.alt=photo.caption||"Tunsoare din galeria clientului";
   img.src=sb.storage.from("bc-client-social-gallery").getPublicUrl(photo.path).data.publicUrl;
-  card.append(img,el("p",photo.caption||"Tunsoare publicată"));
+  const caption=el("p",photo.caption||"Tunsoare publicată");
+  card.append(img,caption);
+  if(window.BCSalonMentions)void window.BCSalonMentions.load().then(()=>window.BCSalonMentions.render(caption,photo.caption||"Tunsoare publicată"));
   if(mine)card.append(btn("Șterge",async()=>{
    if(!confirm("Ștergi fotografia? Nu vei putea publica din nou pentru același QR."))return;
    try{
