@@ -37,13 +37,13 @@
 <div id="gate" class="gate" hidden><div class="gateBox"><div class="popupChrome"><span class="popupChromeLabel">Acces Calendar PRO</span><div class="popupChromeActions"><a class="popupIconButton" href="./pro/" target="_blank" rel="noopener noreferrer" aria-label="Deschide autentificarea PRO în tab nou" title="Deschide în tab nou">↗</a><a class="popupIconButton" href="./pro/" aria-label="Închide și revino la PRO" title="Închide">✕</a></div></div><b>BARBERCRAFT PRO</b><h1>Calendarul salonului</h1><p id="gateText">Verificăm contul tău PRO...</p><a href="./pro/" class="goldLink">Intră în contul PRO</a></div></div>
 <div id="sheetBackdrop" class="backdrop" hidden>
  <section id="quickSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Adaugă în calendar">
-  <div class="sheetHead"><strong id="selectionLabel">Interval selectat</strong><span class="popupChromeActions"><a id="popupNewTabQuick" class="popupIconButton" href="./pro/calendar/" target="_blank" rel="noopener noreferrer" aria-label="Deschide această fereastră în tab nou" title="Deschide în tab nou">↗</a><button id="closeQuick" type="button" aria-label="Închide">✕</button></span></div>
+  <div class="sheetHead"><strong id="selectionLabel">Interval selectat</strong><span class="popupChromeActions"><button id="closeQuick" type="button" aria-label="Închide">✕</button></span></div>
   <p class="sheetSub">Ce vrei să adaugi?</p>
   <button id="chooseBooking" class="choice primary" type="button">＋ Programare nouă</button>
   <button id="chooseBusy" class="choice" type="button">▥ Blochează timpul</button>
  </section>
  <section id="editSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Editează programarea" hidden>
-  <div class="sheetHead"><strong id="editTitle">Programare nouă</strong><span class="popupChromeActions"><a id="popupNewTabEdit" class="popupIconButton" href="./pro/calendar/" target="_blank" rel="noopener noreferrer" aria-label="Deschide această fereastră în tab nou" title="Deschide în tab nou">↗</a><button id="closeEdit" type="button" aria-label="Închide">✕</button></span></div>
+  <div class="sheetHead"><strong id="editTitle">Programare nouă</strong><span class="popupChromeActions"><button id="closeEdit" type="button" aria-label="Închide">✕</button></span></div>
   <form id="eventForm">
    <label>Specialist<select id="eventStaff" required></select></label>
    <div class="twoCols"><label>De la<input id="startAt" type="datetime-local" required></label><label>Până la<input id="endAt" type="datetime-local" required></label></div>
@@ -54,7 +54,7 @@
   </form>
  </section>
  <section id="syncSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Calendarul telefonului" hidden>
-  <div class="sheetHead"><strong>Calendarul telefonului</strong><span class="popupChromeActions"><a id="popupNewTabSync" class="popupIconButton" href="./pro/calendar/" target="_blank" rel="noopener noreferrer" aria-label="Deschide această fereastră în tab nou" title="Deschide în tab nou">↗</a><button id="closeSync" type="button" aria-label="Închide">✕</button></span></div>
+  <div class="sheetHead"><strong>Calendarul telefonului</strong><span class="popupChromeActions"><button id="closeSync" type="button" aria-label="Închide">✕</button></span></div>
   <p class="sheetSub">Conectezi o singură dată. După abonare, rezervările noi din BARBERCRAFT apar automat la actualizarea calendarului din telefon.</p>
   <label>Salon<select id="syncSalon"></select></label>
   <button id="createFeed" class="choice primary" type="button">🔗 Creează linkul privat de sincronizare</button>
