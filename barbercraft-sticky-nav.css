@@ -34,3 +34,12 @@ body.bc-social .bcAssistant,body.bc-passport .bcAssistant,body.bc-preview .bcAss
 body.bc-aux-client .bcAssistant{bottom:calc(89px + env(safe-area-inset-bottom))}
 @media(min-width:700px){body.bc-social .socialTop,body.bc-passport .wrap>header{min-height:72px!important}}
 @media(prefers-reduced-motion:reduce){.bcAppBottom a{scroll-behavior:auto}}
+
+/* Redemption page shares the same sticky chrome while its content scrolls. */
+body.bc-passport .bcRewardWrap>.bcRewardHeader{
+ position:sticky!important;top:0!important;z-index:120!important;
+ margin:0 -8px!important;padding:12px 13px!important;min-height:69px!important;
+ border-bottom:1px solid #605137!important;background:#111217f7!important;
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)
+}
+body.bc-passport .bcRewardWrap{overflow:visible!important}
