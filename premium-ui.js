@@ -13,7 +13,7 @@ function passport(){
  const container=d.getElementById("signedIn");
  if(container&&!d.querySelector(".bc-passport-tabs")){
   const nav=node("nav",undefined,"bc-passport-tabs");nav.setAttribute("aria-label","Secțiunile pașaportului");
-  for(const [txt,id] of [["Activitate","passportCheckin"],["Recompense","rewardMarketplace"],["Recenzii","noteForm"],["Fotografii","photos"]]){
+  for(const [txt,id] of [["Identitate","passportCheckin"],["Medalii","medalBoardSection"],["Recenzii","noteForm"],["Fotografii","photos"]]){
    nav.append(link(txt,"#"+id));}
   container.prepend(nav);
   nav.addEventListener("click",e=>{const a=e.target.closest("a");if(!a)return;
