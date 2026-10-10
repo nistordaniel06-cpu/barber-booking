@@ -37,7 +37,16 @@ function ensureOptions(){
 function draw(){
  const query=norm($("search")?.value),c=city?.value||"",s=sector?.value||"",q=county?.value||"";
  const rare=window.BCDiscoveryRareServices||[];
- const shown=data.filter(x=>(!c||x.city===c)&&(!q||x.county===q)&&(!s||x.sector===s)&&
+ const quick=document.querySelector("#chips .chip.active")?.dataset.filter||"Toate";
+ const quickRules={
+  "Tuns":/tuns|haircut|taper|fade|cut|foarfeca|copii/,
+  "Barbă":/barba|beard|barberit|brici|shave/,
+  "Fade":/fade|taper|skin fade/,
+  "VIP":/vip|premium|ritual|luxury|experience/
+ };
+ const matchQuick=x=>quick==="Toate"||(quickRules[quick]||/$a/).test(
+  (x.services||[]).map(item=>norm(item.name)).join(" "));
+ const shown=data.filter(x=>matchQuick(x)&&(!c||x.city===c)&&(!q||x.county===q)&&(!s||x.sector===s)&&
  !window.BCLocationRadius?.state?.().enabled&&
  rare.every(term=>(x.services||[]).some(svc=>norm(svc.name).includes(norm(term))))&&
  (!query||query.split(/\s+/).every(term=>norm([x.name,x.address,x.city,x.county,x.sector,...(x.services||[]).map(i=>i.name)].join(" ")).includes(term))));
