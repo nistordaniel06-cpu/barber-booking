@@ -7,6 +7,7 @@ const rpc=async(fn,args={})=>{const {data,error}=await sb.rpc(fn,args);if(error)
 const feedback=s=>$("socialStatus").textContent=s;
 const composer=$("socialFeedComposer"),more=$("socialFeedMore");
 let cursor=null,loading=false,hasMore=true,clientCooldown=null;
+let onlineMap=new Map();
 const composerButton=form.querySelector('button[type="submit"]');
 async function refreshClientCooldown(){
  if(!user)return;
@@ -39,7 +40,7 @@ function card(p){
  if(new URLSearchParams(location.search).get("from")==="pro")link.searchParams.set("from","pro");
  author.href=link.pathname+link.search;
  const meta=node("small","@"+p.handle+" · "+(p.kind==="barber"?"Frizer":"Client")+" · "+new Date(p.created_at).toLocaleString("ro-RO"));
- const info=node("div");info.append(author,meta);head.append(info);
+ const info=node("div");if(onlineMap.get(p.author_id))author.prepend(node("span","●","socialPostOnline"));info.append(author,meta);head.append(info);
  if(user&&p.author_id!==user.id){
   const follow=action(p.followed?"✓ Urmărești":"＋ Urmărește",async()=>{
    follow.disabled=true;
@@ -49,7 +50,9 @@ function card(p){
    finally{follow.disabled=false}
   });head.append(follow);
  }
- art.append(head,node("p",p.body,"socialPostBody"));
+ const postText=node("p",p.body,"socialPostBody");
+ art.append(head,postText);
+ if(window.BCSalonMentions)void window.BCSalonMentions.load().then(()=>window.BCSalonMentions.render(postText,p.body));
  if(typeof p.media_path==="string"&&p.media_path.startsWith(p.author_id+"/")&&
  /^[0-9a-f-]{36}\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(p.media_path)){
   const img=node("img");img.className="socialPostImage";img.loading="lazy";
@@ -79,6 +82,11 @@ async function feed(reset=false){
  if(reset){cursor=null;root.replaceChildren(node("p","Se încarcă…"))}
  try{const items=await rpc("bc_social_feed",{p_before:cursor,p_limit:15});
   if(reset)root.replaceChildren();
+  try{
+   const ids=[...new Set((items||[]).map(p=>p.author_id))];
+   const online=ids.length?await rpc("bc_social_online_for",{p_users:ids}):[];
+   onlineMap=new Map((online||[]).map(p=>[p.user_id,!!p.online]));
+  }catch(_){onlineMap=new Map()}
   for(const item of items||[])root.append(card(item));
   if(reset&&!items?.length)root.append(node("p","Încă nu există postări. Poți fi primul care publică!","socialFeedEmpty"));
   hasMore=items?.length===15;more.hidden=!hasMore;
