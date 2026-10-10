@@ -48,7 +48,7 @@ assert.ok(sql.includes("revoke all on public.bc_passport_clients"),"XP tables ar
 assert.ok(sql.includes("tip_passport='premium'"),"Premium rewards require paid tier");
 assert.ok(read("supabase/migrations/20261010_barber_passport_quest_summary_hardening.sql").includes("storage.objects"),"Avatar XP needs actual uploaded image");
 assert.ok(read("supabase/migrations/20261010_barber_passport_actual_service_history.sql").includes("bc_service_visits"),"Visit history excludes legacy territory XP");
-assert.ok(guide.includes("pointermove")&&guide.includes("setPointerCapture"),"Drag with touch pointer");
+assert.ok(guide.includes('document.addEventListener("pointerdown"')&&guide.includes("dialog.hidden=true"),"Assistant minimizes outside chat and stays anchored");
 assert.ok(guide.includes("familiar"),"Onboarding preference");
 assert.ok(guide.includes("nu dintr-un model generativ"),"No false claims of generative AI");
 assert.ok(read("barber-pass.html").includes("15 lei")&&read("barber-pass.html").includes("8 lei"),"Transparent fixed price offers");
