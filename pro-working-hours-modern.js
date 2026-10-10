@@ -3,7 +3,7 @@
 const root=document.getElementById("member");if(!root)return;
 const picker=document.createElement("dialog");
 picker.className="bcWorkTimeWheel";picker.id="bcWorkTimeWheel";picker.setAttribute("aria-label","Selectează ora");
-picker.innerHTML='<div class="bcWheelHead"><div><small>PROGRAM DE LUCRU</small><h2>Alege ora</h2></div><div class="bcWheelTools"><a href="./pro/" target="_blank" rel="noopener noreferrer" title="Deschide PRO în tab nou" aria-label="Deschide PRO în tab nou">↗</a><button id="bcWheelClose" type="button" aria-label="Închide">✕</button></div></div><div class="bcWheelColumns"><div><strong>Ora</strong><div id="bcWheelHours" class="bcWheelList" role="listbox" aria-label="Ore"></div></div><div><strong>Minute</strong><div id="bcWheelMinutes" class="bcWheelList" role="listbox" aria-label="Minute"></div></div></div><p id="bcWheelPreview" class="bcWheelPreview"></p><button id="bcWheelSave" type="button" class="bcWheelSave">Aplică ora</button>';
+picker.innerHTML='<div class="bcWheelHead"><div><small>PROGRAM DE LUCRU</small><h2>Alege ora</h2></div><div class="bcWheelTools"><button id="bcWheelClose" type="button" aria-label="Închide">✕</button></div></div><div class="bcWheelColumns"><div><strong>Ora</strong><div id="bcWheelHours" class="bcWheelList" role="listbox" aria-label="Ore"></div></div><div><strong>Minute</strong><div id="bcWheelMinutes" class="bcWheelList" role="listbox" aria-label="Minute"></div></div></div><p id="bcWheelPreview" class="bcWheelPreview"></p><button id="bcWheelSave" type="button" class="bcWheelSave">Aplică ora</button>';
 document.body.append(picker);
 const $=id=>document.getElementById(id),hours=$("bcWheelHours"),minutes=$("bcWheelMinutes");
 let target=null,hour=9,minute=0,previousFocus=null;
