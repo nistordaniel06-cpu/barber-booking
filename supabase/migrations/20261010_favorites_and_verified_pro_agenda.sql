@@ -28,7 +28,7 @@ create or replace function public.bc_favorite_toggle(p_kind text,p_target uuid)
 returns jsonb language plpgsql security definer set search_path='' as $$
 declare u uuid:=(select auth.uid()); added boolean:=false;
 begin
- if u is null or not public.bc_portal_access('client') then raise exception 'CLIENT_LOGIN_REQUIRED' using errcode='42501';end if;
+ if u is null or not coalesce((public.bc_portal_access('client')->>'allowed')::boolean,false) then raise exception 'CLIENT_LOGIN_REQUIRED' using errcode='42501';end if;
  if p_target is null or not public.bc_favorite_allowed(p_kind,p_target) then raise exception 'PROFILE_NOT_AVAILABLE' using errcode='42501';end if;
  perform pg_advisory_xact_lock(hashtextextended(u::text||':'||p_kind||':'||p_target::text,0));
  if exists(select 1 from public.bc_client_favorites where user_id=u and kind=p_kind and target_id=p_target) then
@@ -58,7 +58,7 @@ create or replace function public.bc_favorites_mine()
 returns jsonb language plpgsql stable security definer set search_path='' as $$
 declare u uuid:=(select auth.uid());
 begin
- if u is null or not public.bc_portal_access('client') then raise exception 'CLIENT_LOGIN_REQUIRED' using errcode='42501';end if;
+ if u is null or not coalesce((public.bc_portal_access('client')->>'allowed')::boolean,false) then raise exception 'CLIENT_LOGIN_REQUIRED' using errcode='42501';end if;
  return coalesce((
   select jsonb_agg(jsonb_build_object('kind',q.kind,'id',q.target_id,'title',
     case when q.kind='salon' then (select s.name from public.bc_public_salon_catalog s where s.id=q.target_id)
