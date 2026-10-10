@@ -10,7 +10,7 @@ Homepage-ul pierde filtrele vechi și întreaga secțiune Servicii speciale. Con
 
 Sync Calendar creează un eveniment .ics din rezervarea confirmată și folosește partajarea nativă când telefonul o permite, altfel descarcă fișierul pentru import. Browserul nu poate scrie automat în calendarul telefonului fără confirmarea utilizatorului și nu oferă sincronizare bidirecțională a modificărilor.
 
-Confirmarea WhatsApp necesită opt-in la rezervare și un canal activ în bc_whatsapp_channels. Outbox-ul și funcția barbercraft-whatsapp-confirmation sunt instalate în proiectul Supabase zqdsrgamoqcvbmazbwcq. Nu s-au trimis mesaje de test și nu s-a activat un scheduler.
+Confirmarea WhatsApp este amânată la cererea utilizatorului: formularul nu oferă opt-in și frontend-ul nu apelează outbox-ul. La activarea ulterioară va necesita opt-in la rezervare și un canal activ în bc_whatsapp_channels. Outbox-ul și funcția barbercraft-whatsapp-confirmation sunt instalate în proiectul Supabase zqdsrgamoqcvbmazbwcq. Nu s-au trimis mesaje de test și nu s-a activat un scheduler.
 
 Pentru activare, configurați secretele serverului META_WHATSAPP_TOKEN, META_CONFIRMATION_TEMPLATE (template aprobat cu cinci parametri: salon, dată, oră, locație, serviciu), META_GRAPH_VERSION și WHATSAPP_DISPATCH_SECRET. Programați un POST către funcția Edge cu header x-dispatch-secret, păstrând secretul în Vault/server, niciodată în frontend. SUPABASE_URL și SUPABASE_SERVICE_ROLE_KEY sunt furnizate de runtime. Rezultatele ambigue nu sunt retrimise automat pentru a evita duplicatele; verificați mesajul la Meta înainte de reprogramare.
 

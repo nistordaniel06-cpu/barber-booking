@@ -15,7 +15,7 @@ const rpc=async(fn,args={})=>{
 };
 let confirmedEvent=null;
 let config=null,selected=null,busy=false,completed=false,slotRequest=0,pending=null,accountUserId=null;
-const fields=["pilotService","pilotDate","pilotClientName","pilotClientPhone","pilotConsent","pilotWhatsAppOptIn"];
+const fields=["pilotService","pilotDate","pilotClientName","pilotClientPhone","pilotConsent"];
 function updateControls(){
  for(const id of fields)$(id).disabled=busy||!!pending||completed;
  $("pilotSlots").querySelectorAll("button").forEach(b=>b.disabled=busy||!!pending||completed);
@@ -169,12 +169,7 @@ $("pilotBookingForm").onsubmit=async e=>{
   $("pilotClientForm").hidden=true;$("pilotSuccess").hidden=false;
   completed=true;
   confirmedEvent={id:pending.payload.p_request,start:result.start,end:result.end||new Date(new Date(result.start).getTime()+(Number(config.services.find(s=>s.name===(result.service||pending.payload.p_service))?.duration)||30)*60000).toISOString(),service:result.service,salon:result.salon||config.name,location:config.address||"",description:"Rezervare confirmată · Cod "+result.code};
-  const bookingId=pending.payload.p_request,whatsAppConsent=$("pilotWhatsAppOptIn").checked;
   pending=null;
-  if(whatsAppConsent){
-   try{const notification=await rpc("bc_booking_whatsapp_optin",{p_booking:bookingId});$("pilotWhatsAppStatus").textContent=notification.queued?"Confirmarea WhatsApp a fost solicitată. Livrarea depinde de serviciul WhatsApp al salonului.":"Salonul nu are încă activată confirmarea WhatsApp. Rezervarea ta rămâne confirmată."}
-   catch(_){$("pilotWhatsAppStatus").textContent="Rezervarea este confirmată, dar confirmarea WhatsApp nu a putut fi solicitată."}
-  }
   setStatus("Rezervarea a fost confirmată. Salvează codul de mai jos.");
   $("pilotSuccess").scrollIntoView({behavior:"smooth",block:"start"});
  }catch(err){
