@@ -44,6 +44,7 @@ jobs:
           node tests/barbercraft-pilot-import-smoke.mjs
           node tests/barbercraft-admin-luxury-smoke.mjs
           node tests/barbercraft-explore-public-booking-approvals-smoke.mjs
+          node tests/barbercraft-booking-flow.mjs
           node tests/barbercraft-auth-email-social-toggle-smoke.mjs
           node tests/barbercraft-client-link-navigation-smoke.mjs
           node tests/barbercraft-private-gallery-smoke.mjs
@@ -59,3 +60,4 @@ jobs:
           node tests/barbercraft-admin-discovery-growth-v2-smoke.mjs
           node tests/barbercraft-passport-individual-ux-smoke.mjs
           node tests/barbercraft-sticky-passport-medals-ux-smoke.mjs
+
