@@ -177,6 +177,12 @@ async function showPerson(id){
   avatar=el("div",p.display_name.slice(0,1).toUpperCase(),"socialAvatar"),info=el("div");
   info.append(el("h2",p.display_name),el("small","@"+p.handle+" · "+p.followers+" urmăritori · "+p.following+" urmăriți"));
   if(p.kind==="barber")info.append(el("span","✂ Frizer verificat","socialVerified"));
+  else {
+   try{
+    const rank=await rpc("bc_social_client_rank",{p_user:p.user_id});
+    if(rank)info.append(el("span","🏅 "+rank.rank+" · "+rank.visits+" tunsori verificate","socialVerified socialRankBadge"));
+   }catch(_){}
+  }
   identity.append(avatar,info);hero.append(identity);
   const topTools=el("div",null,"socialProfileCornerActions");
   if(p.is_me){topTools.append(btn("✎ Editează",()=>openTab("profile"),"socialEditCorner"))}
