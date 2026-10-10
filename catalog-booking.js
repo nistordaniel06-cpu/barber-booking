@@ -8,11 +8,24 @@ if(!uuid(salon)){
 }
 if(!window.supabase){setStatus("Serviciul de rezervări nu este disponibil.");return}
 const sb=window.BCAuthClient("client");
-const rpc=async(fn,args={})=>{const {data,error}=await sb.rpc(fn,args);if(error)throw Error(error.message);return data};
-let config=null,requestId=null,selected=null,busy=false;
+const rpc=async(fn,args={})=>{
+ const {data,error}=await sb.rpc(fn,args);
+ if(error)throw Object.assign(Error(error.message),{code:error.code});
+ return data;
+};
+let config=null,selected=null,busy=false,completed=false,slotRequest=0,pending=null,accountUserId=null;
+const fields=["pilotService","pilotDate","pilotClientName","pilotClientPhone","pilotConsent"];
+function updateControls(){
+ for(const id of fields)$(id).disabled=busy||!!pending||completed;
+ $("pilotSlots").querySelectorAll("button").forEach(b=>b.disabled=busy||!!pending||completed);
+ $("pilotSubmit").disabled=busy||completed||(!pending&&!selected);
+ $("pilotSubmit").textContent=busy?"Verificăm confirmarea…":pending?"Reîncearcă aceeași rezervare":"Confirmă programarea";
+}
 async function checkAccount(){
  const access=$("catalogApprovalAccess"),form=$("catalogAccountLogin"),status=$("catalogAccountStatus");
- const {data:{user},error}=await sb.auth.getUser();
+ const {data,error}=await sb.auth.getUser();
+ const user=data?.user;
+ accountUserId=null;
  access.hidden=false;
  if(error||!user){
   $("pilotClientForm").hidden=true;form.hidden=false;$("catalogLogout").hidden=true;
@@ -24,6 +37,7 @@ async function checkAccount(){
   const result=await rpc("bc_client_my_approval");
   const state=result?.status||"pending";
   if(state==="approved"){
+   accountUserId=user.id;
    access.hidden=true;$("pilotClientForm").hidden=false;
    setStatus("Cont aprobat. Alege serviciul și ora pentru rezervare.");return true;
   }
@@ -90,58 +104,81 @@ const today=localDate(new Date()),end=new Date(Date.UTC(Number(today.slice(0,4))
 $("pilotDate").min=today;$("pilotDate").max=end.toISOString().slice(0,10);$("pilotDate").value=today;
 function price(service){return Number(service.price).toLocaleString("ro-RO")+" lei · "+service.duration+" min";}
 async function slots(){
- if(!config)return;
+ if(!config||busy||pending||completed)return;
+ const request=++slotRequest;
  selected=null;$("pilotSelectedTime").value="";
+ updateControls();
  const box=$("pilotSlots");box.replaceChildren();box.textContent="Se verifică orele…";
  const service=$("pilotService").value,date=$("pilotDate").value;
- if(!service||!date||date<today||date>$("pilotDate").max)return;
+ if(!service||!date||date<today||date>$("pilotDate").max){
+  box.textContent="Alege o zi validă din intervalul disponibil.";return;
+ }
  try{
   const times=await rpc("bc_catalog_booking_slots",{p_catalog:salon,p_date:date,p_service:service});
+  if(request!==slotRequest||busy||pending||completed)return;
   box.replaceChildren();
   if(!times?.length){box.textContent="Nu sunt ore disponibile în ziua aleasă. Încearcă altă zi.";return}
   for(const value of times){
    const b=document.createElement("button");b.type="button";b.textContent=value;b.setAttribute("aria-pressed","false");
    b.onclick=()=>{
+    if(request!==slotRequest||busy||pending||completed)return;
     selected=value;$("pilotSelectedTime").value=value;
     box.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    updateControls();
    };
    box.append(b);
   }
- }catch(e){box.textContent="Nu am putut încărca orele. Reîncearcă.";setStatus(e.message)}
+ }catch(e){
+  if(request!==slotRequest||busy||pending||completed)return;
+  box.textContent="Nu am putut încărca orele. Alege din nou ziua pentru a reîncerca.";setStatus(e.message);
+ }
 }
 $("pilotService").onchange=()=>{const s=config.services.find(x=>x.name===$("pilotService").value);
- $("pilotServiceDetail").textContent=s?price(s):"";slots()};
+ $("pilotServiceDetail").textContent=s?price(s):"";return slots()};
 $("pilotDate").onchange=slots;
 $("pilotBookingForm").onsubmit=async e=>{
  e.preventDefault();
- if(busy)return;
- if(!(await checkAccount())){setStatus("Așteaptă aprobarea contului din Admin înainte de confirmare.");return;}
+ if(busy||completed)return;
+ busy=true;updateControls();
+ try{
+ if(!(await checkAccount())){setStatus("Autentifică-te cu un cont Client aprobat înainte de confirmare.");return;}
+ if(pending&&pending.userId!==accountUserId){
+  setStatus("Revino la contul Client folosit pentru rezervarea în curs înainte de a reîncerca.");return;
+ }
  if(!selected){setStatus("Selectează o oră disponibilă.");return}
  if(!$("pilotConsent").checked){setStatus("Pentru rezervare este necesar acordul privind datele de contact.");return}
  const name=$("pilotClientName").value.trim();
  let phone=$("pilotClientPhone").value.replace(/[\s().-]/g,"");
  if(/^07\d{8}$/.test(phone))phone="+4"+phone;
  if(!/^\+[1-9][0-9]{7,14}$/.test(phone)){setStatus("Introdu un număr valid, de exemplu +407xxxxxxxx.");return}
- if(!confirm("Confirmi această programare REALĂ la "+config.name+" în "+$("pilotDate").value+", ora "+selected+"?"))return;
- busy=true;$("pilotSubmit").disabled=true;
- if(!requestId)requestId=crypto.randomUUID();
- try{
-  const result=await rpc("bc_catalog_booking_create",{p_catalog:salon,p_request:requestId,
+ if(!pending){
+  if(!confirm("Confirmi această programare REALĂ la "+config.name+" în "+$("pilotDate").value+", ora "+selected+"?"))return;
+  pending={userId:accountUserId,payload:{p_catalog:salon,p_request:crypto.randomUUID(),
    p_service:$("pilotService").value,p_date:$("pilotDate").value,p_time:selected,
-   p_name:name,p_phone:phone,p_consent:true});
+   p_name:name,p_phone:phone,p_consent:true}};
+ }
+ const result=await rpc("bc_catalog_booking_create",pending.payload);
   if(!result?.confirmed)throw Error("Rezervarea nu a fost confirmată.");
   const when=new Date(result.start).toLocaleString("ro-RO",
    {timeZone:"Europe/Bucharest",dateStyle:"full",timeStyle:"short"});
-  $("pilotResult").textContent=result.salon+" · "+result.service+" · "+when+
-   " · "+result.price_ron+" lei. Programarea este salvată în calendarul salonului.";
+  const priceRon=result.price_ron;
+  $("pilotResult").textContent=(result.salon||config.name)+" · "+result.service+" · "+when+
+   (priceRon==null?"":" · "+priceRon+" lei")+". Programarea este salvată în calendarul salonului.";
   $("pilotBookingCode").textContent=result.code;
   $("pilotClientForm").hidden=true;$("pilotSuccess").hidden=false;
+  completed=true;pending=null;
   setStatus("Rezervarea a fost confirmată. Salvează codul de mai jos.");
   $("pilotSuccess").scrollIntoView({behavior:"smooth",block:"start"});
  }catch(err){
-  setStatus(err.message==="SLOT_TAKEN"?"Ora a fost rezervată între timp. Selectează alt interval.":"Rezervarea nu a fost efectuată: "+err.message);
-  if(err.message==="SLOT_TAKEN")await slots();
- }finally{busy=false;$("pilotSubmit").disabled=false}
+  if(pending&&(!err.code||pending.uncertain)){
+   pending.uncertain=true;
+   setStatus("Nu am putut verifica răspunsul serverului. Rezervarea poate fi deja salvată. Reîncearcă aceeași rezervare aici, fără să închizi pagina; nu vom crea o cerere nouă."+(err.code?" "+err.message:""));
+  }else{
+   pending=null;
+   setStatus(err.message==="SLOT_TAKEN"?"Ora a fost rezervată între timp. Selectează alt interval.":"Rezervarea nu a fost efectuată: "+err.message);
+   if(err.message==="SLOT_TAKEN"){busy=false;await slots();}
+  }
+ }finally{busy=false;updateControls()}
 };
 $("pilotFeedbackForm").onsubmit=async event=>{
  event.preventDefault();
@@ -164,6 +201,7 @@ try{
  $("pilotSalonName").textContent=config.name;
  $("pilotSalonAddress").textContent=config.address||"";
  for(const s of config.services||[])$("pilotService").append(new Option(s.name+" · "+price(s),s.name));
+ updateControls();
  await checkAccount();
  $("pilotService").dispatchEvent(new Event("change"));
 }catch(e){setStatus("Nu am putut verifica salonul: "+e.message)}
