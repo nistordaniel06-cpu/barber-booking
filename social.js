@@ -6,6 +6,79 @@ const el=(tag,txt,cls)=>{const n=document.createElement(tag);if(txt!==undefined)
 const btn=(label,fn,cls="")=>{const b=el("button",label,"socialButton "+cls);b.type="button";b.onclick=fn;return b};
 const line=(msg)=>$("socialStatus").textContent=String(msg);
 const rpc=async(name,args={})=>{const {data,error}=await sb.rpc(name,args);if(error)throw new Error(error.message);return data};
+const favoriteClient=window.BCAuthClient?.("client",{detectSessionInUrl:false});
+const heartFormat=n=>new Intl.NumberFormat("ro-RO").format(Number(n)||0);
+async function barberHeart(id){
+ const button=el("button",null,"socialBarberHeart");
+ button.type="button";button.setAttribute("aria-label","Salvează frizerul la favorite");
+ const sym=el("span","♡","socialHeartSymbol"),count=el("span","0","socialHeartCount");
+ button.append(sym,count);
+ try{
+  const {data,error}=await sb.rpc("bc_favorite_summary",{p_kind:"barber",p_targets:[id]});
+  if(!error&&data?.[0]){button.classList.toggle("isSaved",!!data[0].saved);
+   sym.textContent=data[0].saved?"♥":"♡";count.textContent=heartFormat(data[0].count);}
+ }catch(_){}
+ button.onclick=async()=>{
+  if(!favoriteClient)return;
+  const {data:{user:clientUser}}=await favoriteClient.auth.getUser();
+  if(!clientUser){line("Pentru favorite, autentifică-te în Portal Client.");return}
+  button.disabled=true;
+  const {data,error}=await favoriteClient.rpc("bc_favorite_toggle",{p_kind:"barber",p_target:id});
+  button.disabled=false;
+  if(error){line("Nu am salvat frizerul: "+error.message);return}
+  button.classList.toggle("isSaved",!!data.saved);
+  sym.textContent=data.saved?"♥":"♡";count.textContent=heartFormat(data.count);
+  line(data.saved?"Frizer salvat în favorite.":"Frizer eliminat din favorite.");
+ };
+ return button;
+}
+async function friendOnlineMap(ids){
+ if(!ids.length)return new Map();
+ try{const data=await rpc("bc_social_online_for",{p_users:[...new Set(ids)].slice(0,100)});
+ return new Map((data||[]).map(v=>[v.user_id,!!v.online]))}catch{return new Map()}
+}
+function onlineDot(online){
+ const d=el("span",null,"socialOnlineDot"+(online?" isOnline":""));
+ d.title=online?"Online acum (cu acordul utilizatorului)":"Status online nedisponibil";
+ d.setAttribute("aria-label",online?"Online":"Status online nepublic");
+ return d;
+}
+let onlineTick=null;
+async function startPresence(){
+ if(!user)return;
+ try{
+  const state=await rpc("bc_social_presence_ping");
+  const control=$("socialOnlineVisible");if(control)control.checked=!!state.share_online;
+  if(!onlineTick)onlineTick=setInterval(()=>{
+   if(document.visibilityState==="visible")void rpc("bc_social_presence_ping").catch(()=>{});
+  },60000);
+ }catch(_){}
+}
+$("socialOnlineVisible")?.addEventListener("change",async event=>{
+ const control=event.target;control.disabled=true;
+ try{await rpc("bc_social_presence_ping",{p_share:control.checked});
+  line(control.checked?"Online public activat.":"Online public dezactivat.");}
+ catch(e){control.checked=!control.checked;msgErr(e)}
+ finally{control.disabled=false}
+});
+async function loadFriends(){
+ const box=$("socialFriends");if(!box||!user)return;
+ box.replaceChildren(el("p","Se încarcă prietenii…"));
+ try{
+  const items=await rpc("bc_social_friends_list");box.replaceChildren();
+  if(!items.length){box.append(el("p","Prietenii apar aici după ce vă urmăriți reciproc."));return}
+  for(const person of items){
+   const row=el("div",null,"socialPerson socialFriendRow"),info=el("div");
+   const label=el("strong",person.name);label.prepend(onlineDot(person.online));
+   info.append(label,el("small","@"+person.handle+" · "+(person.online?"Online":"Offline sau invizibil")));
+   const see=btn("Profil",()=>showPerson(person.user_id));
+   row.append(info,see);
+   if(person.can_message)row.append(btn("Mesaj",()=>startChat(person.user_id,person.name),"primary"));
+   box.append(row);
+  }
+ }catch(e){box.replaceChildren(el("p","Lista prietenilor nu este disponibilă."));msgErr(e)}
+}
+
 const api=window.supabase;
 if(!api||!window.BARBERCRAFT_SUPABASE_URL){line("Comunitatea nu este disponibilă.");return}
 const sb=await window.BCPassportSession();
@@ -18,7 +91,7 @@ function openTab(name){
  if(name==="ideas")name="discover";
  document.querySelectorAll(".socialPanel").forEach(x=>x.hidden=x.id!=="panel"+name[0].toUpperCase()+name.slice(1));
  document.querySelectorAll(".socialTabs button").forEach(x=>x.classList.toggle("selected",x.dataset.panel===name));
- if(name==="messages")loadMutuals();
+ if(name==="messages"){void loadMutuals();void loadFriends();}
  
 }
 document.querySelectorAll(".socialTabs button").forEach(b=>b.onclick=()=>openTab(b.dataset.panel));
@@ -54,7 +127,7 @@ async function loadMyProfile(){
  self.append(el("strong",own?"@"+own.handle:"Profil nepublicat"),el("p",own?(own.is_public?"Vizibil în comunitate":"Privat — nu apari la căutare"):"Publicarea este opțională."));
  if(own){
   self.append(el("p",own.followers+" urmăritori · "+own.following+" urmăriți · "+(own.kind==="barber"?"Profesionist verificat":"Client")));
-  const share=el("a","Deschide profilul public →","socialButton");share.href="./social.html?u="+encodeURIComponent(user.id);self.append(share);
+  const share=el("a","✦ Vizualizează Profil →","socialButton socialViewProfile");share.href="./social.html?u="+encodeURIComponent(user.id);self.append(share);
  }
  const pro=await rpc("bc_social_is_barber",{p_user:user.id});
  barber.hidden=!pro;
@@ -82,10 +155,11 @@ async function discover(){
  const list=$("socialDiscover");list.replaceChildren(el("p","Se caută membri…"));
  try{
   const records=await rpc("bc_social_discover",{p_search:$("socialSearch").value.trim()});list.replaceChildren();
+  const online=await friendOnlineMap((records||[]).map(p=>p.user_id));
   if(!records?.length){list.append(el("p","Nu există încă profiluri publice pentru această căutare."));return}
   for(const item of records){
-   const row=el("div",undefined,"socialPerson"),info=el("div");info.append(el("strong",item.display_name),el("small","@"+item.handle+" · "+(item.kind==="barber"?"Frizer":"Membru")+" · "+item.followers+" urmăritori"));
-   row.append(info,btn("Vezi profilul",()=>showPerson(item.user_id)));list.append(row);
+   const row=el("div",undefined,"socialPerson"),info=el("div");const username=el("strong",item.display_name);username.prepend(onlineDot(online.get(item.user_id)));info.append(username,el("small","@"+item.handle+" · "+(item.kind==="barber"?"Frizer":"Membru")+" · "+item.followers+" urmăritori"));
+   row.append(info,btn("Vizualizează",()=>showPerson(item.user_id)));if(item.kind==="barber")row.append(await barberHeart(item.user_id));list.append(row);
   }
  }catch(e){list.replaceChildren(el("p","Căutarea nu este disponibilă momentan."));msgErr(e)}
 }
@@ -98,14 +172,21 @@ async function showPerson(id){
   const box=$("socialSelected");box.replaceChildren();selected=p;
   if(!p){box.hidden=false;box.append(el("p","Profilul nu este public sau nu mai este disponibil."));return}
   box.hidden=false;
+  box.closest("#panelDiscover")?.prepend(box);
   const hero=el("div",undefined,"socialProfileView"),identity=el("div",undefined,"socialSelectedRow"),
   avatar=el("div",p.display_name.slice(0,1).toUpperCase(),"socialAvatar"),info=el("div");
   info.append(el("h2",p.display_name),el("small","@"+p.handle+" · "+p.followers+" urmăritori · "+p.following+" urmăriți"));
   if(p.kind==="barber")info.append(el("span","✂ Frizer verificat","socialVerified"));
-  identity.append(avatar,info);hero.append(identity);box.append(hero,el("p",p.bio||"Fără descriere publică."));
+  identity.append(avatar,info);hero.append(identity);
+  const topTools=el("div",null,"socialProfileCornerActions");
+  if(p.is_me){topTools.append(btn("✎ Editează",()=>openTab("profile"),"socialEditCorner"))}
+  else if(p.kind==="barber"){topTools.append(await barberHeart(p.user_id))}
+  else{topTools.append(onlineDot((await friendOnlineMap([p.user_id])).get(p.user_id)))}
+  hero.append(topTools);
+  box.append(hero,el("p",p.bio||"Fără descriere publică."));
   const actions=el("div",undefined,"socialActions");
   if(user&&!p.is_me){
-   const follow=btn(p.is_following?"✓ Urmărești · Renunță":"＋ Urmărește",async()=>{
+   const follow=btn(p.is_following?(p.follows_me?"✓ Prieteni · Renunță":"✓ Cerere trimisă · Renunță"):"＋ Adaugă la prieteni",async()=>{
     try{await rpc("bc_social_follow_set",{p_target:p.user_id,p_follow:!p.is_following});
      line(p.is_following?"Nu mai urmărești acest membru.":"Acum urmărești acest membru.");await showPerson(id);await discover()}
     catch(e){msgErr(e)}},p.is_following?"":"primary");
@@ -119,7 +200,7 @@ async function showPerson(id){
     const reason=prompt("Descrie motivul raportării (10–350 caractere):");if(reason===null)return;
     try{await rpc("bc_social_report",{p_user:id,p_reason:reason.trim()});line("Raportarea a fost înregistrată.")}catch(e){msgErr(e)}
    }));
-  }else if(p.is_me)actions.append(btn("Editează profilul",()=>openTab("profile"),"primary"));
+  }else if(p.is_me){/* Edit pencil lives next to avatar above. */}
   else actions.append(el("p","Autentifică-te pentru a urmări și a trimite mesaje."));
   box.append(actions);
   if(p.kind==="barber"){
@@ -203,10 +284,14 @@ async function refreshGalleryStatus(){
  selector.replaceChildren();
  for(const q of visits){
   const d=new Date(q.checked_at),expiry=new Date(q.expires_at);
-  const value="QR "+d.toLocaleString("ro-RO")+" · până la "+expiry.toLocaleString("ro-RO");
+  const value="Tunsoare confirmată "+d.toLocaleDateString("ro-RO")+" · mai poți posta până la "+expiry.toLocaleTimeString("ro-RO",{hour:"2-digit",minute:"2-digit"});
   selector.append(new Option(value,q.checkin_id));
  }
  const visitsDone=Number(state.completed_visits)||0;
+ const ranks=[["Bronz I",3],["Bronz II",6],["Argint I",12],["Argint II",20],["Aur I",30],["Aur II",45],["Platină",65],["Diamant",100]];
+ const goal=ranks.find(x=>visitsDone<x[1]);
+ const rankText=goal?Math.min(visitsDone,goal[1])+"/"+goal[1]+" tunsori pentru "+goal[0]:"Diamant · rang maxim";
+ const rankBadge=$("socialClientRankProgress");if(rankBadge)rankBadge.textContent="✂ "+rankText;
  let message;
  if(visitsDone<3){
   message=visitsDone+"/3 tunsori finalizate și confirmate. Mai ai nevoie de "+(3-visitsDone)+" pentru a putea posta.";
@@ -427,6 +512,7 @@ async function init(){
   const {data:membership}=await sb.rpc("bc_my_professional_access");
   staff=membership||[];
   await loadMyProfile();
+  await startPresence();
   await discover();
   const search=new URLSearchParams(location.search),id=search.get("u");
   if(uuid(id))await showPerson(id);
