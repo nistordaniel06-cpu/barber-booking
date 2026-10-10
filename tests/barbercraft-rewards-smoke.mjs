@@ -7,7 +7,7 @@ for(const name of scripts){
  new vm.Script(read(name),{filename:name});
  console.log("PASS JavaScript syntax: "+name);
 }
-const documents=["passport.html","reward-redeem.html","admin.html","territory-war.html","professionals.html"];
+const documents=["passport.html","rewards.html","reward-redeem.html","admin.html","territory-war.html","professionals.html"];
 for(const path of documents){
  const body=read(path);
  assert.match(body,/<!doctype html>/i,"HTML doctype: "+path);
@@ -17,9 +17,10 @@ for(const path of documents){
  console.log("PASS HTML/inline script: "+path);
 }
 const passport=read("passport.html"),pro=read("professionals.html"),admin=read("admin.html");
-assert.match(passport,/passport-rewards\.js/);
+assert.match(read("rewards.html"),/passport-rewards\.js/);
+assert.ok(!passport.includes("Oferte de la saloane participante"),"Salon offers are not part of social Passport");
 assert.match(passport,/passport-checkin\.js/);
-assert.match(passport,/id="rewardQrPanel"/);
+assert.match(read("rewards.html"),/id="rewardQrPanel"/);
 assert.match(passport,/id="passportCheckinCode"/);
 assert.match(pro,/reward-redeem\.html/);
 assert.match(admin,/data-tab="zones"/);
