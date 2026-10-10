@@ -1,0 +1,26 @@
+/* YouTube creator awards-inspired medallion wall — BARBERCRAFT palette. */
+.bcMedalPanel{margin:20px 0;padding:17px;background:linear-gradient(145deg,#25232a,#121318);
+ border:1px solid #77603b;border-radius:22px}
+.bcMedalPanel h2{font-size:23px;letter-spacing:-.6px;color:#f8d684;margin:0 0 9px}
+.bcMedalIntro{font-size:12px;color:#d9d4cb;margin:7px 0 16px;line-height:1.6}
+.bcMedalGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px}
+.bcMedal{position:relative;min-width:0;padding:16px 9px;border-radius:17px;
+ background:linear-gradient(155deg,#312d26,#18191f);border:1px solid #544736;
+ display:grid;justify-items:center;align-content:start;gap:7px;text-align:center}
+.bcMedalIcon{display:grid;place-items:center;width:73px;height:73px;font-size:35px;border-radius:50%;
+ border:4px double currentColor;background:radial-gradient(circle at 35% 24%,#ffffff30,transparent 55%),#333239;
+ filter:drop-shadow(0 3px 5px #0007)}
+.bcMedal strong{font-size:14px;color:#fff}
+.bcMedal small{font-size:11px;color:#d1c7b9}
+.bcMedalRequirement{min-height:34px;display:grid;align-items:center;font-size:10px;font-weight:850;color:#f5d38f}
+.bcMedal-bronze{--medal:#d18d5a}.bcMedal-silver{--medal:#b9d0db}.bcMedal-gold{--medal:#f9cd67}
+.bcMedal-platinum{--medal:#c2cae0}.bcMedal-diamond{--medal:#99e7f2}
+.bcMedal.isUnlocked{border-color:var(--medal);box-shadow:0 0 19px color-mix(in srgb,var(--medal),transparent 78%)}
+.bcMedal.isUnlocked .bcMedalIcon{color:var(--medal)}
+.bcMedal.isLocked{opacity:.61;filter:grayscale(.65)}.bcMedal.isLocked .bcMedalIcon{color:#79767b}
+.bcMedalFineprint{margin:13px 0 0;color:#a3a1a9;font-size:11px;line-height:1.5}
+.bcIdentityActions{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0}
+.bcIdentityActions a{display:inline-flex;align-items:center;justify-content:center;flex:1 1 180px;
+ padding:13px;border-radius:13px;background:#f2c76b;color:#20150e;text-decoration:none;font-size:12px;font-weight:900}
+.bcIdentityActions a.secondary{background:#26262d;color:#ffdc90;border:1px solid #735c35}
+@media(max-width:370px){.bcMedalGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}

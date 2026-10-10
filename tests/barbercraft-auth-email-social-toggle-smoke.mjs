@@ -9,7 +9,7 @@ assert.ok(code.includes('new URL("https://nistordaniel06-cpu.github.io/barber-bo
 assert.ok(code.includes('confirmUrl.searchParams.set("salon",salon)'),"Salon context preserved in email confirmation");
 assert.ok(code.includes("emailRedirectTo:confirmUrl.toString()"),"Signup passes explicit redirectTo");
 assert.ok(!code.includes('emailRedirectTo:"http://localhost'),"No localhost target configured for signup");
-assert.ok(html.includes('<input type="checkbox" name="public"><span>Permite afișarea profilului în comunitate</span>'),"Public toggle has separate wrap label");
+assert.ok(html.includes('<input type="checkbox" name="public"><span>Profil vizibil în comunitate</span>'),"Public toggle has separate wrap label");
 assert.ok(html.includes('<input type="checkbox" name="messages"><span>Acceptă mesaje de la persoane urmărite reciproc</span>'),"Mutual messages toggle has separate wrap label");
 assert.match(css,/body\.bc-social #socialProfileForm \.socialToggle input\[type="checkbox"\]/,"Selector overrides generic form input width");
 assert.match(css,/width:22px!important/,"Checkbox width pinned to 22 pixels");

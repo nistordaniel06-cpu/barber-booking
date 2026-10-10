@@ -12,6 +12,7 @@ const sb=await window.BCPassportSession();
 const {data:{user},error}=await sb.auth.getUser();
 const profileForm=$("socialProfileForm"),self=$("socialMyProfile"),barber=$("socialBarber"),clientGallery=$("socialClientGallery");
 let me=null,own=null,selected=null,chatWith=null,staff=[],mutuals=[],chatTimer=null;
+let privacyEligibility=null;
 const uuid=x=>/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(x||"");
 function openTab(name){
  if(name==="ideas")name="discover";
@@ -29,6 +30,25 @@ async function loadMyProfile(){
   profileForm.elements.name.value=own.display_name;profileForm.elements.handle.value=own.handle;
   profileForm.elements.bio.value=own.bio;profileForm.elements.public.checked=!!own.is_public;
   profileForm.elements.messages.checked=!!own.allow_messages;
+ }else{
+  // No social profile becomes public until the Client explicitly saves one.
+  profileForm.elements.public.checked=true;
+ }
+ const privacyHint=$("socialPrivacyHint"),privacyInput=profileForm.elements.public;
+ try{
+  privacyEligibility=await rpc("bc_social_privacy_eligibility");
+  const eligible=!!privacyEligibility?.can_make_private;
+  privacyInput.disabled=!eligible;
+  privacyInput.checked=own?!!own.is_public:true;
+  privacyHint.textContent=eligible?
+   "Vizibilitatea este la alegerea ta. Poți schimba oricând între public și privat.":
+   "Profilul nou poate fi doar public. După "+privacyEligibility.verified_visits+
+   " / 3 tunsori finalizate și verificate, vei putea să-l faci privat. Nu ești obligat să publici profilul.";
+  privacyHint.dataset.unlocked=String(eligible);
+ }catch(error){
+  privacyEligibility=null;
+  privacyInput.disabled=true;
+  privacyHint.textContent="Nu putem verifica cele 3 vizite momentan; schimbarea vizibilității rămâne indisponibilă.";
  }
  self.replaceChildren();
  self.append(el("strong",own?"@"+own.handle:"Profil nepublicat"),el("p",own?(own.is_public?"Vizibil în comunitate":"Privat — nu apari la căutare"):"Publicarea este opțională."));
@@ -56,7 +76,7 @@ profileForm.onsubmit=async e=>{
    p_name:profileForm.elements.name.value.trim(),p_bio:profileForm.elements.bio.value.trim(),
    p_public:profileForm.elements.public.checked,p_messages:profileForm.elements.messages.checked});
   line("Profilul a fost actualizat.");await loadMyProfile();await discover();window.dispatchEvent(new Event("bc-social-profile-updated"));
- }catch(e){msgErr(e)}finally{b.disabled=false}
+ }catch(e){if(e?.message==="THREE_VERIFIED_VISITS_FOR_PRIVACY")line("Pentru a face profilul privat ai nevoie de 3 tunsori finalizate și verificate.");else msgErr(e)}finally{b.disabled=false}
 };
 async function discover(){
  const list=$("socialDiscover");list.replaceChildren(el("p","Se caută membri…"));

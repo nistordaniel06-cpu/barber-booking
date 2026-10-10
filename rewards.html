@@ -1,0 +1,40 @@
+<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c0c0e"><title>Revendică recompense · BARBERCRAFT</title>
+<meta name="robots" content="noindex,nofollow"><meta name="description" content="Revendică separat recompensele de la saloanele participante și consultă istoricul cererilor tale.">
+<link rel="stylesheet" href="./premium.css"><link rel="stylesheet" href="./passport-medals.css"><link rel="stylesheet" href="./barbercraft-sticky-nav.css"><link rel="stylesheet" href="./barbercraft-assistant.css">
+<style>
+body.bc-passport{margin:0;background:#0b0c0f;color:#f8f7f5;font-family:"DM Sans",system-ui,sans-serif}
+.bcRewardWrap{max-width:820px;margin:0 auto;padding:0 16px 130px}
+.bcRewardHeader{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:69px;padding:12px;background:#111317;border-bottom:1px solid #59452c}
+.bcRewardHeader a{color:#f5d078;text-decoration:none;font-size:13px;font-weight:800}
+.bcRewardHeader strong{font-size:17px;color:#fff}.bcRewardHeader b{color:#f7d17b}
+.bcRewardHero{background:linear-gradient(125deg,#392914,#15151a);padding:23px;border:1px solid #70532b;border-radius:20px;margin:22px 0}
+.bcRewardHero h1{font-size:clamp(23px,5vw,34px);margin:5px 0}.bcRewardHero p{color:#d6d1c7;font-size:12px;line-height:1.7}
+.rewardInfo{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px;background:#242017;border:1px solid #7c612b;border-radius:16px}
+.rewardInfo strong{display:block;color:#f5d27d;font-size:27px}.rewardInfo p{color:#b9b5b0;font-size:11px}
+.rewardMarketArea{margin:20px 0}.rewardMarketArea h2{font-size:20px;margin:0 0 12px}
+.rewardMarketArea .offers{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.rewardMarketArea .offer{background:#23252b;border:1px solid #665332;border-radius:14px;padding:15px;display:grid;gap:8px}.offer b{color:#f4c967}
+.rewardMarketArea .offer p{font-size:12px;color:#cbcbd0}.offer select{width:100%;background:#14151a;color:#fff;padding:12px;border:1px solid #6c6047;border-radius:9px}
+.rewardMarketArea .offer button,.rewardQrPanel button{padding:10px 13px;background:#f3cb68;color:#211708;border:0;border-radius:11px;font-weight:800}
+.rewardMarketArea button:disabled{opacity:.6}.rewardQrPanel{padding:13px;background:#242228;border-radius:16px;border:1px solid #584b35}
+.rewardQrSquare{display:inline-flex;align-items:center;justify-content:center;background:#fff;padding:14px;border-radius:13px;margin:12px 0}
+.rewardQrCode{display:block;overflow-wrap:anywhere;max-width:100%;padding:8px;background:#1b1b1f}
+.rewardInfo .pill{font-size:11px;color:#f6d087}
+#rewardFlowStatus{color:#e5d1a8;font-size:12px;line-height:1.5;margin:15px 0}
+.item{padding:12px;border:1px solid #4b463c;background:#24242b;border-radius:13px;display:flex;justify-content:space-between;gap:10px;margin:8px 0}
+.item strong{font-size:13px}.item p{font-size:11px;color:#bebfc8}.actions{display:flex;flex-wrap:wrap;gap:6px}
+</style>
+</head><body class="bc-premium bc-passport"><div class="bcRewardWrap"><header class="bcRewardHeader"><a href="./passport.html">‹ Barber Passport</a><strong>BARBER<b>CRAFT</b></strong><a href="./client/">Descoperă ↗</a></header>
+<section class="bcRewardHero"><h1>Revendică recompense</h1><p>Aici sunt produsele și beneficiile oferite de saloane. Este un spațiu separat de identitatea Barber Passport și de medaliile tale.</p></section>
+<section id="rewardMarketplace"><div class="rewardInfo"><div><div class="eyebrow">Puncte disponibile</div><strong id="rewardBalance">—</strong><p id="rewardCommitted">Se verifică portofelul…</p></div><span class="pill">Puncte validate</span></div>
+<p id="rewardFlowStatus" role="status">Conectează-te în contul Client pentru revendicare.</p>
+<div class="rewardMarketArea"><h2>Recompense disponibile la saloane</h2><div id="rewardMarketList" class="offers" aria-live="polite"></div></div>
+<div class="rewardMarketArea"><h2>Revendicările tale</h2><div id="rewardClaimList" aria-live="polite"></div></div>
+<div id="rewardQrPanel" class="rewardQrPanel" aria-live="polite"></div>
+</section>
+<div class="bcIdentityActions"><a class="secondary" href="./passport.html#medalBoardSection">🏆 Înapoi la medaliile mele</a></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="./auth-config.js"></script><script src="./passport-session.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script src="./passport-rewards.js" defer></script>
+<script src="./barbercraft-sticky-nav.js" defer></script><script src="./barbercraft-assistant.js" defer></script></body></html>

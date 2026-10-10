@@ -27,26 +27,32 @@ const footer=el("small","Ghid contextual, fără acces la date private. Răspuns
 dialog.append(top,transcript,suggestions,form,footer);root.append(note,bubble,dialog);
 document.body.append(root);
 const messages={
- discovery:"Începe cu un serviciu sau un salon. «Locația ta» folosește GPS-ul doar cu acordul tău; raza poate fi mărită. Dacă salonul n-a confirmat poziția GPS, nu poate apărea în rezultatele exacte pe kilometri.",
- account:"Aici îți creezi contul Client. Poți încărca avatarul după conectare. Contul PRO și Admin sunt separate.",
- passport:"Barber Passport este progresul tău individual. XP se primește după vizite finalizate și confirmate de salon prin QR, nu din programări nefinalizate.",
- calendar:"Atinge o oră ca să programezi; poți glisa un interval. Selectează 1, 3 sau 7 zile și folosește două degete pentru zoom.",
- pro:"În Setări salon poți modifica programul de lucru, copia orele în alte zile și configura specialiștii. Doar orele salvate devin publice.",
- admin:"În prima pagină Admin vezi utilizatori noi și saloane care așteaptă aprobarea. Selectează notificarea pentru a le verifica înainte de publicare.",
- plans:"Nu-i suport pe cei cu 7,99 lei, așa că am pus 8 lei. 😄 Prețurile sunt directe: 15 lei pentru salon, 8 lei pentru frizer sau +5 lei la un salon activ. Încă nu încasăm abonamente.",
- partners:"Un salon costă 15 lei/lună pentru funcțiile cosmetice propuse; un profil personal 8 lei, sau 5 lei în plus cu abonamentul salonului activ. Checkout-ul nu este încă pornit.",
- notifications:"Notificările telefonului au nevoie de permisiunea browserului și de activarea unui serviciu Web Push. Fără abonarea la un serviciu Push, nu putem trimite alerte din fundal."
+ discovery:"Ca să te programezi: caută un salon, deschide profilul, alege serviciul, specialistul și ora liberă, apoi confirmă rezervarea.",
+ account:"În Contul meu îți gestionezi avatarul, rezervările și accesul la Barber Passport. Pentru gestionarea unui salon folosește portalul PRO.",
+ passport:"Barber Passport este identitatea ta de membru BARBERCRAFT: profil, istoric, QR de identificare, portofoliu și medalii. Nivelurile și misiunile apar separat, la Barber Pass.",
+ community:"În Comunitate îți poți prezenta profilul și urmări frizeri sau clienți. După 3 tunsori verificate poți alege dacă profilul rămâne public sau devine privat.",
+ calendar:"Ca profesionist, în Calendar PRO poți selecta și muta programări, bloca intervale și modifica programul de lucru.",
+ pro:"Din PRO setezi serviciile, prețurile, programul fiecărui frizer și calendarul salonului. Clientul rezervă prin profilul public al salonului.",
+ plans:"8 lei/lună: culoare, motto și efecte pentru profilul frizerului. 15 lei/lună: profil premium de salon. Ai salonul activ? Profilul frizerului e doar +5 lei/lună. Plata e în pregătire.",
+ partners:"Saloanele își pot promova profilul, programările și, după integrare, produsele branduite. Vezi pagina «Devino partener».",
+ notifications:"Poți activa permisiunea browserului pentru notificări. Trimiterea automată din fundal devine disponibilă după conectarea serviciului Web Push."
 };
+const howToBook="Descoperă → caută salonul sau serviciul → deschide salonul → alege serviciul și frizerul → selectează data și ora liberă → confirmă rezervarea. O găsești apoi la «Rezervări».";
+const identityHelp="Barber Passport este identitatea ta în BARBERCRAFT: profil de Client sau frizer, istoricul vizitelor, QR-ul personal, pozele și medaliile. Barber Pass este separat: niveluri, XP și personalizări.";
+const priceHelp="8 lei/lună pentru motto și stilul numelui frizerului; 15 lei/lună pentru prezentarea premium a salonului; +5 lei/lună pentru frizer dacă salonul are deja planul activ. Plățile nu sunt pornite.";
 function context(){
  const pathname=location.pathname;
- if(pathname.includes("/admin"))return "admin";
  if(pathname.includes("/pro/calendar"))return "calendar";
  if(pathname.includes("/pro/")||pathname.includes("professionals.html"))return "pro";
- if(pathname.includes("passport"))return "passport";
+ if(pathname.includes("social.html"))return "community";
  if(pathname.includes("barber-pass"))return "plans";
+ if(pathname.includes("passport"))return "passport";
  if(pathname.includes("partner"))return "partners";
  if(pathname.includes("notification"))return "notifications";
- if(pathname.includes("/client")||pathname.endsWith("/index.html")||pathname.endsWith("/"))return document.querySelector(".view.active")?.id==="account"?"account":"discovery";
+ if(pathname.includes("/client")||pathname.endsWith("/index.html")||pathname.endsWith("/")){
+  const current=document.querySelector(".view.active")?.id;
+  return current==="account"?"account":"discovery";
+ }
  return "discovery";
 }
 function say(text,role){
@@ -55,25 +61,24 @@ function say(text,role){
 }
 function answer(q){
  const s=q.toLocaleLowerCase("ro-RO");
- if(/7[.,]99|preț|pret|abon|cost|lei|vip|premium/.test(s))
-  return "Nu-i suport pe cei cu 7,99 lei, așa că am pus 8 lei. 😄 Pe bune: 8 lei pentru stilul personal, 15 lei pentru salon și 5 lei extra dacă salonul are deja un plan activ. Momentan sunt prețuri propuse; plata nu e activată.";
- if(/gps|raza|km|loca|harta|hartă|4men/.test(s))
-  return "Apasă «Locația ta», acceptă GPS și reglează raza. Pe hartă, doar saloanele cu coordonate reale confirmate apar ca pinuri precise. Dacă 4MEN lipsește, proprietarul trebuie să-i confirme poziția din PRO → Profil online.";
- if(/misiun|nivel|xp|passport|streak|recompens/.test(s))
-  return "Barber Passport are 20 de niveluri. Misiunile aduc XP doar din vizite QR finalizate, recenzii verificate și avatar. Rezervele nefinalizate nu cresc nivelul.";
- if(/program|orar|calendar|timp|zi|zile/.test(s))
-  return "În PRO → Program de lucru, alegi orele și «Repetă în alte zile». Calendarul permite intervale din 15 în 15 minute și vederi 1, 3 sau 7 zile.";
- if(/cont|avatar|poz|parol|inregistr|autent/.test(s))
-  return "Conturile Client și PRO sunt separate. În Contul meu poți încărca avatarul și edita profilul. Nu-ți cer parola în chat.";
- if(/admin|aproba|aprobare|public/.test(s))
-  return "Admin → Prezentare generală afișează cererile în așteptare. Verifică datele salonului înainte să îl publici.";
+ if(/cum m[aă] programez|vreau (o )?programare|f[aă] o programare|cum rezerv|aleg (un )?salon|book/.test(s))return howToBook;
+ if(/barber passport|pa[sș]aport|identitat/.test(s))return identityHelp;
+ if(/c[aâ]t cost|pre[tț]|preț|pret|abon|7[.,]99|\blei\b|pl[aă]tesc/.test(s))return priceHelp;
+ if(/barber pass|misiun|nivel|\bxp\b|streak|medali|distinc|recompens/.test(s))
+  return "Barber Pass îți arată misiunile și progresul din vizite confirmate. Medaliile sunt distincții obținute, nu oferte comerciale. Pentru produse și reduceri intră în pagina «Revendică recompense».";
+ if(/gps|raza|\bkm\b|loca|hart[aă]/.test(s))
+  return "Apasă «Locația ta» și permite GPS. Folosește glisorul pentru raza în kilometri. Harta include pinuri exacte numai la saloanele cu localizare confirmată.";
+ if(/program|orar|calendar|rezerv|tuns|servici|frizer/.test(s))
+  return context()==="pro"||context()==="calendar"?messages.pro:howToBook;
+ if(/avatar|fotografi|poz|cont|profil|parol|autent/.test(s))
+  return "Din Contul meu alegi avatarul și îți editezi profilul. În Comunitate îl poți personaliza; după trei tunsori verificate poți schimba vizibilitatea.";
  if(/notific|push|telefon/.test(s))return messages.notifications;
- if(/produs|magazin|partener|firma|firmă/.test(s))return "Pagina Parteneriate prezintă conceptul de magazin cu produse branduite. Furnizorul și salonul trebuie să semneze un acord înainte de checkout.";
+ if(/produs|magazin|partener|firm[aă]/.test(s))return messages.partners;
  return messages[context()]||messages.discovery;
 }
 function showChat(){
  note.hidden=true;dialog.hidden=false;input.focus({preventScroll:true});
- if(!transcript.children.length)say("Salut! Spune-mi ce vrei să faci. Te pot ghida prin meniuri, calendar, misiuni și programări.","bot");
+ if(!transcript.children.length)say("Salut! Te ajut să găsești saloane, să faci rezervări și să îți personalizezi Barber Passport.","bot");
  suggestions.replaceChildren();
  for(const label of ["Cum mă programez?","Ce este Barber Passport?","Cât costă?"]){
   const b=el("button",null,label);b.type="button";b.onclick=()=>{say(label,"user");say(answer(label),"bot")};suggestions.append(b);
