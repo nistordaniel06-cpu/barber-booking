@@ -1,0 +1,36 @@
+/* Persistent BARBERCRAFT navigation on companion pages, mobile first.
+   Main Client/PRO/Admin apps retain their own navigation. */
+body.bc-social .socialTop,
+body.bc-passport .wrap>header,
+body.bc-preview .bc-ig-top,
+body.bc-aux-client .wrap>header{
+ position:sticky!important;top:0!important;z-index:120!important;
+ min-height:66px!important;display:flex;align-items:center;
+ padding:12px 13px!important;margin:0 -8px!important;
+ border-bottom:1px solid #605137!important;
+ background:rgba(13,14,18,.97)!important;
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+ box-shadow:0 6px 18px #0005;
+}
+body.bc-social .socialTop{margin:0 -7px!important}
+body.bc-social .socialWrap,body.bc-passport .wrap,body.bc-preview .bc-ig-wrap{overflow:visible!important}
+body.bc-aux-client{padding-bottom:calc(77px + env(safe-area-inset-bottom))!important}
+body.bc-social .socialWrap,body.bc-passport .wrap{padding-bottom:calc(114px + env(safe-area-inset-bottom))!important}
+body.bc-social .socialTabs{position:sticky;top:69px;z-index:110;box-shadow:0 4px 14px #0007}
+.bcAppBottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:900;
+ width:100%;max-width:980px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+ align-items:stretch;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+ border-top:1px solid #57452b;background:rgba(17,18,22,.98);
+ backdrop-filter:blur(18px);box-shadow:0 -6px 23px #0008}
+.bcAppBottom a{display:grid;justify-items:center;align-content:center;gap:3px;
+ min-height:49px;min-width:0;padding:5px 0;color:#afb0b8;text-decoration:none;
+ font-size:clamp(9px,2.4vw,11px);font-weight:760;line-height:1.15;text-align:center}
+.bcAppBottom a span{font-size:22px;line-height:1.1;display:grid;place-items:center;
+ min-height:29px;min-width:29px;border-radius:9px}
+.bcAppBottom a[aria-current="page"]{color:#f6d17c}
+.bcAppBottom a[aria-current="page"] span{background:#f6cf68;color:#16110b}
+.bcAppBottom a:focus-visible{outline:2px solid #f9d984;outline-offset:-2px}
+body.bc-social .bcAssistant,body.bc-passport .bcAssistant,body.bc-preview .bcAssistant,
+body.bc-aux-client .bcAssistant{bottom:calc(89px + env(safe-area-inset-bottom))}
+@media(min-width:700px){body.bc-social .socialTop,body.bc-passport .wrap>header{min-height:72px!important}}
+@media(prefers-reduced-motion:reduce){.bcAppBottom a{scroll-behavior:auto}}
