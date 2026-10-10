@@ -19,6 +19,7 @@ function openTab(name){
  document.querySelectorAll(".socialPanel").forEach(x=>x.hidden=x.id!=="panel"+name[0].toUpperCase()+name.slice(1));
  document.querySelectorAll(".socialTabs button").forEach(x=>x.classList.toggle("selected",x.dataset.panel===name));
  if(name==="messages")loadMutuals();
+ if(name==="friends")loadFriends();
  
 }
 document.querySelectorAll(".socialTabs button").forEach(b=>b.onclick=()=>openTab(b.dataset.panel));
@@ -54,7 +55,7 @@ async function loadMyProfile(){
  self.append(el("strong",own?"@"+own.handle:"Profil nepublicat"),el("p",own?(own.is_public?"Vizibil în comunitate":"Privat — nu apari la căutare"):"Publicarea este opțională."));
  if(own){
   self.append(el("p",own.followers+" urmăritori · "+own.following+" urmăriți · "+(own.kind==="barber"?"Profesionist verificat":"Client")));
-  const share=el("a","Deschide profilul public →","socialButton");share.href="./social.html?u="+encodeURIComponent(user.id);self.append(share);
+  const share=el("a","♛ Vizualizează profilul","socialButton");share.href="./social.html?u="+encodeURIComponent(user.id)+(new URLSearchParams(location.search).get("from")==="pro"?"&from=pro":"");self.append(share);
  }
  const pro=await rpc("bc_social_is_barber",{p_user:user.id});
  barber.hidden=!pro;
@@ -85,7 +86,7 @@ async function discover(){
   if(!records?.length){list.append(el("p","Nu există încă profiluri publice pentru această căutare."));return}
   for(const item of records){
    const row=el("div",undefined,"socialPerson"),info=el("div");info.append(el("strong",item.display_name),el("small","@"+item.handle+" · "+(item.kind==="barber"?"Frizer":"Membru")+" · "+item.followers+" urmăritori"));
-   row.append(info,btn("Vezi profilul",()=>showPerson(item.user_id)));list.append(row);
+   window.BCPresence?.mount(info,item.user_id);row.append(info,btn("Vezi profilul",()=>showPerson(item.user_id)));list.append(row);
   }
  }catch(e){list.replaceChildren(el("p","Căutarea nu este disponibilă momentan."));msgErr(e)}
 }
@@ -102,12 +103,16 @@ async function showPerson(id){
   avatar=el("div",p.display_name.slice(0,1).toUpperCase(),"socialAvatar"),info=el("div");
   info.append(el("h2",p.display_name),el("small","@"+p.handle+" · "+p.followers+" urmăritori · "+p.following+" urmăriți"));
   if(p.kind==="barber")info.append(el("span","✂ Frizer verificat","socialVerified"));
+  window.BCPresence?.mount(avatar,p.user_id);
   identity.append(avatar,info);hero.append(identity);box.append(hero,el("p",p.bio||"Fără descriere publică."));
+  if(p.is_me){const edit=btn("✏️",()=>{box.hidden=true;openTab("profile");profileForm.elements.name.focus()},"bcProfileEdit");edit.setAttribute("aria-label","Editează profilul");hero.prepend(edit)}
+  if(p.kind==="barber")void window.BCFavorites?.mount(hero,"barber",p.user_id);
+  else await window.BCVisitRank?.mount(hero,p.user_id);
   const actions=el("div",undefined,"socialActions");
   if(user&&!p.is_me){
-   const follow=btn(p.is_following?"✓ Urmărești · Renunță":"＋ Urmărește",async()=>{
+   const follow=btn(p.is_following?(p.follows_me?"✓ Prieteni · Elimină":"Cerere trimisă · Anulează"):(p.follows_me?"Acceptă prietenia":"＋ Adaugă la prieteni"),async()=>{
     try{await rpc("bc_social_follow_set",{p_target:p.user_id,p_follow:!p.is_following});
-     line(p.is_following?"Nu mai urmărești acest membru.":"Acum urmărești acest membru.");await showPerson(id);await discover()}
+     line(p.is_following?"Ai eliminat legătura.":p.follows_me?"Sunteți acum prieteni.":"Cererea de prietenie a fost trimisă.");await showPerson(id);await discover()}
     catch(e){msgErr(e)}},p.is_following?"":"primary");
    actions.append(follow);
    if(p.message_allowed)actions.append(btn("✉ Mesaj",()=>startChat(p.user_id,p.display_name),"primary"));
@@ -119,8 +124,8 @@ async function showPerson(id){
     const reason=prompt("Descrie motivul raportării (10–350 caractere):");if(reason===null)return;
     try{await rpc("bc_social_report",{p_user:id,p_reason:reason.trim()});line("Raportarea a fost înregistrată.")}catch(e){msgErr(e)}
    }));
-  }else if(p.is_me)actions.append(btn("Editează profilul",()=>openTab("profile"),"primary"));
-  else actions.append(el("p","Autentifică-te pentru a urmări și a trimite mesaje."));
+  }else if(p.is_me){}
+  else actions.append(el("p","Autentifică-te pentru a adăuga prieteni și a trimite mesaje."));
   box.append(actions);
   if(p.kind==="barber"){
    const title=el("h3","Barber Passport · Portofoliu");box.append(title);
@@ -132,14 +137,22 @@ async function showPerson(id){
   box.scrollIntoView({behavior:"smooth",block:"start"});
  }catch(e){msgErr(e)}
 }
+async function loadFriends(){
+ const box=$("socialFriends");if(!box)return;box.replaceChildren();
+ if(!user){box.append(el("p","Conectează-te pentru a adăuga prieteni."));return}
+ try{const people=await rpc("bc_friends_list");
+ if(!people.length){box.append(el("p","Adaugă persoane din Comunitate. Când acceptă, apar aici ca prieteni."));return}
+ for(const p of people){const row=el("article",undefined,"socialPerson"),info=el("div"),actions=el("div",undefined,"socialFriendActions");info.append(el("strong",p.display_name),el("small","@"+p.handle+" · "+(p.mutual?"Prieten":p.outgoing?"Cerere trimisă":"Te-a adăugat")));window.BCPresence?.mount(info,p.user_id);actions.append(btn("Profil",()=>showPerson(p.user_id)));if(!p.outgoing)actions.append(btn("Acceptă",async()=>{try{await rpc("bc_social_follow_set",{p_target:p.user_id,p_follow:true});await loadFriends()}catch(e){msgErr(e)}},"primary"));if(p.message_allowed)actions.append(btn("✉ Chat",()=>startChat(p.user_id,p.display_name)));row.append(info,actions);box.append(row)}
+ }catch(e){box.textContent="Lista de prieteni nu este disponibilă momentan.";msgErr(e)}
+}
 async function loadMutuals(){
  if(!user){$("socialMutuals").textContent="Autentifică-te pentru mesaje.";return}
  const box=$("socialMutuals");box.replaceChildren();
  try{mutuals=await rpc("bc_social_mutuals");
- if(!mutuals.length){box.append(el("p","Nu există încă persoane pe care le urmărești reciproc și care acceptă mesaje."));return}
+ if(!mutuals.length){box.append(el("p","Prietenii care permit mesaje vor apărea aici."));return}
  for(const person of mutuals){
   const row=el("div",undefined,"socialPerson"),label=el("div");
-  label.append(el("strong",person.display_name),el("small","@"+person.handle));
+  label.append(el("strong",person.display_name),el("small","@"+person.handle));window.BCPresence?.mount(label,person.user_id);
   row.append(label,btn("Deschide chat",()=>startChat(person.user_id,person.display_name)));box.append(row);
  }
  }catch(e){msgErr(e)}
@@ -147,21 +160,21 @@ async function loadMutuals(){
 async function startChat(id,name){
  if(!user){line("Autentifică-te pentru mesaje.");return}
  if(chatTimer)clearInterval(chatTimer);
- chatWith=id;openTab("messages");
- chatTimer=setInterval(()=>{if(chatWith===id&&document.visibilityState==="visible")loadConversation()},12000);
+ chatWith=id;$("socialChatMessages").dataset.loaded="";$("socialChatMessages").dataset.signature="";openTab("messages");
+ chatTimer=setInterval(()=>{if(chatWith===id&&document.visibilityState==="visible")loadConversation()},4000);
  const panel=$("socialChat");panel.hidden=false;$("socialChatName").textContent="Mesaje cu "+name;
  await loadConversation();
  panel.scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function loadConversation(){
- if(!chatWith)return;const box=$("socialChatMessages");box.replaceChildren();
- try{const msgs=await rpc("bc_social_conversation",{p_with:chatWith});
+ if(!chatWith)return;const requested=chatWith,box=$("socialChatMessages"),nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<60;
+ try{const msgs=await rpc("bc_social_conversation",{p_with:requested});if(chatWith!==requested)return;const signature=JSON.stringify(msgs);if(box.dataset.signature===signature)return;box.dataset.signature=signature;box.replaceChildren();
  if(!msgs.length)box.append(el("p","Încă nu aveți mesaje. Primul mesaj poate începe conversația."));
  for(const m of msgs){
   const bubble=el("div",m.body,"socialBubble"+(m.mine?" mine":""));
   bubble.append(el("small",new Date(m.at).toLocaleString("ro-RO")));
   box.append(bubble);
- }box.scrollTop=box.scrollHeight;
+ }if(nearBottom||!box.dataset.loaded)box.scrollTop=box.scrollHeight;box.dataset.loaded="true";
  }catch(e){msgErr(e)}
 }
 $("socialChatForm").onsubmit=async e=>{
@@ -203,7 +216,7 @@ async function refreshGalleryStatus(){
  selector.replaceChildren();
  for(const q of visits){
   const d=new Date(q.checked_at),expiry=new Date(q.expires_at);
-  const value="QR "+d.toLocaleString("ro-RO")+" · până la "+expiry.toLocaleString("ro-RO");
+  const value="Tunsoare din "+d.toLocaleDateString("ro-RO")+" · poți publica până la "+expiry.toLocaleString("ro-RO");
   selector.append(new Option(value,q.checkin_id));
  }
  const visitsDone=Number(state.completed_visits)||0;
@@ -211,11 +224,12 @@ async function refreshGalleryStatus(){
  if(visitsDone<3){
   message=visitsDone+"/3 tunsori finalizate și confirmate. Mai ai nevoie de "+(3-visitsDone)+" pentru a putea posta.";
  }else if(!visits.length){
-  message="Ai "+visitsDone+" tunsori confirmate. Nu ai acum o vizită eligibilă: cere verificarea QR la frizer, confirmarea finalizării serviciului și postează în 24 de ore.";
+  message="Ai "+visitsDone+" tunsori confirmate. Pentru o nouă fotografie, cere frizerului să confirme tunsoarea, apoi publică în cel mult 24 de ore.";
  }else{
-  message="Ai "+visitsDone+" tunsori confirmate și "+visits.length+" vizită/vizite eligibile. Poți urca o singură fotografie pentru fiecare QR, înainte de expirare.";
+  message="Ai "+visitsDone+" tunsori confirmate și "+visits.length+" tunsori pentru care poți publica acum. Poți urca o singură fotografie pentru fiecare QR, înainte de expirare.";
  }
  galleryStatusNote("socialClientQuota",message);
+ const quota=$("socialClientQuota"),old=quota.previousElementSibling;if(old?.classList.contains("bcVisitRank"))old.remove();if(window.BCVisitRank)quota.before(window.BCVisitRank.render(visitsDone));
  selector.disabled=!visits.length;
  b.disabled=!visits.length;
 }
@@ -229,7 +243,7 @@ async function loadClientGallery(id,mine,target){
   const card=el("div",undefined,"socialPortfolioItem"),img=el("img");
   img.loading="lazy";img.alt=photo.caption||"Tunsoare din galeria clientului";
   img.src=sb.storage.from("bc-client-social-gallery").getPublicUrl(photo.path).data.publicUrl;
-  card.append(img,el("p",photo.caption||"Tunsoare publicată"));
+  const caption=el("p",photo.caption||"Tunsoare publicată");card.append(img,caption);void window.BCSalonMentions?.render(caption,photo.caption||"Tunsoare publicată");
   if(mine)card.append(btn("Șterge",async()=>{
    if(!confirm("Ștergi fotografia? Nu vei putea publica din nou pentru același QR."))return;
    try{
@@ -310,7 +324,7 @@ async function loadBarberDetails(id,mine,target){
   const card=el("div",undefined,"socialPortfolioItem"),img=el("img");
   img.loading="lazy";img.alt=photo.caption||"Tunsoare din portofoliul frizerului";
   const {data}=sb.storage.from("bc-barber-portfolio").getPublicUrl(photo.path);
-  img.src=data.publicUrl;card.append(img,el("p",photo.caption));
+  img.src=data.publicUrl;const caption=el("p",photo.caption);card.append(img,caption);void window.BCSalonMentions?.render(caption,photo.caption||"");
   if(mine)card.append(btn("Șterge",async()=>{
    if(!confirm("Ștergi definitiv fotografia publică?"))return;
    try{const path=await rpc("bc_social_barber_portfolio_delete",{p_id:photo.id});

@@ -44,12 +44,6 @@ window.BCLocationRadius={
   return haversine(coordinates.lat,coordinates.lon,lat,lon);
  }
 };
-const rare=[
- ["Skin fade","Skin fade"],["Tunsori creative","design"],
- ["Hair tattoo","hair tattoo"],["Vopsit păr","vopsit"],
- ["Dreadlocks","dreadlocks"],["Barbă premium","barbă premium"],
- ["Tratamente scalp","scalp"],["Tuns copii","copii"]
-];
 window.BCDiscoveryRareServices=[];
 // Accessible service suggestions inspired by the best booking marketplace searches.
 const categories=document.createElement("section");categories.className="bcServiceSuggestions";
@@ -67,30 +61,6 @@ for(const [title,term] of [["✂ Frizerie & barber","tuns"],["♙ Aranjat barbă
 categories.append(scroller);
 const searchPanel=home.querySelector(".search");
 searchPanel?.insertAdjacentElement("afterend",categories);
-const details=document.querySelector(".bcAdvancedFilters");
-if(details){
- details.open=false; // Closed by default. Expand only after a direct user tap.
- const section=document.createElement("section");section.className="bcRareServices";
- section.append(document.createElement("h3"));section.querySelector("h3").textContent="Servicii speciale · ce cauți mai rar";
- const info=document.createElement("p");info.textContent="Afișăm doar saloanele care au declarat serviciile respective.";
- section.append(info);
- const buttons=document.createElement("div");buttons.className="bcRareButtons";
- for(const [name,term] of rare){
-  const b=document.createElement("button");b.type="button";b.textContent=name;b.dataset.rareService=term;b.setAttribute("aria-pressed","false");
-  b.onclick=()=>{
-   b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")==="true"?"false":"true");
-   window.BCDiscoveryRareServices=[...buttons.querySelectorAll('[aria-pressed="true"]')].map(x=>x.dataset.rareService);
-   window.BCRefreshSearch?.();window.BCUpdateDemoSearch?.();
-  };buttons.append(b);
- }
- section.append(buttons);
- const reset=document.createElement("button");reset.type="button";reset.className="bcRareClear";reset.textContent="Curăță filtrele speciale";
- reset.onclick=()=>{
-  buttons.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed","false"));
-  window.BCDiscoveryRareServices=[];window.BCRefreshSearch?.();window.BCUpdateDemoSearch?.();
- };
- section.append(reset);details.append(section);
-}
 // Marketing is always a clear link, never an unconsented popup.
 const partner=document.createElement("aside");partner.className="bcPartnerBanner";
 partner.innerHTML='<strong>Ai un salon, un brand sau distribui produse pentru frizeri?</strong><p>Intră în ecosistemul BARBERCRAFT: profil de salon, programări, servicii și posibilitatea unui magazin cu produse personalizate.</p><a href="./partner.html">Devino partener BARBERCRAFT ↗</a>';
@@ -99,3 +69,4 @@ document.getElementById("search")?.addEventListener("input",()=>window.BCUpdateD
 document.querySelectorAll("#countyFilter,#cityFilter,#sectorFilter").forEach(s=>s.addEventListener("change",()=>window.BCUpdateDemoSearch?.()));
 window.addEventListener("bc-discovery-results",()=>window.BCUpdateDemoSearch?.());
 })();
+

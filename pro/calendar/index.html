@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#111319"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="./pro/calendar/manifest.webmanifest"><link rel="icon" href="./pro/calendar/icon.svg" type="image/svg+xml">
 <title>Calendar · BARBERCRAFT PRO</title><base href="../../"><link rel="stylesheet" href="./pro-calendar-app.css">
-</head><body>
+<script defer src="./community-kit.js"></script></head><body>
 <main id="calendarApp" class="calendarApp" aria-label="Calendar BARBERCRAFT PRO">
  <header class="appHeader">
   <a class="back" href="./pro/" aria-label="Înapoi la portalul PRO">‹</a>
@@ -31,19 +31,19 @@
   <a href="./pro/"><span>⌂</span>Acasă</a>
   <a href="./pro/calendar/" class="selected" aria-current="page"><span>▦</span>Calendar</a>
   <button id="fastAdd" type="button"><span>＋</span>Adaugă</button>
-  <a href="./pro/"><span>♙</span>Clienți</a>
+  <a href="./pro/#clients"><span>♙</span>Clienți</a>
  </nav>
 </main>
-<div id="gate" class="gate" hidden><div class="gateBox"><div class="popupChrome"><span class="popupChromeLabel">Acces Calendar PRO</span><div class="popupChromeActions"><a class="popupIconButton" href="./pro/" target="_blank" rel="noopener noreferrer" aria-label="Deschide autentificarea PRO în tab nou" title="Deschide în tab nou">↗</a><a class="popupIconButton" href="./pro/" aria-label="Închide și revino la PRO" title="Închide">✕</a></div></div><b>BARBERCRAFT PRO</b><h1>Calendarul salonului</h1><p id="gateText">Verificăm contul tău PRO...</p><a href="./pro/" class="goldLink">Intră în contul PRO</a></div></div>
+<div id="gate" class="gate" hidden><div class="gateBox"><div class="popupChrome"><span class="popupChromeLabel">Acces Calendar PRO</span><div class="popupChromeActions"><a class="popupIconButton" href="./pro/" aria-label="Închide și revino la PRO" title="Închide">✕</a></div></div><b>BARBERCRAFT PRO</b><h1>Calendarul salonului</h1><p id="gateText">Verificăm contul tău PRO...</p><a href="./pro/" class="goldLink">Intră în contul PRO</a></div></div>
 <div id="sheetBackdrop" class="backdrop" hidden>
  <section id="quickSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Adaugă în calendar">
-  <div class="sheetHead"><strong id="selectionLabel">Interval selectat</strong><span class="popupChromeActions"><a id="popupNewTabQuick" class="popupIconButton" href="./pro/calendar/" target="_blank" rel="noopener noreferrer" aria-label="Deschide această fereastră în tab nou" title="Deschide în tab nou">↗</a><button id="closeQuick" type="button" aria-label="Închide">✕</button></span></div>
+  <div class="sheetHead"><strong id="selectionLabel">Interval selectat</strong><span class="popupChromeActions"><button id="closeQuick" type="button" aria-label="Închide">✕</button></span></div>
   <p class="sheetSub">Ce vrei să adaugi?</p>
   <button id="chooseBooking" class="choice primary" type="button">＋ Programare nouă</button>
   <button id="chooseBusy" class="choice" type="button">▥ Blochează timpul</button>
  </section>
  <section id="editSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Editează programarea" hidden>
-  <div class="sheetHead"><strong id="editTitle">Programare nouă</strong><span class="popupChromeActions"><a id="popupNewTabEdit" class="popupIconButton" href="./pro/calendar/" target="_blank" rel="noopener noreferrer" aria-label="Deschide această fereastră în tab nou" title="Deschide în tab nou">↗</a><button id="closeEdit" type="button" aria-label="Închide">✕</button></span></div>
+  <div class="sheetHead"><strong id="editTitle">Programare nouă</strong><span class="popupChromeActions"><button id="closeEdit" type="button" aria-label="Închide">✕</button></span></div>
   <form id="eventForm">
    <label>Specialist<select id="eventStaff" required></select></label>
    <div class="twoCols"><label>De la<input id="startAt" type="datetime-local" required></label><label>Până la<input id="endAt" type="datetime-local" required></label></div>
@@ -54,7 +54,7 @@
   </form>
  </section>
  <section id="syncSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Calendarul telefonului" hidden>
-  <div class="sheetHead"><strong>Calendarul telefonului</strong><span class="popupChromeActions"><a id="popupNewTabSync" class="popupIconButton" href="./pro/calendar/" target="_blank" rel="noopener noreferrer" aria-label="Deschide această fereastră în tab nou" title="Deschide în tab nou">↗</a><button id="closeSync" type="button" aria-label="Închide">✕</button></span></div>
+  <div class="sheetHead"><strong>Calendarul telefonului</strong><span class="popupChromeActions"><button id="closeSync" type="button" aria-label="Închide">✕</button></span></div>
   <p class="sheetSub">Conectezi o singură dată. După abonare, rezervările noi din BARBERCRAFT apar automat la actualizarea calendarului din telefon.</p>
   <label>Salon<select id="syncSalon"></select></label>
   <button id="createFeed" class="choice primary" type="button">🔗 Creează linkul privat de sincronizare</button>

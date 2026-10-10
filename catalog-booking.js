@@ -13,8 +13,9 @@ const rpc=async(fn,args={})=>{
  if(error)throw Object.assign(Error(error.message),{code:error.code});
  return data;
 };
+let confirmedEvent=null;
 let config=null,selected=null,busy=false,completed=false,slotRequest=0,pending=null,accountUserId=null;
-const fields=["pilotService","pilotDate","pilotClientName","pilotClientPhone","pilotConsent"];
+const fields=["pilotService","pilotDate","pilotClientName","pilotClientPhone","pilotConsent","pilotWhatsAppOptIn"];
 function updateControls(){
  for(const id of fields)$(id).disabled=busy||!!pending||completed;
  $("pilotSlots").querySelectorAll("button").forEach(b=>b.disabled=busy||!!pending||completed);
@@ -166,7 +167,14 @@ $("pilotBookingForm").onsubmit=async e=>{
    (priceRon==null?"":" · "+priceRon+" lei")+". Programarea este salvată în calendarul salonului.";
   $("pilotBookingCode").textContent=result.code;
   $("pilotClientForm").hidden=true;$("pilotSuccess").hidden=false;
-  completed=true;pending=null;
+  completed=true;
+  confirmedEvent={id:pending.payload.p_request,start:result.start,end:result.end||new Date(new Date(result.start).getTime()+(Number(config.services.find(s=>s.name===(result.service||pending.payload.p_service))?.duration)||30)*60000).toISOString(),service:result.service,salon:result.salon||config.name,location:config.address||"",description:"Rezervare confirmată · Cod "+result.code};
+  const bookingId=pending.payload.p_request,whatsAppConsent=$("pilotWhatsAppOptIn").checked;
+  pending=null;
+  if(whatsAppConsent){
+   try{const notification=await rpc("bc_booking_whatsapp_optin",{p_booking:bookingId});$("pilotWhatsAppStatus").textContent=notification.queued?"Confirmarea WhatsApp a fost solicitată. Livrarea depinde de serviciul WhatsApp al salonului.":"Salonul nu are încă activată confirmarea WhatsApp. Rezervarea ta rămâne confirmată."}
+   catch(_){$("pilotWhatsAppStatus").textContent="Rezervarea este confirmată, dar confirmarea WhatsApp nu a putut fi solicitată."}
+  }
   setStatus("Rezervarea a fost confirmată. Salvează codul de mai jos.");
   $("pilotSuccess").scrollIntoView({behavior:"smooth",block:"start"});
  }catch(err){
@@ -190,6 +198,11 @@ $("pilotFeedbackForm").onsubmit=async event=>{
   notice.textContent="Mulțumim! Feedbackul a fost trimis salonului.";form.hidden=true;
  }catch(e){notice.textContent="Feedbackul nu a fost trimis: "+e.message;button.disabled=false}
 };
+$("pilotSyncCalendar").onclick=async()=>{
+ if(!confirmedEvent)return;
+ try{await window.BCNativeCalendar.sync(confirmedEvent);setStatus("Deschide fișierul în calendarul telefonului și confirmă adăugarea.")}
+ catch(e){if(e.name!=="AbortError")setStatus("Calendarul nu s-a deschis: "+e.message)}
+};
 $("pilotCopyCode").onclick=async()=>{
  const content=$("pilotResult").textContent+" Cod: "+$("pilotBookingCode").textContent;
  try{await navigator.clipboard.writeText(content);setStatus("Confirmarea a fost copiată.")}
@@ -206,3 +219,4 @@ try{
  $("pilotService").dispatchEvent(new Event("change"));
 }catch(e){setStatus("Nu am putut verifica salonul: "+e.message)}
 })();
+

@@ -6,7 +6,7 @@ try{familiar=localStorage.getItem("bc-assistant-familiar-v1")}catch(_){}
 const root=el("aside","bcAssistant");root.id="bcAssistant";
 root.setAttribute("aria-label","Asistentul BARBERCRAFT");
 const bubble=el("button","bcAssistantOrb","✂");
-bubble.type="button";bubble.setAttribute("aria-label","Deschide Asistent BARBERCRAFT");bubble.title="Asistent BARBERCRAFT · ține apăsat pentru a muta";
+bubble.type="button";bubble.setAttribute("aria-label","Deschide Asistent BARBERCRAFT");bubble.title="Asistent BARBERCRAFT";
 const note=el("div","bcAssistantTip");note.hidden=true;
 const tipTxt=el("span");const tipX=el("button","bcAssistantTipClose","×");tipX.type="button";tipX.title="Ascunde indiciul";
 tipX.onclick=()=>{note.hidden=true};note.append(tipTxt,tipX);
@@ -14,8 +14,12 @@ const dialog=el("section","bcAssistantChat");dialog.hidden=true;dialog.setAttrib
 const top=el("div","bcAssistantTop");
 const title=el("strong",null,"✂ Asistent BARBERCRAFT");
 const tabs=el("div","bcAssistantTools");
-const expand=el("a",null,"↗");expand.href="./tutorial.html";expand.target="_blank";expand.rel="noopener noreferrer";expand.title="Tutorial în tab nou";
-const close=el("button",null,"✕");close.type="button";close.setAttribute("aria-label","Închide asistentul");close.onclick=()=>{dialog.hidden=true};tabs.append(expand,close);top.append(title,tabs);
+let muted=false;
+try{muted=localStorage.getItem("bc-assistant-muted")==="true"}catch(_){}
+const mute=el("button");mute.type="button";
+function paintMute(){mute.innerHTML=muted?'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4M3 3l18 18"/></svg>':'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>';mute.setAttribute("aria-label",muted?"Activează indiciile":"Oprește indiciile");mute.setAttribute("aria-pressed",String(muted));}
+mute.onclick=()=>{muted=!muted;paintMute();if(muted)note.hidden=true;try{localStorage.setItem("bc-assistant-muted",String(muted))}catch(_){}};paintMute();
+const close=el("button",null,"✕");close.type="button";close.setAttribute("aria-label","Închide asistentul");close.onclick=()=>{dialog.hidden=true};tabs.append(mute,close);top.append(title,tabs);
 const transcript=el("div","bcAssistantMessages");
 transcript.setAttribute("aria-live","polite");
 const form=el("form","bcAssistantForm");
@@ -85,40 +89,18 @@ function showChat(){
  }
 }
 form.onsubmit=e=>{e.preventDefault();const text=input.value.trim();if(!text)return;say(text,"user");say(answer(text),"bot");input.value=""};
-let pointer=null,moved=false,initial={x:0,y:0,left:0,top:0};
-const keepInScreen=(x,y)=>{
- const width=56,height=56;return {x:Math.min(innerWidth-width-9,Math.max(9,x)),
-  y:Math.min(innerHeight-height-70,Math.max(65,y))};
-};
-function place(x,y){const p=keepInScreen(x,y);root.style.left=p.x+"px";root.style.top=p.y+"px";root.style.right="auto";root.style.bottom="auto"}
-try{const saved=JSON.parse(localStorage.getItem("bc-assistant-position"));if(saved&&Number.isFinite(saved.x)&&Number.isFinite(saved.y))place(saved.x,saved.y)}catch(_){}
-bubble.addEventListener("pointerdown",e=>{
- if(e.button!==0)return;pointer=e.pointerId;moved=false;
- const rect=root.getBoundingClientRect();initial={x:e.clientX,y:e.clientY,left:rect.left,top:rect.top};
- bubble.setPointerCapture?.(pointer);
-});
-bubble.addEventListener("pointermove",e=>{
- if(pointer!==e.pointerId)return;
- const dx=e.clientX-initial.x,dy=e.clientY-initial.y;
- if(Math.hypot(dx,dy)>8)moved=true;
- if(moved){place(initial.left+dx,initial.top+dy);e.preventDefault()}
-});
-bubble.addEventListener("pointerup",e=>{
- if(pointer!==e.pointerId)return;pointer=null;
- if(moved){
-  try{localStorage.setItem("bc-assistant-position",JSON.stringify({x:root.getBoundingClientRect().left,y:root.getBoundingClientRect().top}))}catch(_){}
- }else showChat();
-});
-bubble.addEventListener("click",e=>{if(e.detail===0)showChat()});
+bubble.addEventListener("click",()=>{if(dialog.hidden)showChat();else dialog.hidden=true});
+document.addEventListener("pointerdown",e=>{if(!root.contains(e.target)){dialog.hidden=true;note.hidden=true}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){dialog.hidden=true;bubble.focus()}});
 function showHint(){
- if(familiar!=="beginner")return;
+ if(muted||familiar!=="beginner")return;
  const key="bc-assistant-hint:"+context();
  try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,"yes")}catch(_){}
  tipTxt.textContent=messages[context()];
  note.hidden=false;setTimeout(()=>{note.hidden=true},12500);
 }
 function askFamiliar(){
- if(familiar!==null)return;
+ if(muted||familiar!==null)return;
  note.hidden=true;dialog.hidden=false;
  transcript.replaceChildren();say("Ești familiarizat cu BARBERCRAFT sau folosești aplicația pentru prima dată?","bot");
  suggestions.replaceChildren();
@@ -142,3 +124,4 @@ const watcher=new MutationObserver(()=>{
 });
 watcher.observe(document.body,{subtree:true,attributes:true,attributeFilter:["class"]});
 })();
+

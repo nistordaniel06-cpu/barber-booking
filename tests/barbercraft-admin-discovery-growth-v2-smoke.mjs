@@ -36,8 +36,8 @@ assert.match(publicPage,/bcSalonWebsite/,"Website is linked with salon name");
 assert.match(publicPage,/link\.target="_blank";link\.rel="noopener noreferrer"/,"External salon site opens in a safe new tab");
 assert.match(publicPage,/id="clientHeaderAvatar"/,"Avatar replaces both CLIENT label and extra user glyph");
 assert.match(publicPage,/bc_client_set_avatar/,"Avatar uploaded through Client-only database RPC");
-assert.match(read("client-home-v2.js"),/link\("◉ Portal client","\.\/client\/"\)/,"Client portal is in four-item guest menu");
-assert.match(read("client-home-v2.js"),/link\("✂ Portal profesioniști","\.\/pro\/"\)/,"PRO portal is distinct");
+assert.match(read("client-home-v2.js"),/button\("♙ Profil Client"/,"Client profile opens login/account");
+assert.match(read("client-home-v2.js"),/link\("✂ Profil Profesionist","\.\/pro\/"\)/,"PRO portal is distinct");
 assert.ok(!read("client-home-v2.js").includes("Bătălia Zonelor"),"No territorial game links");
 assert.match(read("client-home-v2.css"),/:root\[data-theme=light\] body\.bc-premium\.bc-client \.shell/,"Light theme overrides premium background");
 assert.match(prof,/bc_pro_save_salon_location/,"Owners can explicitly confirm salon GPS");
@@ -49,3 +49,4 @@ assert.match(read("tutorial.html"),/demoPlay/,"Guided animated walkthrough exist
 assert.match(read("supabase/migrations/20261010_barbercraft_client_avatar.sql"),/bc_portal_access\('client'\)/,"Avatar authorization belongs to Client only");
 assert.match(read("supabase/migrations/20261010_barbercraft_verified_salon_gps.sql"),/bc_can_manage_pro_hours/,"Salon pin authorized by server");
 console.log("PASS: Admin dashboard with live stats, Client GPS/marketplace & avatar, PRO modern hours, brand partners and portal separation");
+

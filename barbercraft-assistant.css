@@ -1,6 +1,6 @@
 .bcAssistant{position:fixed;right:14px;bottom:calc(91px + env(safe-area-inset-bottom));z-index:9991;display:block;max-width:calc(100vw - 24px);font-family:"DM Sans",system-ui,sans-serif}
-.bcAssistantOrb{display:grid;place-items:center;width:54px;height:54px;border:1px solid #9a7937;border-radius:50%;background:linear-gradient(135deg,#f5d277,#cb923c);color:#17130a;font-size:24px;font-weight:900;box-shadow:0 9px 27px #0007;touch-action:none;user-select:none;cursor:grab}
-.bcAssistantOrb:active{cursor:grabbing}
+.bcAssistantOrb{display:grid;place-items:center;width:54px;height:54px;border:1px solid #9a7937;border-radius:50%;background:linear-gradient(135deg,#f5d277,#cb923c);color:#17130a;font-size:24px;font-weight:900;box-shadow:0 9px 27px #0007;touch-action:manipulation;user-select:none;cursor:pointer}
+.bcAssistantOrb:active{cursor:pointerbing}
 .bcAssistantTip{position:absolute;bottom:68px;right:0;width:min(295px,calc(100vw - 29px));background:#292b34;border:1px solid #d3aa53;border-radius:14px;padding:12px 30px 12px 12px;color:#f5f4f2;font-size:12px;line-height:1.5;box-shadow:0 8px 20px #0008}
 .bcAssistantTip[hidden],.bcAssistantChat[hidden]{display:none!important}
 .bcAssistantTipClose{position:absolute;top:4px;right:6px;color:#fff;background:transparent;border:0;font-size:22px}
@@ -20,3 +20,4 @@
 :root[data-theme=light] .bcAssistantForm input{background:#fff;color:#272932}
 @media(max-width:400px){.bcAssistantChat{width:min(330px,calc(100vw - 25px))}}
 @media(prefers-reduced-motion:reduce){.bcAssistantOrb{animation:none}}
+
