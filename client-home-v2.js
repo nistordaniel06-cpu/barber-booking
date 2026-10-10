@@ -25,12 +25,8 @@ async function invite(){
 }
 function populate(){
  box.replaceChildren();
- // Guest and authenticated menus remain focused on the requested entrypoints.
- if(window.BCClientUser){
-  button("♙ Profil Client",()=>document.querySelector('[data-go="account"]')?.click());
- }else{
-  button("♙ Profil Client",()=>document.querySelector('[data-go="account"]')?.click());
- }
+ // Guest and authenticated menus share the same requested entrypoints.
+ button("♙ Profil Client",()=>document.querySelector('[data-go="account"]')?.click());
  link("✂ Profil Profesionist","./pro/");
  link("◇ Devino partener","./partner.html");
  button("↗ Invită prietenii",()=>{void invite()});
