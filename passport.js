@@ -8,9 +8,8 @@ if(userError||!user){status.replaceChildren(document.createTextNode("Autentific�
 $("signedIn").hidden=false;status.textContent="Informațiile din pașaport sunt private și sincronizate între dispozitive.";
 const fmt=n=>new Intl.NumberFormat("ro-RO").format(Number(n)||0);
 try{
- const [{data:profile},{data:rewards,error:rewardsError},{data:summary,error:summaryError},{data:history,error:historyError}]=await Promise.all([
+ const [{data:profile},{data:summary,error:summaryError},{data:history,error:historyError}]=await Promise.all([
  sb.from("bc_profiles").select("display_name").eq("user_id",user.id).maybeSingle(),
- sb.from("bc_reward_templates").select("title,description,points_cost,category,stock").eq("is_active",true).order("points_cost").limit(25),
  sb.rpc("bc_passport_my_progress"),sb.rpc("bc_passport_my_visit_history")]);
  const name=profile?.display_name||user.email?.split("@")[0]||"Client";$("name").textContent=name;$("avatar").textContent=name.trim().charAt(0).toUpperCase();
  if(summaryError)throw summaryError;
@@ -27,10 +26,6 @@ try{
  if(historyError)h.append(el("p","Istoricul verificat nu a putut fi încărcat: "+historyError.message,"muted"));
  else if(!(history?.recent||[]).length)h.append(el("p","Nu există încă vizite validate. Programările viitoare nu generează automat XP.","muted"));
  else for(const visit of history.recent){const row=el("div",undefined,"item"),date=el("span",new Date(visit.date).toLocaleDateString("ro-RO",{day:"numeric",month:"long",year:"numeric"}));row.append(date,el("strong",visit.salon+" · +"+fmt(visit.xp)+" XP pentru vizita validată"));h.append(row)}
- const o=$("offers");o.replaceChildren();
- if(rewardsError)o.append(el("p","Recompensele nu sunt momentan disponibile.","muted"));
- else if(!(rewards||[]).length)o.append(el("p","Primele recompense sunt în curs de pregătire. Le vei vedea aici când sunt activate de administrator.","muted"));
- else for(const offer of rewards){const box=el("article",undefined,"offer");box.append(el("b",offer.category.toUpperCase()+" · "+fmt(offer.points_cost)+" puncte"),el("strong",offer.title),el("p",offer.description),el("p",offer.stock===0?"Stoc indisponibil":"Disponibilitatea și eligibilitatea se confirmă cu salonul."));o.append(box)}
  // Individual Barber Passport benefits appear in the progress panel above.
 }catch(e){status.textContent="Nu am putut încărca toate datele: "+e.message}
 const notes=$("notes"),photos=$("photos");
