@@ -322,3 +322,5 @@ body.bc-social .socialPanel{scroll-margin-top:150px}
 .socialChatComposer input{flex:1;min-width:0;border-radius:28px!important}
 .socialChatComposer button{border-radius:28px!important}
 @media(max-width:420px){.socialPerson{flex-wrap:wrap}.socialPerson>div:first-child{flex:1 1 140px}}
+
+.socialPostOnline{color:#36dc73;font-size:13px;display:inline-block;padding:0 5px 0 0;text-shadow:0 0 9px #37dc7880}
