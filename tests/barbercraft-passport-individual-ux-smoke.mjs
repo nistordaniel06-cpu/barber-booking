@@ -27,7 +27,8 @@ assert.ok(pro.includes('id="proWarOptin" hidden'),"PRO historical participation 
 assert.ok(!menu.includes("Bătălia Zonelor"),"Legacy territory removed from Client menu");
 assert.ok(!read("premium-ui.js").includes('Bătălia Zonelor'),"Legacy role menu removed");
 assert.ok(menu.includes("Profil Client")&&menu.includes("Profil Profesionist")&&menu.includes("Devino partener"),"Simple Client/PRO/partner menu");
-assert.ok(!menu.includes("if(window.BCClientUser)"),"Guest never sees extra links");
+assert.doesNotMatch(menu,/if\(window\.BCClientUser\)/,"Guest and authenticated menus share the same entrypoints");
+assert.doesNotMatch(menu,/Portal client|Portal profesioniști/,"Removed portal labels stay out of the menu");
 assert.ok(client.includes('textContent="C."')||client.includes('document.createTextNode("C.")'),"Guest avatar initial");
 assert.ok(client.includes("bcFavoriteHeart")&&read("client-home-v2.css").includes(".bcFavoriteHeart"),"Red favorite icon");
 assert.ok(client.includes('id="bcNearMe"')||read("ro-discovery.js").includes("📍 Locația ta"),"Location label clear");
