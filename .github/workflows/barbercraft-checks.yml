@@ -59,3 +59,4 @@ jobs:
           node tests/barbercraft-admin-discovery-growth-v2-smoke.mjs
           node tests/barbercraft-passport-individual-ux-smoke.mjs
           node tests/barbercraft-sticky-passport-medals-ux-smoke.mjs
+          node tests/barbercraft-social-favorites-pro-agenda-smoke.mjs
