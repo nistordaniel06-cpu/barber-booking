@@ -6,7 +6,7 @@ const cutoff=level=>level<20?100+50*(level-1)+10*(level-1)**2:null;
 function render(c){
  root.replaceChildren();
  const top=create("div",null,"bcPassTop");
- const title=create("div");title.append(create("small","BARBER PASSPORT · PROGRES INDIVIDUAL"),create("h2","Nivel "+c.nivel_passport+" / 20"));
+ const title=create("div");title.append(create("small","BARBER PASS · PROGRES & MISIUNI"),create("h2","Nivel "+c.nivel_passport+" / 20"));
  const badge=create("span",c.tip_passport==="premium"?"✦ PREMIUM":"✂ FREE","bcPassTier");top.append(title,badge);root.append(top);
  const prior=Array.from({length:Math.max(0,c.nivel_passport-1)},(_,index)=>cutoff(index+1)).reduce((a,b)=>a+b,0);
  const levelXP=Math.max(0,Number(c.xp_client||0)-prior),max=cutoff(Number(c.nivel_passport));
@@ -16,7 +16,7 @@ function render(c){
  const fill=create("span");fill.style.width=(max?Math.min(100,(levelXP/max)*100):100)+"%";meter.append(fill);root.append(meter);
  root.append(create("p",max?levelXP+" / "+max+" XP până la nivelul "+(c.nivel_passport+1):"Nivel maxim atins ✨","bcPassMuted"));
  if($("xp"))$("xp").textContent=Number(c.xp_client||0).toLocaleString("ro-RO");
- if($("rank"))$("rank").textContent="Barber Passport · Nivel "+c.nivel_passport;
+ if($("rank"))$("rank").textContent="Barber Pass · Nivel "+c.nivel_passport;
  if($("xpProgress"))$("xpProgress").style.width=(max?Math.min(100,levelXP/max*100):100)+"%";
  if($("xpNext"))$("xpNext").textContent=max?levelXP+" din "+max+" XP spre nivelul "+(c.nivel_passport+1):"Felicitări! Ai atins nivelul 20.";
  const quests=create("section",null,"bcPassQuests");quests.append(create("h3","Misiunile tale"));
@@ -28,9 +28,9 @@ function render(c){
   list.append(row);
  }
  quests.append(list);root.append(quests);
- const rewards=create("section",null,"bcPassQuests");rewards.append(create("h3","Recompense deblocate"));
+ const rewards=create("section",null,"bcPassQuests");rewards.append(create("h3","Distincții de nivel · Barber Pass"));
  const unlocked=c.rewards||[];
- rewards.append(create("p",unlocked.length?"Recompensele tale individuale, obținute din progres:":"Primele recompense apar când atingi nivelul 2.","bcPassMuted"));
+ rewards.append(create("p",unlocked.length?"Premiile cosmetice deblocate din progres, nu oferte comerciale:":"Primele distincții apar la nivelul 2.","bcPassMuted"));
  for(const reward of unlocked)rewards.append(create("div",(reward.tier==="premium"?"♛ ":"✦ ")+reward.title,"bcPassReward"));
  root.append(rewards);
  const note=create("p","Se acordă XP numai după ce salonul confirmă efectiv vizita prin check-in QR. O simplă rezervare nu oferă XP.","bcPassMuted");root.append(note);
