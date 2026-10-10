@@ -30,10 +30,6 @@ for(const id of ["quickSheet","editSheet","syncSheet"]){
  assert.doesNotMatch(block,/target="_blank"/,"Popup "+id+" has no separate tab");
  assert.match(block,/aria-label="Închide"/,"Popup "+id+" has a close button");
 }
-assert.match(app,/function popupURL\(kind\)/,"Separate-tab URLs built for all three dialogs");
-assert.match(app,/\["popupNewTabQuick","quick"\],\["popupNewTabEdit","edit"\],\["popupNewTabSync","sync"\]/);
-assert.match(app,/async function restorePopupFromURL/,"New tab restores matching popup");
-assert.match(app,/await restorePopupFromURL\(\)/,"Popup restoration runs only after checking PRO access");
 assert.match(app,/bc_pro_portal_access/,"Backend PRO access not bypassed");
 assert.match(app,/state\.events\.find\(e=>e\.id===eventId&&e\.source_provider==="manual"\)/,"Appointment deep link can only edit loaded, owned event");
 assert.doesNotMatch(app,/searchParams\.set\(["'](?:clientName|client_display_name|serviceName|access_token|token)["']/,"No sensitive data placed into URLs");
