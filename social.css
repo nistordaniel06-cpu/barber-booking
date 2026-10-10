@@ -278,3 +278,9 @@ body.bc-social #socialClientGalleryStatus:not(:empty){
 .socialPrivacyHint[data-unlocked="true"]{border-color:#547e58;background:#18291f;color:#c4efcc!important}
 #socialPrivacyToggle:has(input:disabled){opacity:.8}
 #socialPrivacyToggle input:disabled{accent-color:#8c805f;cursor:not-allowed}
+
+/* Exactly three community tabs; remain visible below the sticky top bar. */
+body.bc-social .socialTabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+body.bc-social .socialTop{min-height:66px}
+body.bc-social .socialPanel{scroll-margin-top:150px}
+@media(max-width:370px){body.bc-social .socialTop a{font-size:11px}}
