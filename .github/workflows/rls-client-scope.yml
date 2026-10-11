@@ -1,0 +1,22 @@
+name: Barbercraft RLS tenant checks
+
+on:
+  pull_request:
+    paths:
+      - "supabase/migrations/20261011_fix_bc_pro_clients_tenant_rls.sql"
+      - "tests/barbercraft-pro-clients-tenant-rls-smoke.mjs"
+      - ".github/workflows/rls-client-scope.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify client RLS is scoped to the target salon
+        run: node tests/barbercraft-pro-clients-tenant-rls-smoke.mjs
